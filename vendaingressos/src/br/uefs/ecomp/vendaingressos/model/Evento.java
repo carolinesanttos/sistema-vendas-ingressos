@@ -1,5 +1,6 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,16 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
+        ingressos = new ArrayList<>();
+    }
+
+    public Ingresso venderIngresso() {
+        Ingresso ingresso = new Ingresso(this);
+        return ingresso;
+    }
+
+    public boolean isAtivo() {
+        return true;
     }
 
     public String getNome() {
@@ -47,4 +58,7 @@ public class Evento {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
+
 }

@@ -3,13 +3,19 @@ package br.uefs.ecomp.vendaingressos.model;
 public class Ingresso {
     private String id;
     private float valor;
-    private String status;
+    private String status; // a venda, vendido
     private Evento evento;
+
+    public Ingresso(Evento evento) {
+        this.evento = evento;
+    }
 
     public Ingresso(String id, Evento evento) {
         this.id = id;
         this.evento = evento;
     }
+
+
 
     public String getId() {
         return id;
