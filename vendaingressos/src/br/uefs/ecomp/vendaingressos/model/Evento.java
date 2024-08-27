@@ -8,14 +8,16 @@ public class Evento {
     private String nome;
     private String descricao;
     private String data;
-    List<Ingresso> ingressos;
+    private List<Ingresso> ingressos;
     private String status;
+    private static List<Evento> eventosCadastrados;
 
     public Evento(String nome, String descricao, String data) {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
         ingressos = new ArrayList<>();
+        eventosCadastrados = new ArrayList<>();
     }
 
     public Ingresso venderIngresso() {
@@ -25,6 +27,10 @@ public class Evento {
 
     public boolean isAtivo() {
         return true;
+    }
+
+    public void cadastroDeEventos(Evento evento) {
+        eventosCadastrados.add(evento);
     }
 
     public String getNome() {
@@ -41,6 +47,10 @@ public class Evento {
 
     public String getStatus() {
         return status;
+    }
+
+    public static List<Evento> getEventosCadastrados() {
+        return eventosCadastrados;
     }
 
     public void setNome(String nome) {

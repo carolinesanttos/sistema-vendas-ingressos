@@ -11,37 +11,37 @@ import java.util.List;
 
 public class ControllerTest {
 
-//    private Controller controller;
-//
-//    @BeforeEach
-//    public void setUp() {
-//        controller = new Controller();
-//    }
-//
-//    @Test
-//    public void testCadastrarUsuario() {
-//        Usuario usuario = controller.cadastrarUsuario("user1", "senha123", "Nome 1", "11111111111", "user1@example.com");
-//        assertNotNull(usuario);
-//        assertEquals("user1", usuario.getLogin());
-//    }
-//
-//    @Test
-//    public void testLoginUsuario() {
-//        controller.cadastrarUsuario("user2", "senha456", "Nome 2", "22222222222", "user2@example.com");
-//        Usuario usuario = controller.loginUsuario("user2", "senha456");
-//        assertNotNull(usuario);
-//        assertEquals("user2", usuario.getLogin());
-//    }
-//
-//    @Test
-//    public void testCadastrarEvento() {
-//        controller.cadastrarUsuario("admin", "adminpass", "Admin", "00000000000", "admin@example.com");
-//        controller.loginUsuario("admin", "adminpass");
-//        Evento evento = controller.cadastrarEvento("Show", "Descrição do Show", "2024-08-20");
-//        assertNotNull(evento);
-//        assertEquals("Show", evento.getNome());
-//    }
-//
+    private Controller controller;
+
+    @BeforeEach
+    public void setUp() {
+        controller = new Controller();
+    }
+
+    @Test
+    public void testCadastrarUsuario() {
+        Usuario usuario = controller.cadastrarUsuario("user1", "senha123", "Nome 1", "11111111111", "user1@example.com");
+        assertNotNull(usuario);
+        assertEquals("user1", usuario.getLogin());
+    }
+
+    @Test
+    public void testLoginUsuario() {
+        controller.cadastrarUsuario("user2", "senha456", "Nome 2", "22222222222", "user2@example.com");
+        Usuario usuario = controller.loginUsuario("user2", "senha456");
+        assertNotNull(usuario);
+        assertEquals("user2", usuario.getLogin());
+    }
+
+    @Test
+    public void testCadastrarEvento() {
+        controller.cadastrarUsuario("admin", "adminpass", "Admin", "00000000000", "admin@example.com");
+        controller.loginUsuario("admin", "adminpass");
+        Evento evento = controller.cadastrarEvento("Show", "Descrição do Show", "2024-08-20");
+        assertNotNull(evento);
+        assertEquals("Show", evento.getNome());
+    }
+
 //    @Test
 //    public void testListarEventosDisponiveis() {
 //        controller.cadastrarUsuario("admin", "adminpass", "Admin", "00000000000", "admin@example.com");
