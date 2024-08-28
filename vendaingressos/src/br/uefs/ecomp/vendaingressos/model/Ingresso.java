@@ -1,10 +1,17 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class Ingresso {
     private String id;
     private float valor;
     private String status; // a venda, vendido
     private Evento evento;
+
+    public Ingresso() {
+    }
 
     public Ingresso(Evento evento) {
         this.evento = evento;
@@ -14,8 +21,6 @@ public class Ingresso {
         this.id = id;
         this.evento = evento;
     }
-
-
 
     public String getId() {
         return id;
@@ -48,4 +53,5 @@ public class Ingresso {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
+
 }

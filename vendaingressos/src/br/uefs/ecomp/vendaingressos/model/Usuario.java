@@ -10,9 +10,12 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String email;
-    private List<Ingresso> ingressos;
+    private List<Ingresso> ingressosCompradosU;
     private static List<Usuario> usuariosCadastrados;
     private static List<Usuario> usuarioslogados;
+
+    public Usuario() {
+    }
 
     public Usuario(String login, String senha, String nome, String cpf, String email) {
         this.login = login;
@@ -20,17 +23,17 @@ public class Usuario {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
-        ingressos = new ArrayList<>();
+        ingressosCompradosU = new ArrayList<>();
         usuariosCadastrados = new ArrayList<>();
         usuarioslogados = new ArrayList<>();
     }
 
     public void adicionarIngresso(Ingresso ingresso) {
-        ingressos.add(ingresso);
+        ingressosCompradosU.add(ingresso);
     }
 
     public List<Ingresso> getIngressos() {
-        return ingressos;
+        return ingressosCompradosU;
     }
 
     public void cancelarIngresso(String id) {
@@ -38,11 +41,12 @@ public class Usuario {
         // lista enquanto iteramos por ela. Em Java, para remover elementos durante a iteração, você precisa usar um objeto
         // especial - um iterador (classe Iterator). A turma Iteratoré responsável por percorrer com segurança uma lista de elementos.
 
-        Iterator<Ingresso> ingressosIterator = ingressos.iterator(); // cria um iterador
-        while(ingressosIterator.hasNext()) { // contanto que haja elementos na lista
-            Ingresso nextIngresso = ingressosIterator.next(); // obter o próximo elemento
-            if (nextIngresso.getId().equals(id)) {
-                ingressosIterator.remove(); // exclua o ingresso com o nome desejado
+        Iterator<Ingresso> iterator = ingressosCompradosU.iterator();
+        while (iterator.hasNext()) {
+            Ingresso ingreso = iterator.next();
+
+            if ((ingreso.getId() == null && ingreso.getEvento() != null) || (ingreso.getId() != null && ingreso.getId().equals(id))) {
+                iterator.remove(); // Remove o ingresso sem causar ConcurrentModificationException
             }
         }
     }
@@ -88,6 +92,10 @@ public class Usuario {
 
     public static List<Usuario> getUsuariosCadastrados() {
         return usuariosCadastrados;
+    }
+
+    public List<Ingresso> getIngressosCompradosU() {
+        return ingressosCompradosU;
     }
 
     public void setLogin(String login) {

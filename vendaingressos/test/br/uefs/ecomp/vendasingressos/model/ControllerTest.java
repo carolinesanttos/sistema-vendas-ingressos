@@ -16,6 +16,7 @@ public class ControllerTest {
     @BeforeEach
     public void setUp() {
         controller = new Controller();
+        Evento.limparEventos();
     }
 
     @Test
@@ -42,37 +43,36 @@ public class ControllerTest {
         assertEquals("Show", evento.getNome());
     }
 
-//    @Test
-//    public void testListarEventosDisponiveis() {
-//        controller.cadastrarUsuario("admin", "adminpass", "Admin", "00000000000", "admin@example.com");
-//        controller.loginUsuario("admin", "adminpass");
-//        controller.cadastrarEvento("Show 1", "Descrição do Show 1", "2024-08-21");
-//        controller.cadastrarEvento("Show 2", "Descrição do Show 2", "2024-08-22");
-//
-//        List<Evento> eventos = controller.listarEventosDisponiveis();
-//        assertEquals(2, eventos.size());
-//    }
-//
-//    @Test
-//    public void testComprarIngresso() {
-//        controller.cadastrarUsuario("user3", "senha789", "Nome 3", "33333333333", "user3@example.com");
-//        controller.loginUsuario("user3", "senha789");
-//        controller.cadastrarEvento("Show 3", "Descrição do Show 3", "2024-08-23");
-//
-//        Ingresso ingresso = controller.comprarIngresso("Show 3");
-//        assertNotNull(ingresso);
-//        assertEquals("Show 3", ingresso.getEvento().getNome());
-//    }
-//
-//    @Test
-//    public void testCancelarCompraIngresso() {
-//        controller.cadastrarUsuario("user4", "senha000", "Nome 4", "44444444444", "user4@example.com");
-//        controller.loginUsuario("user4", "senha000");
-//        controller.cadastrarEvento("Show 4", "Descrição do Show 4", "2024-08-24");
-//
-//        Ingresso ingresso = controller.comprarIngresso("Show 4");
-//        controller.cancelarCompraIngresso(ingresso.getId());
-//        assertFalse(controller.listarIngressosComprados().contains(ingresso));
-//    }
-}
+    @Test
+    public void testListarEventosDisponiveis() {
+        controller.cadastrarUsuario("admin", "adminpass", "Admin", "00000000000", "admin@example.com");
+        controller.loginUsuario("admin", "adminpass");
+        controller.cadastrarEvento("Show 1", "Descrição do Show 1", "2024-08-21");
+        controller.cadastrarEvento("Show 2", "Descrição do Show 2", "2024-08-22");
 
+        List<Evento> eventos = controller.listarEventosDisponiveis();
+        assertEquals(2, eventos.size());
+    }
+
+    @Test
+    public void testComprarIngresso() {
+        controller.cadastrarUsuario("user3", "senha789", "Nome 3", "33333333333", "user3@example.com");
+        controller.loginUsuario("user3", "senha789");
+        controller.cadastrarEvento("Show 3", "Descrição do Show 3", "2024-08-23");
+
+        Ingresso ingresso = controller.comprarIngresso("Show 3");
+        assertNotNull(ingresso);
+        assertEquals("Show 3", ingresso.getEvento().getNome());
+    }
+
+    @Test
+    public void testCancelarCompraIngresso() {
+        controller.cadastrarUsuario("user4", "senha000", "Nome 4", "44444444444", "user4@example.com");
+        controller.loginUsuario("user4", "senha000");
+        controller.cadastrarEvento("Show 4", "Descrição do Show 4", "2024-08-24");
+
+        Ingresso ingresso = controller.comprarIngresso("Show 4");
+        controller.cancelarCompraIngresso(ingresso.getId());
+        assertFalse(controller.listarIngressosComprados().contains(ingresso));
+    }
+}

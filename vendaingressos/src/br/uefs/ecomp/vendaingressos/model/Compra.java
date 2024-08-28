@@ -11,6 +11,8 @@ public class Compra {
         this.data = data;
     }
 
+
+
     public Usuario getUsuario() {
         return usuario;
     }
