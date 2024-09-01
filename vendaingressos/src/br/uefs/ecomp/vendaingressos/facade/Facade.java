@@ -23,9 +23,9 @@ public class Facade {
         return controller.loginUsuario(login, senha);
     }
 
-//    public void logoutUsuario() {
-//        controller.logoutUsuario();
-//    }
+    public void logoutUsuario() {
+        controller.logoutUsuario();
+    }
 
     // Chamadas do Controller relacionadas ao evento
     public Evento cadastrarEvento(String nome, String descricao, String data) {

@@ -12,7 +12,7 @@ public class Usuario {
     private String email;
     private List<Ingresso> ingressosCompradosU;
     private static List<Usuario> usuariosCadastrados;
-    private static List<Usuario> usuarioslogados;
+    private static List<Usuario> usuariosLogados;
 
     public Usuario() {
     }
@@ -25,7 +25,7 @@ public class Usuario {
         this.email = email;
         ingressosCompradosU = new ArrayList<>();
         usuariosCadastrados = new ArrayList<>();
-        usuarioslogados = new ArrayList<>();
+        usuariosLogados = new ArrayList<>();
     }
 
     public void adicionarIngresso(Ingresso ingresso) {
@@ -63,11 +63,32 @@ public class Usuario {
         while (cadastroIterator.hasNext()) {
             Usuario nextUsuario = cadastroIterator.next();
             if (nextUsuario.getLogin().equals(login)) {
-                usuariosCadastrados.add(this);
+                usuariosLogados.add(this);
                 return nextUsuario;
             }
         }
         return null;
+    }
+
+    public void logoutUsuario () {
+//        Iterator<Usuario> loginIterator = usuarioslogados.iterator();
+//        Usuario ultimoUsuario = null;
+//        while (loginIterator.hasNext()) {
+//            ultimoUsuario = loginIterator.next();
+//        }
+//        if (ultimoUsuario != null) {
+//            usuarioslogados.remove(ultimoUsuario);
+//        }
+        Iterator<Usuario> loginIterator = usuariosLogados.iterator();
+        while (loginIterator.hasNext()) {
+            Usuario userAtual = loginIterator.next();
+            if (userAtual.equals(this)) {
+                loginIterator.remove();
+                return;
+            }
+        }
+
+
     }
 
     public String getLogin() {

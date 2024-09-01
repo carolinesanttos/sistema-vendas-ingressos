@@ -47,4 +47,8 @@ public class Controller {
     public List<Ingresso> listarIngressosComprados() {
         return usuario.getIngressosCompradosU();
     }
+
+    public void logoutUsuario() {
+        usuario.logoutUsuario();
+    }
 }
