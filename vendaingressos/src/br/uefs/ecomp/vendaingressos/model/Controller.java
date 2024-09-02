@@ -1,7 +1,5 @@
 package br.uefs.ecomp.vendaingressos.model;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class Controller {
@@ -23,6 +21,10 @@ public class Controller {
         return usuario;
     }
 
+    public void logoutUsuario() {
+        usuario.logoutUsuario();
+    }
+
     public Evento cadastrarEvento(String nome, String descricao, String data) {
         evento = new Evento(nome, descricao, data);
         evento.cadastroDeEventos(evento);
@@ -34,21 +36,16 @@ public class Controller {
     }
 
     public Ingresso comprarIngresso(String name) {// Nome do show
-        Ingresso compra = evento.compraDeIngresso(name);
-        usuario.adicionarIngresso(compra);
+        Ingresso compra = evento.venderIngresso(name);
+        usuario.adicionarIngressoComprado(compra);
         return compra;
     }
 
-    public void cancelarCompraIngresso(String id) {
-        usuario.cancelarIngresso(id);
-    }
-
-
     public List<Ingresso> listarIngressosComprados() {
-        return usuario.getIngressosCompradosU();
+        return usuario.getIngressosComprados();
     }
 
-    public void logoutUsuario() {
-        usuario.logoutUsuario();
+    public void cancelarCompraIngresso(String id) {
+        usuario.cancelarIngressoComprado(id);
     }
 }

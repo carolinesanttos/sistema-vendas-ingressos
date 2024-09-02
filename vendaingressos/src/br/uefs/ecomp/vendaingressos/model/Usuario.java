@@ -10,7 +10,7 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String email;
-    private List<Ingresso> ingressosCompradosU;
+    private List<Ingresso> ingressosComprados;
     private static List<Usuario> usuariosCadastrados;
     private static List<Usuario> usuariosLogados;
 
@@ -23,41 +23,15 @@ public class Usuario {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
-        ingressosCompradosU = new ArrayList<>();
+        ingressosComprados = new ArrayList<>();
         usuariosCadastrados = new ArrayList<>();
         usuariosLogados = new ArrayList<>();
-    }
-
-    public void adicionarIngresso(Ingresso ingresso) {
-        ingressosCompradosU.add(ingresso);
-    }
-
-    public List<Ingresso> getIngressos() {
-        return ingressosCompradosU;
-    }
-
-    public void cancelarIngresso(String id) {
-        // O erro ConcurrentModificationException ocorre precisamente quando tentamos quebrar uma regra e alterar a
-        // lista enquanto iteramos por ela. Em Java, para remover elementos durante a iteração, você precisa usar um objeto
-        // especial - um iterador (classe Iterator). A turma Iteratoré responsável por percorrer com segurança uma lista de elementos.
-
-        Iterator<Ingresso> iterator = ingressosCompradosU.iterator();
-        while (iterator.hasNext()) {
-            Ingresso ingreso = iterator.next();
-
-            if ((ingreso.getId() == null && ingreso.getEvento() != null) || (ingreso.getId() != null && ingreso.getId().equals(id))) {
-                iterator.remove(); // Remove o ingresso sem causar ConcurrentModificationException
-            }
-        }
     }
 
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
     }
 
-    // Verificar se o usuário é cadastrado
-    // Se for, loga
-    // Se não, precisa criar cadastro
     public Usuario logarUsuario (String login, String senha) {
         Iterator<Usuario> cadastroIterator = getUsuariosCadastrados().iterator();
         while (cadastroIterator.hasNext()) {
@@ -71,14 +45,6 @@ public class Usuario {
     }
 
     public void logoutUsuario () {
-//        Iterator<Usuario> loginIterator = usuarioslogados.iterator();
-//        Usuario ultimoUsuario = null;
-//        while (loginIterator.hasNext()) {
-//            ultimoUsuario = loginIterator.next();
-//        }
-//        if (ultimoUsuario != null) {
-//            usuarioslogados.remove(ultimoUsuario);
-//        }
         Iterator<Usuario> loginIterator = usuariosLogados.iterator();
         while (loginIterator.hasNext()) {
             Usuario userAtual = loginIterator.next();
@@ -87,8 +53,35 @@ public class Usuario {
                 return;
             }
         }
+    }
 
+    /*
+    Adiciona ingresso comprado pelo usuário na lista de ingressos do usuário e na lista de ingressos comprados
+    do evento correspondente, se houver um evento associado ao ingresso.
+     */
+    public void adicionarIngressoComprado(Ingresso ingresso) {
+        Ingresso i = ingresso;
+        ingressosComprados.add(ingresso);
+        if (i.getEvento() == null) {
+            return;
+        } else {
+            i.getEvento().adicionaIngressoComprado(i);
+        }
+    }
 
+    // Aqui também
+    public void cancelarIngressoComprado(String id) {
+        // O erro ConcurrentModificationException ocorre precisamente quando tentamos quebrar uma regra e alterar a
+        // lista enquanto iteramos por ela. Em Java, para remover elementos durante a iteração, você precisa usar um objeto
+        // especial - um iterador (classe Iterator). A turma Iteratoré responsável por percorrer com segurança uma lista de elementos.
+
+        Iterator<Ingresso> iterator = ingressosComprados.iterator();
+        while (iterator.hasNext()) {
+            Ingresso ingreso = iterator.next();
+            if ((ingreso.getId() == null && ingreso.getEvento() != null) || (ingreso.getId() != null && ingreso.getId().equals(id))) {
+                iterator.remove(); // Remove o ingresso sem causar ConcurrentModificationException
+            }
+        }
     }
 
     public String getLogin() {
@@ -115,8 +108,12 @@ public class Usuario {
         return usuariosCadastrados;
     }
 
-    public List<Ingresso> getIngressosCompradosU() {
-        return ingressosCompradosU;
+    public List<Ingresso> getIngressosComprados() {
+        return ingressosComprados;
+    }
+
+    public List<Ingresso> getIngressos() {
+        return ingressosComprados;
     }
 
     public void setLogin(String login) {
@@ -138,7 +135,4 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
-
 }

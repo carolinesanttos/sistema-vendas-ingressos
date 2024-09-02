@@ -20,7 +20,7 @@ public class UsuarioTest {
     @Test
     public void testAdicionarIngresso() {
         Ingresso ingresso = new Ingresso("1", null);
-        usuario.adicionarIngresso(ingresso);
+        usuario.adicionarIngressoComprado(ingresso);
         List<Ingresso> ingressos = usuario.getIngressos();
         assertEquals(1, ingressos.size());
         assertEquals(ingresso, ingressos.get(0));
@@ -29,8 +29,8 @@ public class UsuarioTest {
     @Test
     public void testCancelarIngresso() {
         Ingresso ingresso = new Ingresso("1", null);
-        usuario.adicionarIngresso(ingresso);
-        usuario.cancelarIngresso(ingresso.getId());
+        usuario.adicionarIngressoComprado(ingresso);
+        usuario.cancelarIngressoComprado(ingresso.getId());
         assertTrue(usuario.getIngressos().isEmpty());
     }
 }

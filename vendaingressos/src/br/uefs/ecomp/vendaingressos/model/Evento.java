@@ -1,8 +1,6 @@
 package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class Evento {
@@ -23,25 +21,37 @@ public class Evento {
         ingressosComprados = new ArrayList<>();
     }
 
-    public Ingresso venderIngresso() {
-        Ingresso ingresso = new Ingresso(this);
-        return ingresso;
-    }
-
-    public boolean isAtivo() {
-        return true;
-    }
-
     public void cadastroDeEventos(Evento evento) {
         eventosCadastrados.add(evento);
     }
 
-    public Ingresso compraDeIngresso (String name) {
-        Evento ev = encontrarEventoPorNome(name);
-        Ingresso venda = ev.venderIngresso();
-        ingressosComprados.add(venda);
-        return venda;
+    // Retorna true se o evento estiver presente na lista de "eventosCadastrados".
+    public boolean isAtivo() {
+        return true;
     }
+
+    /*
+    Sobrecarga de métodos:
+    - O primeiro método venderIngresso() é utilizado pela classe `EventoTest`.
+    - O segundo método venderIngresso(String name) é chamado pela classe `Controller`.
+
+    A sobrecarga foi necessária porque o segundo método precisa do parâmetro (`name`),
+    enquanto o primeiro não. Afim de evitar duplicação de código, o segundo método reaproveita
+    a lógica do primeiro.
+    */
+    public Ingresso venderIngresso() {
+        Ingresso ingresso = new Ingresso(this);
+        ingressosComprados.add(ingresso);
+        return ingresso;
+    }
+    public Ingresso venderIngresso(String name) {
+        Evento evento = encontrarEventoPorNome(name); //ev para evento
+        return evento.venderIngresso();
+    }
+
+    /*
+
+     */
 
     private Evento encontrarEventoPorNome(String name) {
         for (Evento evento : getEventosCadastrados()) {
@@ -94,5 +104,9 @@ public class Evento {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void adicionaIngressoComprado (Ingresso ingresso) {
+        ingressosComprados.add(ingresso);
     }
 }

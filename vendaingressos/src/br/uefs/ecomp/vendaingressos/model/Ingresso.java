@@ -7,8 +7,9 @@ import java.util.List;
 public class Ingresso {
     private String id;
     private float valor;
-    private String status; // a venda, vendido
+    private String status;
     private Evento evento;
+    private Usuario usuario;
 
     public Ingresso() {
     }
@@ -21,6 +22,7 @@ public class Ingresso {
         this.id = id;
         this.evento = evento;
     }
+
 
     public String getId() {
         return id;
