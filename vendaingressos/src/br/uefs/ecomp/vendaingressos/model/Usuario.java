@@ -28,10 +28,16 @@ public class Usuario {
         usuariosLogados = new ArrayList<>();
     }
 
+    /*
+    Adiciona usuários que acabaram de se cadastrar na lista.
+     */
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
     }
 
+    /*
+    Antes de logar, o método "logarUsuario" verifica se o usuário a ser logado está cadastrado.
+     */
     public Usuario logarUsuario (String login, String senha) {
         Iterator<Usuario> cadastroIterator = getUsuariosCadastrados().iterator();
         while (cadastroIterator.hasNext()) {
@@ -44,6 +50,9 @@ public class Usuario {
         return null;
     }
 
+    /*
+    O método "logoutUsuario" serve para deslogar o usuário atual que está logado no sistema.
+     */
     public void logoutUsuario () {
         Iterator<Usuario> loginIterator = usuariosLogados.iterator();
         while (loginIterator.hasNext()) {
@@ -69,19 +78,34 @@ public class Usuario {
         }
     }
 
-    // Aqui também
+    /*
+    Este método remove um ingresso da lista de ingressos comprados pelo usuário e, caso o ingresso esteja associado a
+    um evento, ele também é removido da lista de ingressos comprados do evento.
+    */
     public void cancelarIngressoComprado(String id) {
-        // O erro ConcurrentModificationException ocorre precisamente quando tentamos quebrar uma regra e alterar a
-        // lista enquanto iteramos por ela. Em Java, para remover elementos durante a iteração, você precisa usar um objeto
-        // especial - um iterador (classe Iterator). A turma Iteratoré responsável por percorrer com segurança uma lista de elementos.
-
-        Iterator<Ingresso> iterator = ingressosComprados.iterator();
-        while (iterator.hasNext()) {
-            Ingresso ingreso = iterator.next();
+        // Remove compra da lista do usuário.
+        Iterator<Ingresso> compraIngressoUsuario = ingressosComprados.iterator();
+        while (compraIngressoUsuario.hasNext()) {
+            Ingresso ingreso = compraIngressoUsuario.next();
             if ((ingreso.getId() == null && ingreso.getEvento() != null) || (ingreso.getId() != null && ingreso.getId().equals(id))) {
-                iterator.remove(); // Remove o ingresso sem causar ConcurrentModificationException
+                compraIngressoUsuario.remove(); // Remove o ingresso sem causar ConcurrentModificationException
             }
         }
+        // Remove compra da lista do evento.
+        for (Ingresso i: ingressosComprados) {
+            if (i.getId().equals(id) && i.getEvento() != null) {
+                List<Ingresso> ingressosEvento = i.getEvento().getIngressosComprados();
+                Iterator<Ingresso> compraIngressoEvento = ingressosEvento.iterator();
+                while(compraIngressoUsuario.hasNext()){
+                    Ingresso ingressoDoEvento = compraIngressoEvento.next();
+                    if (ingressoDoEvento.getId().equals(id)) {
+                        compraIngressoUsuario.remove();
+                    }
+                }
+            }
+        }
+
+
     }
 
     public String getLogin() {
