@@ -21,6 +21,9 @@ public class Evento {
         ingressosComprados = new ArrayList<>();
     }
 
+    /*
+    Adiciona o evento desejado à lista de "eventosCadastrados".
+     */
     public void cadastroDeEventos(Evento evento) {
         eventosCadastrados.add(evento);
     }
@@ -45,23 +48,29 @@ public class Evento {
         return ingresso;
     }
     public Ingresso venderIngresso(String name) {
-        Evento evento = encontrarEventoPorNome(name); //ev para evento
+        Evento evento = encontrarEventoPorNome(name);
         return evento.venderIngresso();
     }
 
     /*
-
-     */
-
+    Este método busca um evento pelo seu nome. Se encontrar o evento com nome desejado, o método retorna esse evento,
+    caso contrário, retorna null se nenhum evento for encontrado.
+    */
     private Evento encontrarEventoPorNome(String name) {
         for (Evento evento : getEventosCadastrados()) {
             if (evento.getNome().equalsIgnoreCase(name)) {
                 return evento;
+            } else {
+                return null;
             }
         }
         return null;
     }
 
+    /*
+    Este método limpa a lista de eventos cadastrados, removendo todos os eventos da lista. Foi criado para garantir
+    que a cada teste realizado a lista de eventos seja reinicializada e não contenha eventos de testes anteriores.
+    */
     public static void limparEventos() {
         eventosCadastrados.clear();
     }

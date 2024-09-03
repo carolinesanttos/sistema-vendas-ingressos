@@ -29,7 +29,7 @@ public class Usuario {
     }
 
     /*
-    Adiciona usuários que acabaram de se cadastrar na lista.
+    Adiciona usuário à lista de cadastro.
      */
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
