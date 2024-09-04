@@ -10,6 +10,7 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String email;
+    private boolean adm;
     private List<Ingresso> ingressosComprados;
     private static List<Usuario> usuariosCadastrados;
     private static List<Usuario> usuariosLogados;
@@ -17,12 +18,13 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String login, String senha, String nome, String cpf, String email) {
+    public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
         this.login = login;
         this.senha = senha;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
+        this.adm = adm;
         ingressosComprados = new ArrayList<>();
         usuariosCadastrados = new ArrayList<>();
         usuariosLogados = new ArrayList<>();
@@ -33,6 +35,14 @@ public class Usuario {
      */
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
+    }
+
+    public boolean isAdmin() {
+        return adm;
+    }
+
+    public boolean login(String login, String senha) {
+
     }
 
     /*
@@ -104,8 +114,6 @@ public class Usuario {
                 }
             }
         }
-
-
     }
 
     public String getLogin() {
@@ -152,11 +160,9 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setAdm(boolean adm) {
+        this.adm = adm;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
 }
