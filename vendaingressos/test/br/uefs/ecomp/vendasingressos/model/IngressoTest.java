@@ -1,3 +1,4 @@
+package br.uefs.ecomp.vendasingressos.model;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -26,7 +27,7 @@ public class IngressoTest {
 //        assertEquals("A1", ingresso.getAssento());
 //        assertTrue(ingresso.isAtivo());
 //    }
-//
+
 //    @Test
 //    public void testCancelarIngresso() {
 //        Calendar calendar = Calendar.getInstance();
@@ -39,7 +40,7 @@ public class IngressoTest {
 //        assertTrue(ingresso.cancelar());
 //        assertFalse(ingresso.isAtivo());
 //    }
-//
+
 //    @Test
 //    public void testCancelarIngressoEventoPassado() {
 //        Calendar calendar = Calendar.getInstance();
@@ -52,7 +53,7 @@ public class IngressoTest {
 //        assertFalse(ingresso.cancelar());
 //        assertTrue(ingresso.isAtivo());
 //    }
-//
+
 //    @Test
 //    public void testReativarIngresso() {
 //        Calendar calendar = Calendar.getInstance();
@@ -68,7 +69,7 @@ public class IngressoTest {
 //        ingresso.reativar();
 //        assertTrue(ingresso.isAtivo());
 //    }
-//
+
 //    @Test
 //    public void testIngressoDuplicado() {
 //        Calendar calendar = Calendar.getInstance();

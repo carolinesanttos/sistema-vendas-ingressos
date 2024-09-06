@@ -3,6 +3,7 @@ package br.uefs.ecomp.vendaingressos.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class Usuario {
     private String login;
@@ -11,9 +12,9 @@ public class Usuario {
     private String cpf;
     private String email;
     private boolean adm;
-    private List<Ingresso> ingressosComprados;
-    private static List<Usuario> usuariosCadastrados;
-    private static List<Usuario> usuariosLogados;
+    private List<Ingresso> ingressosComprados = new ArrayList<>();;
+    private static List<Usuario> usuariosCadastrados = new ArrayList<>();;
+    private static List<Usuario> usuariosLogados = new ArrayList<>();
 
     public Usuario() {
     }
@@ -25,9 +26,9 @@ public class Usuario {
         this.cpf = cpf;
         this.email = email;
         this.adm = adm;
-        ingressosComprados = new ArrayList<>();
-        usuariosCadastrados = new ArrayList<>();
-        usuariosLogados = new ArrayList<>();
+//        ingressosComprados = new ArrayList<>();
+//        usuariosCadastrados = new ArrayList<>();
+//        usuariosLogados = new ArrayList<>();
     }
 
     /*
@@ -42,23 +43,28 @@ public class Usuario {
     }
 
     public boolean login(String login, String senha) {
-
+//        for (Usuario user: usuariosCadastrados) {
+//            if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
+//                return true;
+//            }
+//        }
+//        return false;
+        return this.login.equals(login) && this.senha.equals(senha);
     }
 
-    /*
-    Antes de logar, o método "logarUsuario" verifica se o usuário a ser logado está cadastrado.
-     */
-    public Usuario logarUsuario (String login, String senha) {
-        Iterator<Usuario> cadastroIterator = getUsuariosCadastrados().iterator();
-        while (cadastroIterator.hasNext()) {
-            Usuario nextUsuario = cadastroIterator.next();
-            if (nextUsuario.getLogin().equals(login)) {
-                usuariosLogados.add(this);
-                return nextUsuario;
-            }
-        }
-        return null;
-    }
+
+    //Antes de logar, o método "logarUsuario" verifica se o usuário a ser logado está cadastrado.
+//    public Usuario logarUsuario (String login, String senha) {
+//        Iterator<Usuario> cadastroIterator = getUsuariosCadastrados().iterator();
+//        while (cadastroIterator.hasNext()) {
+//            Usuario nextUsuario = cadastroIterator.next();
+//            if (nextUsuario.getLogin().equals(login)) {
+//                usuariosLogados.add(this);
+//                return nextUsuario;
+//            }
+//        }
+//        return null;
+//    }
 
     /*
     O método "logoutUsuario" serve para deslogar o usuário atual que está logado no sistema.
@@ -116,6 +122,23 @@ public class Usuario {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(login, usuario.login) && Objects.equals(cpf, usuario.cpf) && Objects.equals(email, usuario.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, cpf, email);
+    }
+
     public String getLogin() {
         return login;
     }
@@ -158,6 +181,14 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setAdm(boolean adm) {
