@@ -1,24 +1,76 @@
 package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Evento {
     private String nome;
     private String descricao;
-    private String data;
-    private static List<Ingresso> ingressosComprados;
+    private Date data;
+    private static List<Ingresso> ingressosComprados  = new ArrayList<>();;
     private String status;
     private static List<Evento> eventosCadastrados = new ArrayList<>();
 
     public Evento() {
     }
 
-    public Evento(String nome, String descricao, String data) {
+    public Evento(String nome, String descricao, Date data) {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
-        ingressosComprados = new ArrayList<>();
+        //ingressosComprados = new ArrayList<>();
+    }
+
+    public void adicionarAssento(String a1) {
+        
+    }
+
+
+
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public List<Evento> getEventosCadastrados() {
+        return eventosCadastrados;
+    }
+
+    public List<Ingresso> getIngressosComprados() {
+        return ingressosComprados;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void adicionaIngressoComprado (Ingresso ingresso) {
+        ingressosComprados.add(ingresso);
     }
 
     /*
@@ -75,47 +127,5 @@ public class Evento {
         eventosCadastrados.clear();
     }
 
-    public String getNome() {
-        return nome;
-    }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public List<Evento> getEventosCadastrados() {
-        return eventosCadastrados;
-    }
-
-    public List<Ingresso> getIngressosComprados() {
-        return ingressosComprados;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void adicionaIngressoComprado (Ingresso ingresso) {
-        ingressosComprados.add(ingresso);
-    }
 }
