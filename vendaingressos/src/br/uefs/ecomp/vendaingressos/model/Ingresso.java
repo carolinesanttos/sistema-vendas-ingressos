@@ -43,7 +43,6 @@ public class Ingresso {
         } else {// Não pode cancelar, data passada.
             return false;
         }
-
     }
 
     public void reativar() {

@@ -41,39 +41,39 @@ public class EventoTest {
         assertTrue(assentos.contains("A1"));
     }
 
-//    @Test
-//    public void testRemoverAssento() {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.SEPTEMBER, 10);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
-//        evento.adicionarAssento("A1");
-//        evento.removerAssento("A1");
-//
-//        List<String> assentos = evento.getAssentosDisponiveis();
-//        assertFalse(assentos.contains("A1"));
-//    }
+    @Test
+    public void testRemoverAssento() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
 
-//    @Test
-//    public void testEventoAtivo() {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.SEPTEMBER, 10);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
-//
-//        assertTrue(evento.isAtivo());
-//    }
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+        evento.adicionarAssento("A1");
+        evento.removerAssento("A1");
 
-//    @Test
-//    public void testEventoInativo() {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2023, Calendar.JANUARY, 10);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
-//
-//        assertFalse(evento.isAtivo());
-//    }
+        List<String> assentos = evento.getAssentosDisponiveis();
+        assertFalse(assentos.contains("A1"));
+    }
+
+    @Test
+    public void testEventoAtivo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+
+        assertTrue(evento.isAtivo());
+    }
+
+    @Test
+    public void testEventoInativo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.JANUARY, 10);
+        Date data = calendar.getTime();
+
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+
+        assertFalse(evento.isAtivo());
+    }
 }

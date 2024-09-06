@@ -26,9 +26,6 @@ public class Usuario {
         this.cpf = cpf;
         this.email = email;
         this.adm = adm;
-//        ingressosComprados = new ArrayList<>();
-//        usuariosCadastrados = new ArrayList<>();
-//        usuariosLogados = new ArrayList<>();
     }
 
     public boolean isAdmin() {

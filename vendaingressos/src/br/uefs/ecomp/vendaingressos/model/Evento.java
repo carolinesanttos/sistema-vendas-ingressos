@@ -1,6 +1,7 @@
 package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -8,9 +9,12 @@ public class Evento {
     private String nome;
     private String descricao;
     private Date data;
-    private static List<Ingresso> ingressosComprados  = new ArrayList<>();;
     private String status;
-    private static List<Evento> eventosCadastrados = new ArrayList<>();
+    private List<String> assentosDisponiveis = new ArrayList<>();
+
+    private List<Evento> eventosCadastrados = new ArrayList<>();
+    private List<Ingresso> ingressosComprados  = new ArrayList<>();
+
 
     public Evento() {
     }
@@ -19,11 +23,29 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
-        //ingressosComprados = new ArrayList<>();
     }
 
-    public void adicionarAssento(String a1) {
-        
+    public void adicionarAssento(String assento) {
+        assentosDisponiveis.add(assento);
+    }
+
+    public void removerAssento(String assento) {
+        assentosDisponiveis.remove(assento);
+    }
+
+    public boolean isAtivo() {
+        Calendar atualData = Calendar.getInstance();
+        Calendar dataEvento = Calendar.getInstance();
+        dataEvento.setTime(getEvento().getData());
+        int valor = atualData.compareTo(dataEvento);
+        if (valor == 0) { // Não pode cancelar no mesmo dia do evento.
+            return false;
+        } else if (valor < 0) { // Pode cancelar, pois não passou da data do evento.
+            setStatus(false);
+            return true;
+        } else {// Não pode cancelar, data passada.
+            return false;
+        }
     }
 
 
@@ -43,6 +65,10 @@ public class Evento {
 
     public String getStatus() {
         return status;
+    }
+
+    public List<String> getAssentosDisponiveis() {
+        return assentosDisponiveis;
     }
 
     public List<Evento> getEventosCadastrados() {
@@ -81,9 +107,7 @@ public class Evento {
     }
 
     // Retorna true se o evento estiver presente na lista de "eventosCadastrados".
-    public boolean isAtivo() {
-        return true;
-    }
+
 
     /*
     Sobrecarga de métodos:
@@ -119,13 +143,14 @@ public class Evento {
         return null;
     }
 
-    /*
-    Este método limpa a lista de eventos cadastrados, removendo todos os eventos da lista. Foi criado para garantir
-    que a cada teste realizado a lista de eventos seja reinicializada e não contenha eventos de testes anteriores.
-    */
-    public static void limparEventos() {
-        eventosCadastrados.clear();
-    }
+
+//    /*
+//    Este método limpa a lista de eventos cadastrados, removendo todos os eventos da lista. Foi criado para garantir
+//    que a cada teste realizado a lista de eventos seja reinicializada e não contenha eventos de testes anteriores.
+//    */
+//    public static void limparEventos() {
+//        eventosCadastrados.clear();
+//    }
 
 
 }
