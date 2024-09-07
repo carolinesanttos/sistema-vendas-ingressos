@@ -9,7 +9,7 @@ public class Evento {
     private String nome;
     private String descricao;
     private Date data;
-    private String status;
+    private boolean status;
     private List<String> assentosDisponiveis = new ArrayList<>();
 
     private List<Evento> eventosCadastrados = new ArrayList<>();
@@ -36,7 +36,7 @@ public class Evento {
     public boolean isAtivo() {
         Calendar atualData = Calendar.getInstance();
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getEvento().getData());
+        dataEvento.setTime(getData());
         int valor = atualData.compareTo(dataEvento);
         if (valor == 0) { // Não pode cancelar no mesmo dia do evento.
             return false;
@@ -63,7 +63,7 @@ public class Evento {
         return data;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -91,7 +91,7 @@ public class Evento {
         this.data = data;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
