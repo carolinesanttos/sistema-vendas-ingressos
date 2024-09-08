@@ -18,23 +18,23 @@ import br.uefs.ecomp.vendaingressos.model.Usuario;
 
 public class ControllerTest {
 
-//    @Test
-//    public void testCadastrarEventoPorAdmin() {
-//        Controller controller = new Controller();
-//        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.SEPTEMBER, 10);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
-//
-//        assertNotNull(evento);
-//        assertEquals("Show de Rock", evento.getNome());
-//        assertEquals("Banda XYZ", evento.getDescricao());
-//        assertEquals(data, evento.getData());
-//    }
-//
+    @Test
+    public void testCadastrarEventoPorAdmin() {
+        Controller controller = new Controller();
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+
+        assertNotNull(evento);
+        assertEquals("Show de Rock", evento.getNome());
+        assertEquals("Banda XYZ", evento.getDescricao());
+        assertEquals(data, evento.getData());
+    }
+
 //    @Test
 //    public void testCadastrarEventoPorUsuarioComum() {
 //        Controller controller = new Controller();
@@ -50,7 +50,7 @@ public class ControllerTest {
 //
 //        assertEquals("Somente administradores podem cadastrar eventos.", exception.getMessage());
 //    }
-//
+
 //    @Test
 //    public void testComprarIngresso() {
 //        Controller controller = new Controller();
@@ -71,7 +71,7 @@ public class ControllerTest {
 //        assertEquals("A1", ingresso.getAssento());
 //        assertTrue(usuario.getIngressos().contains(ingresso));
 //    }
-//
+
 //    @Test
 //    public void testCancelarCompra() {
 //        Controller controller = new Controller();
@@ -91,7 +91,7 @@ public class ControllerTest {
 //        assertFalse(ingresso.isAtivo());
 //        assertFalse(usuario.getIngressos().contains(ingresso));
 //    }
-//
+
 //    @Test
 //    public void testListarEventosDisponiveis() {
 //        Controller controller = new Controller();
@@ -112,7 +112,7 @@ public class ControllerTest {
 //
 //        assertEquals(2, eventos.size());
 //    }
-//
+
 //    @Test
 //    public void testListarIngressosComprados() {
 //        Controller controller = new Controller();
