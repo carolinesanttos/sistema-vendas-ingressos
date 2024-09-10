@@ -35,42 +35,42 @@ public class ControllerTest {
         assertEquals(data, evento.getData());
     }
 
-//    @Test
-//    public void testCadastrarEventoPorUsuarioComum() {
-//        Controller controller = new Controller();
-//        Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.SEPTEMBER, 10);
-//        Date data = calendar.getTime();
-//
-//        Exception exception = assertThrows(SecurityException.class, () -> {
-//            controller.cadastrarEvento(usuario, "Peça de Teatro", "Grupo ABC", data);
-//        });
-//
-//        assertEquals("Somente administradores podem cadastrar eventos.", exception.getMessage());
-//    }
+    @Test
+    public void testCadastrarEventoPorUsuarioComum() {
+        Controller controller = new Controller();
+        Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
-//    @Test
-//    public void testComprarIngresso() {
-//        Controller controller = new Controller();
-//        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.SEPTEMBER, 10);
-//        Date data = calendar.getTime();
-//
-//        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
-//        controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
-//        controller.adicionarAssentoEvento("Show de Rock", "A1");
-//
-//        Ingresso ingresso = controller.comprarIngresso(usuario, "Show de Rock", "A1");
-//
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        Exception exception = assertThrows(SecurityException.class, () -> {
+            controller.cadastrarEvento(usuario, "Peça de Teatro", "Grupo ABC", data);
+        });
+
+        assertEquals("Somente administradores podem cadastrar eventos.", exception.getMessage());
+    }
+
+    @Test
+    public void testComprarIngresso() {
+        Controller controller = new Controller();
+        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "A1");
+
+        Ingresso ingresso = controller.comprarIngresso(usuario, "Show de Rock", "A1");
+
 //        assertNotNull(ingresso);
 //        assertEquals("Show de Rock", ingresso.getEvento().getNome());
 //        assertEquals("A1", ingresso.getAssento());
 //        assertTrue(usuario.getIngressos().contains(ingresso));
-//    }
+    }
 
 //    @Test
 //    public void testCancelarCompra() {

@@ -32,18 +32,20 @@ public class Usuario {
         return adm;
     }
 
+    public void verificaUsuario() throws SecurityException{
+        if (!isAdmin()) {
+            throw new SecurityException("Somente administradores podem cadastrar eventos.");
+        }
+    }
+
     public boolean login(String login, String senha) {
-//        for (Usuario user: usuariosCadastrados) {
-//            if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
-//                return true;
-//            }
-//        }
-//        return false;
         return this.login.equals(login) && this.senha.equals(senha);
     }
 
-
-
+    // Adiciona usuário à lista de cadastro.
+    public void cadastroDeUsuarios (Usuario usuario) {
+        usuariosCadastrados.add(usuario);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -61,6 +63,11 @@ public class Usuario {
     public int hashCode() {
         return Objects.hash(login, cpf, email);
     }
+
+
+
+
+
 
     public String getLogin() {
         return login;
@@ -118,12 +125,7 @@ public class Usuario {
         this.adm = adm;
     }
 
-    /*
-    Adiciona usuário à lista de cadastro.
-     */
-    public void cadastroDeUsuarios (Usuario usuario) {
-        usuariosCadastrados.add(usuario);
-    }
+
 
     //Antes de logar, o método "logarUsuario" verifica se o usuário a ser logado está cadastrado.
 //    public Usuario logarUsuario (String login, String senha) {

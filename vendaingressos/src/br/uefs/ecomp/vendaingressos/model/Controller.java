@@ -1,12 +1,43 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class Controller {
-//    Usuario usuario;
-//    Evento evento;
-//    Ingresso ingresso;
-//
+
+    Usuario usuario;
+    Evento evento;
+    Ingresso ingresso;
+
+    public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
+        usuario = new Usuario(login, senha, nome, cpf, email, isAdm);
+        usuario.cadastroDeUsuarios(usuario);
+        return usuario;
+    }
+
+    public Evento cadastrarEvento(Usuario usuarioAdmin, String nomeDoEvento, String descricao, Date data) throws SecurityException{
+        evento = new Evento(usuarioAdmin, nomeDoEvento, descricao, data);
+        try {
+            evento.cadastroDeEventos(evento);
+        } catch (SecurityException e) {
+            throw new SecurityException("Somente administradores podem cadastrar eventos.");
+        }
+        return evento;
+
+    }
+
+    public void adicionarAssentoEvento(String nomeDoEvento, String assento) {
+        evento = evento.encontrarEventoPorNome(nomeDoEvento);
+        if (evento!= null) {
+            evento.adicionarAssento(assento);
+        }
+    }
+
+    public Ingresso comprarIngresso(Usuario usuario, String nomeDoEvento, String assento) {
+        
+    }
+
+
 //    public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email) {
 //        usuario = new Usuario(login, senha, nome, cpf, email);
 //        usuario.cadastroDeUsuarios(usuario);

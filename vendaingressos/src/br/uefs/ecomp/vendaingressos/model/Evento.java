@@ -10,8 +10,8 @@ public class Evento {
     private String descricao;
     private Date data;
     private boolean status;
+    private Usuario usuario;
     private List<String> assentosDisponiveis = new ArrayList<>();
-
     private List<Evento> eventosCadastrados = new ArrayList<>();
     private List<Ingresso> ingressosComprados  = new ArrayList<>();
 
@@ -23,6 +23,24 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
+    }
+
+    public Evento(Usuario usuario, String nome, String descricao, Date data) {
+        this.usuario = usuario;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.data = data;
+    }
+
+
+    // Adiciona o evento desejado à lista de "eventosCadastrados".
+    public void cadastroDeEventos(Evento evento) throws SecurityException {
+        try {
+            evento.getUsuario().verificaUsuario();
+            eventosCadastrados.add(evento);
+        } catch (SecurityException e) {
+            throw new SecurityException("Somente administradores podem cadastrar eventos.");
+        }
     }
 
     public void adicionarAssento(String assento) {
@@ -48,7 +66,16 @@ public class Evento {
         }
     }
 
-
+//    Este método busca um evento pelo seu nome. Se encontrar o evento com nome desejado, o método retorna esse evento,
+//    caso contrário, retorna null se nenhum evento for encontrado.
+    public Evento encontrarEventoPorNome(String name) {
+        for (Evento evento : getEventosCadastrados()) {
+            if (evento.getNome().equalsIgnoreCase(name)) {
+                return evento;
+            }
+        }
+        return null;
+    }
 
 
     public String getNome() {
@@ -79,6 +106,10 @@ public class Evento {
         return ingressosComprados;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -99,15 +130,6 @@ public class Evento {
         ingressosComprados.add(ingresso);
     }
 
-    /*
-    Adiciona o evento desejado à lista de "eventosCadastrados".
-     */
-    public void cadastroDeEventos(Evento evento) {
-        eventosCadastrados.add(evento);
-    }
-
-    // Retorna true se o evento estiver presente na lista de "eventosCadastrados".
-
 
     /*
     Sobrecarga de métodos:
@@ -123,25 +145,12 @@ public class Evento {
         ingressosComprados.add(ingresso);
         return ingresso;
     }
-    public Ingresso venderIngresso(String name) {
-        Evento evento = encontrarEventoPorNome(name);
-        return evento.venderIngresso();
-    }
+//    public Ingresso venderIngresso(String name) {
+//        Evento evento = encontrarEventoPorNome(name);
+//        return evento.venderIngresso();
+//    }
 
-    /*
-    Este método busca um evento pelo seu nome. Se encontrar o evento com nome desejado, o método retorna esse evento,
-    caso contrário, retorna null se nenhum evento for encontrado.
-    */
-    private Evento encontrarEventoPorNome(String name) {
-        for (Evento evento : getEventosCadastrados()) {
-            if (evento.getNome().equalsIgnoreCase(name)) {
-                return evento;
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
+
 
 
 //    /*
