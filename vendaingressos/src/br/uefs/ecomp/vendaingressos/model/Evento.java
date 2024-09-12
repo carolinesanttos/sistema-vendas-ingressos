@@ -13,7 +13,6 @@ public class Evento {
     private Usuario usuario;
     private List<String> assentosDisponiveis = new ArrayList<>();
     private List<Evento> eventosCadastrados = new ArrayList<>();
-    private List<Ingresso> ingressosComprados  = new ArrayList<>();
 
 
     public Evento() {
@@ -32,15 +31,12 @@ public class Evento {
         this.data = data;
     }
 
-
     // Adiciona o evento desejado à lista de "eventosCadastrados".
     public void cadastroDeEventos(Evento evento) throws SecurityException {
-        try {
-            evento.getUsuario().verificaUsuario();
-            eventosCadastrados.add(evento);
-        } catch (SecurityException e) {
+        if (!evento.getUsuario().isAdmin()) {
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
         }
+        eventosCadastrados.add(evento);
     }
 
     public void adicionarAssento(String assento) {
@@ -77,6 +73,21 @@ public class Evento {
         return null;
     }
 
+    /*
+    Sobrecarga de métodos:
+    - O primeiro método venderIngresso() é utilizado pela classe `EventoTest`.
+    - O segundo método venderIngresso(String name) é chamado pela classe `Controller`.
+
+    A sobrecarga foi necessária porque o segundo método precisa do parâmetro (`name`),
+    enquanto o primeiro não. Afim de evitar duplicação de código, o segundo método reaproveita
+    a lógica do primeiro.
+    */
+    public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
+        Evento evento = encontrarEventoPorNome(nomeDoEvento);
+        Ingresso ingresso = new Ingresso(usuario, evento, assento);
+        ingresso.getUsuario().adicionarIngressoComprado(ingresso);
+        return ingresso;
+    }
 
     public String getNome() {
         return nome;
@@ -102,10 +113,6 @@ public class Evento {
         return eventosCadastrados;
     }
 
-    public List<Ingresso> getIngressosComprados() {
-        return ingressosComprados;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -125,41 +132,4 @@ public class Evento {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public void adicionaIngressoComprado (Ingresso ingresso) {
-        ingressosComprados.add(ingresso);
-    }
-
-
-    /*
-    Sobrecarga de métodos:
-    - O primeiro método venderIngresso() é utilizado pela classe `EventoTest`.
-    - O segundo método venderIngresso(String name) é chamado pela classe `Controller`.
-
-    A sobrecarga foi necessária porque o segundo método precisa do parâmetro (`name`),
-    enquanto o primeiro não. Afim de evitar duplicação de código, o segundo método reaproveita
-    a lógica do primeiro.
-    */
-    public Ingresso venderIngresso() {
-        Ingresso ingresso = new Ingresso(this);
-        ingressosComprados.add(ingresso);
-        return ingresso;
-    }
-//    public Ingresso venderIngresso(String name) {
-//        Evento evento = encontrarEventoPorNome(name);
-//        return evento.venderIngresso();
-//    }
-
-
-
-
-//    /*
-//    Este método limpa a lista de eventos cadastrados, removendo todos os eventos da lista. Foi criado para garantir
-//    que a cada teste realizado a lista de eventos seja reinicializada e não contenha eventos de testes anteriores.
-//    */
-//    public static void limparEventos() {
-//        eventosCadastrados.clear();
-//    }
-
-
 }

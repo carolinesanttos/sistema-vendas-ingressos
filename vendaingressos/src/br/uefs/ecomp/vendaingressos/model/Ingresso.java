@@ -1,8 +1,6 @@
 package br.uefs.ecomp.vendaingressos.model;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 public class Ingresso {
     private String id;
@@ -22,15 +20,19 @@ public class Ingresso {
         this.status = true;
     }
 
-    public Ingresso(Evento evento) {
+    public Ingresso(Usuario user, Evento evento, String assento) {
+        this.usuario = user;
         this.evento = evento;
+        this.assento = assento;
+        this.preco = 100.0;
+        this.status = true;
     }
 
     public boolean isAtivo() {
         return getStatus();
     }
 
-    public boolean cancelar() {
+    public boolean cancelarIngresso() {
         Calendar atualData = Calendar.getInstance();
         Calendar dataEvento = Calendar.getInstance();
         dataEvento.setTime(getEvento().getData());
@@ -80,6 +82,10 @@ public class Ingresso {
 
     public String getAssento() {
         return assento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     public void setId(String id) {

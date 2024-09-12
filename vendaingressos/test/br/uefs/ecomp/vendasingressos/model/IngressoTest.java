@@ -31,13 +31,13 @@ public class IngressoTest {
     @Test
     public void testCancelarIngresso() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.SEPTEMBER, 17); // Trocquei 10 por 17
         Date data = calendar.getTime();
 
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
         Ingresso ingresso = new Ingresso(evento, 100.0, "A1");
 
-        assertTrue(ingresso.cancelar());
+        assertTrue(ingresso.cancelarIngresso());
         assertFalse(ingresso.isAtivo());
     }
 
@@ -50,20 +50,20 @@ public class IngressoTest {
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
         Ingresso ingresso = new Ingresso(evento, 100.0, "A1");
 
-        assertFalse(ingresso.cancelar());
+        assertFalse(ingresso.cancelarIngresso());
         assertTrue(ingresso.isAtivo());
     }
 
     @Test
     public void testReativarIngresso() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.SEPTEMBER, 17); // Trocquei 10 por 17
         Date data = calendar.getTime();
 
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
         Ingresso ingresso = new Ingresso(evento, 100.0, "A1");
 
-        ingresso.cancelar();
+        ingresso.cancelarIngresso();
         assertFalse(ingresso.isAtivo());
 
         ingresso.reativar();
