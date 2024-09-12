@@ -1,3 +1,13 @@
+// Sistema Operacional: Windows 10 - 64 Bits
+// Versão Da Linguagem: Java
+// Autor: Caroline Santos de Jesus
+// Componente Curricular: Algoritmos II
+// Concluido em: 12/09/2024
+// Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
+// colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+// Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
+// código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+
 package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.*;
@@ -10,47 +20,53 @@ public class Ingresso {
     private String assento;
     private Usuario usuario;
 
-    public Ingresso() {
-    }
-
     public Ingresso(Evento evento, double valor, String assento) {
         this.evento = evento;
         this.preco = valor;
         this.assento = assento;
-        this.status = true;
+        this.status = true; // Ingressos criados inicialmente estão ativos
     }
 
     public Ingresso(Usuario user, Evento evento, String assento) {
         this.usuario = user;
         this.evento = evento;
         this.assento = assento;
-        this.preco = 100.0;
-        this.status = true;
+        this.preco = 100.0; // Preço padrão atribuído ao ingresso
+        this.status = true; // Ingressos criados inicialmente estão ativos
     }
 
+    // Método para verificar se o ingresso está ativo
     public boolean isAtivo() {
-        return getStatus();
+        return getStatus(); // Retorna o status do ingresso
     }
+
+
+     // Método para cancelar o ingresso:
+     // - Não permite cancelamento no dia do evento.
+     // - Permite cancelamento antes do evento.
+     // - Não permite cancelamento após a data do evento.
 
     public boolean cancelarIngresso() {
-        Calendar atualData = Calendar.getInstance();
+        Calendar atualData = Calendar.getInstance(); // Obtém a data atual
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getEvento().getData());
-        int valor = atualData.compareTo(dataEvento);
-        if (valor == 0) { // Não pode cancelar no mesmo dia do evento.
+        dataEvento.setTime(getEvento().getData()); // Define a data do evento
+        int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento
+        if (valor == 0) { // Se o evento ocorrer no mesmo dia, não permite cancelamento
             return false;
-        } else if (valor < 0) { // Pode cancelar, pois não passou da data do evento.
-            setStatus(false);
+        } else if (valor < 0) { // Se a data atual for antes do evento, permite o cancelamento
+            setStatus(false); // Marca o ingresso como cancelado (status false)
             return true;
-        } else {// Não pode cancelar, data passada.
+        } else { // Se a data do evento já passou, não permite cancelamento
             return false;
         }
     }
 
+    // Método para reativar o ingresso, caso necessário
     public void reativar() {
         setStatus(true);
     }
 
+    // Método equals para comparar se dois ingressos são iguais com base em preço, evento e assento
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,6 +75,7 @@ public class Ingresso {
         return Double.compare(preco, ingresso.preco) == 0 && Objects.equals(evento, ingresso.evento) && Objects.equals(assento, ingresso.assento);
     }
 
+    // Método hashCode que retorna o hash baseado em preço, evento e assento
     @Override
     public int hashCode() {
         return Objects.hash(preco, evento, assento);

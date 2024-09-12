@@ -1,3 +1,13 @@
+// Sistema Operacional: Windows 10 - 64 Bits
+// Versão Da Linguagem: Java
+// Autor: Caroline Santos de Jesus
+// Componente Curricular: Algoritmos II
+// Concluido em: 12/09/2024
+// Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
+// colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+// Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
+// código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+
 package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.ArrayList;
@@ -14,7 +24,6 @@ public class Usuario {
     private boolean adm;
     private List<Ingresso> ingressosComprados = new ArrayList<>();
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
-    private static List<Usuario> usuariosLogados = new ArrayList<>();
 
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
         this.login = login;
@@ -30,41 +39,38 @@ public class Usuario {
         return adm;
     }
 
-    public boolean login(String login, String senha) {
-        return this.login.equals(login) && this.senha.equals(senha);
-    }
-
     // Adiciona usuário à lista de cadastro.
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
     }
 
-    /*
-    Adiciona ingresso comprado pelo usuário na lista de ingressos do usuário e na lista de ingressos comprados
-    do evento correspondente, se houver um evento associado ao ingresso.
-     */
+    // Verifica login do usuário, retornando true se o login e senha estiverem corretos.
+    public boolean login(String login, String senha) {
+        return this.login.equals(login) && this.senha.equals(senha);
+    }
+
+//    Adiciona ingresso comprado pelo usuário na lista de ingressos comprados por ele.
     public void adicionarIngressoComprado(Ingresso ingresso) {
         ingressosComprados.add(ingresso);
     }
 
-    /*
-    Este método remove um ingresso da lista de ingressos comprados pelo usuário e, caso o ingresso esteja associado a
-    um evento, ele também é removido da lista de ingressos comprados do evento.
-    */
+    // Este método remove um ingresso da lista de ingressos comprados pelo usuário
     public boolean cancelarIngressoComprado(Ingresso ingresso) {
         // Remove compra da lista do usuário.
         Iterator<Ingresso> compraIngressoUsuario = ingressosComprados.iterator();
-        while (compraIngressoUsuario.hasNext()) {
+        while (compraIngressoUsuario.hasNext()) { // Percorre a lista de ingressos comprados pelo usuário
             Ingresso i = compraIngressoUsuario.next();
-            if (i.equals(ingresso)) {
-                compraIngressoUsuario.remove(); // Remove o ingresso sem causar ConcurrentModificationException
-                i.setStatus(false);
-                return true;
+            if (i.equals(ingresso)) { // Verifica se o ingresso atual é o mesmo que precisa ser removido
+                compraIngressoUsuario.remove(); // Remove o ingresso da lista do usuário sem causar ConcurrentModificationException
+                i.setStatus(false); // Marca o ingresso como cancelado (status false)
+                return true; // Retorna true para indicar que o ingresso foi removido
             }
         }
-        return false;
+        return false; // Retorna false caso o ingresso não tenha sido encontrado na lista
     }
 
+//   Sobrescreve o método equals para comparar dois objetos Usuario.
+//   Dois usuários são considerados iguais se o login, cpf e email forem iguais.
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,6 +83,7 @@ public class Usuario {
         return Objects.equals(login, usuario.login) && Objects.equals(cpf, usuario.cpf) && Objects.equals(email, usuario.email);
     }
 
+    // Sobrescreve o método hashCode para garantir a coerência com o método equals.
     @Override
     public int hashCode() {
         return Objects.hash(login, cpf, email);
@@ -84,10 +91,6 @@ public class Usuario {
 
     public String getLogin() {
         return login;
-    }
-
-    public String getSenha() {
-        return senha;
     }
 
     public String getNome() {
@@ -102,20 +105,8 @@ public class Usuario {
         return email;
     }
 
-    public static List<Usuario> getUsuariosCadastrados() {
-        return usuariosCadastrados;
-    }
-
-    public List<Ingresso> getIngressosComprados() {
-        return ingressosComprados;
-    }
-
     public List<Ingresso> getIngressos() {
         return ingressosComprados;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public void setSenha(String senha) {
@@ -133,9 +124,4 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setAdm(boolean adm) {
-        this.adm = adm;
-    }
-
 }
