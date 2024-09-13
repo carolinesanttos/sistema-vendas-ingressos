@@ -1,5 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
-// Versão Da Linguagem: Java
+// Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
 // Concluido em: 12/09/2024

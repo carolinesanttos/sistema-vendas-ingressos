@@ -1,5 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
-// Versão Da Linguagem: Java
+// Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
 // Concluido em: 12/09/2024
@@ -22,37 +22,47 @@ public class Controller {
     private List<Evento> eventosCadastrados = new ArrayList<>();
     private List<Ingresso> ingressosComprados = new ArrayList<>();
 
+    // Método para cadastrar um novo usuário.
+    // Recebe as informações do usuário, cria um objeto de `Usuario` e o cadastra.
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
-        usuario = new Usuario(login, senha, nome, cpf, email, isAdm);
-        usuario.cadastroDeUsuarios(usuario);
-        return usuario;
+        usuario = new Usuario(login, senha, nome, cpf, email, isAdm); // Cria o novo usuário
+        usuario.cadastroDeUsuarios(usuario); // Cadastra o usuário na lista de usuários
+        return usuario; // Retorna o usuário criado
     }
 
+    // Método para cadastrar um novo evento.
+    // Verifica se o usuário tem permissão de administrador antes de cadastrar.
     public Evento cadastrarEvento(Usuario usuario, String nomeDoEvento, String descricao, Date data) throws SecurityException{
-        evento = new Evento(usuario, nomeDoEvento, descricao, data);
-        try {
+        evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações fornecidas
+        try { // Tenta cadastrar o evento
             evento.cadastroDeEventos(evento);
-            eventosCadastrados.add(evento);
-        } catch (SecurityException e) {
+            eventosCadastrados.add(evento); // Adiciona o evento à lista de eventos cadastrados
+        } catch (SecurityException e) { // Se o usuário não for administrador, lança uma exceção
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
         }
-        return evento;
+        return evento; // Retorna o evento criado
 
     }
 
+    // Método para adicionar um assento disponível a um evento específico.
+    // Procura o evento pelo nome e adiciona o assento à lista de assentos disponíveis.
     public void adicionarAssentoEvento(String nomeDoEvento, String assento) {
-        evento = evento.encontrarEventoPorNome(nomeDoEvento);
-        if (evento!= null) {
-            evento.adicionarAssento(assento);
+        evento = evento.encontrarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome
+        if (evento!= null) { // Verifica se o evento foi encontrado
+            evento.adicionarAssento(assento); // Adiciona o assento ao evento
         }
     }
 
+    // Método para comprar um ingresso para um evento.
+    // Cria um novo ingresso associando o usuário, o evento e o assento escolhido.
     public Ingresso comprarIngresso(Usuario usuario, String nomeDoEvento, String assento) {
-        ingresso = evento.venderIngresso(usuario, nomeDoEvento, assento);
-        ingressosComprados.add(ingresso);
-        return ingresso;
+        ingresso = evento.venderIngresso(usuario, nomeDoEvento, assento); // Cria um novo ingresso
+        ingressosComprados.add(ingresso); // Adiciona o ingresso à lista de ingressos comprados
+        return ingresso; // Retorna o ingresso criado
     }
 
+    // Método para cancelar a compra de um ingresso.
+    // Verifica se o ingresso pode ser cancelado, e se possível, o remove da lista de ingressos comprados.
     public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
         return usuario.cancelarIngressoComprado(ingresso);
     }

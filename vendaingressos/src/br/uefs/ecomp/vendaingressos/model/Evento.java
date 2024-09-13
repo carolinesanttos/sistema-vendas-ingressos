@@ -1,5 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
-// Versão Da Linguagem: Java
+// Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
 // Concluido em: 12/09/2024
@@ -24,7 +24,6 @@ public class Evento {
     private List<String> assentosDisponiveis = new ArrayList<>();
     private List<Evento> eventosCadastrados = new ArrayList<>();
 
-
     public Evento() {
     }
 
@@ -41,7 +40,9 @@ public class Evento {
         this.data = data;
     }
 
-    // Adiciona o evento desejado à lista de "eventosCadastrados".
+     // Método para cadastrar eventos.
+     // O evento só pode ser cadastrado se o usuário for administrador.
+     // Caso contrário, lança uma exceção de segurança.
     public void cadastroDeEventos(Evento evento) throws SecurityException {
         if (!evento.getUsuario().isAdmin()) {
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
@@ -49,31 +50,35 @@ public class Evento {
         eventosCadastrados.add(evento);
     }
 
+    // Método para adicionar um assento à lista de assentos disponíveis
     public void adicionarAssento(String assento) {
         assentosDisponiveis.add(assento);
     }
 
+    // Método para remover um assento da lista de assentos disponíveis
     public void removerAssento(String assento) {
         assentosDisponiveis.remove(assento);
     }
 
+     // Método para verificar se o evento está ativo.
+     // O evento é considerado ativo se ainda não passou da data.
     public boolean isAtivo() {
-        Calendar atualData = Calendar.getInstance();
+        Calendar atualData = Calendar.getInstance(); // Obtém a data atual
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getData());
-        int valor = atualData.compareTo(dataEvento);
-        if (valor == 0) { // Não pode cancelar no mesmo dia do evento.
+        dataEvento.setTime(getData()); // Define a data do evento
+        int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento
+        if (valor == 0) { // Se o evento ocorrer no mesmo dia, define como inativo
             return false;
-        } else if (valor < 0) { // Pode cancelar, pois não passou da data do evento.
-            setStatus(false);
+        } else if (valor < 0) { // Se o evento ainda não aconteceu, define como ativo
+            setStatus(false); // Marca o status como falso
             return true;
-        } else {// Não pode cancelar, data passada.
+        } else { // Se o evento já aconteceu, está inativo
             return false;
         }
     }
 
-//    Este método busca um evento pelo seu nome. Se encontrar o evento com nome desejado, o método retorna esse evento,
-//    caso contrário, retorna null se nenhum evento for encontrado.
+     // Método para buscar um evento pelo seu nome.
+     // Retorna o evento encontrado ou `null` se não existir.
     public Evento encontrarEventoPorNome(String name) {
         for (Evento evento : getEventosCadastrados()) {
             if (evento.getNome().equalsIgnoreCase(name)) {
@@ -83,20 +88,14 @@ public class Evento {
         return null;
     }
 
-    /*
-    Sobrecarga de métodos:
-    - O primeiro método venderIngresso() é utilizado pela classe `EventoTest`.
-    - O segundo método venderIngresso(String name) é chamado pela classe `Controller`.
 
-    A sobrecarga foi necessária porque o segundo método precisa do parâmetro (`name`),
-    enquanto o primeiro não. Afim de evitar duplicação de código, o segundo método reaproveita
-    a lógica do primeiro.
-    */
+    // Método para vender um ingresso.
+    // O método cria um ingresso para o evento e o associa ao usuário.
     public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
-        Evento evento = encontrarEventoPorNome(nomeDoEvento);
-        Ingresso ingresso = new Ingresso(usuario, evento, assento);
-        ingresso.getUsuario().adicionarIngressoComprado(ingresso);
-        return ingresso;
+        Evento evento = encontrarEventoPorNome(nomeDoEvento); // Busca o evento pelo nome
+        Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um novo ingresso
+        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona o ingresso à lista de ingressos comprados pelo usuário
+        return ingresso; // Retorna o ingresso criado
     }
 
     public String getNome() {
