@@ -88,7 +88,6 @@ public class Evento {
         return null;
     }
 
-
     // Método para vender um ingresso.
     // O método cria um ingresso para o evento e o associa ao usuário.
     public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
