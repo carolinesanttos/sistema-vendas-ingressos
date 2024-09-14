@@ -25,6 +25,7 @@ public class Usuario {
     private List<Ingresso> ingressosComprados = new ArrayList<>();
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
 
+    // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
         this.login = login;
         this.senha = senha;
@@ -44,33 +45,34 @@ public class Usuario {
         usuariosCadastrados.add(usuario);
     }
 
-    // Verifica login do usuário, retornando true se o login e senha estiverem corretos.
+    // Verifica login do usuário, retorna true se o login e senha estiverem corretos.
     public boolean login(String login, String senha) {
         return this.login.equals(login) && this.senha.equals(senha);
     }
 
-//    Adiciona ingresso comprado pelo usuário na lista de ingressos comprados por ele.
+    // Adiciona ingresso comprado pelo usuário na lista de ingressos comprados por ele.
     public void adicionarIngressoComprado(Ingresso ingresso) {
         ingressosComprados.add(ingresso);
     }
 
-    // Este método remove um ingresso da lista de ingressos comprados pelo usuário
+    // Remove um ingresso da lista de ingressos comprados pelo usuário.
     public boolean cancelarIngressoComprado(Ingresso ingresso) {
-        // Remove compra da lista do usuário.
         Iterator<Ingresso> compraIngressoUsuario = ingressosComprados.iterator();
-        while (compraIngressoUsuario.hasNext()) { // Percorre a lista de ingressos comprados pelo usuário
+
+        while (compraIngressoUsuario.hasNext()) { // Percorre a lista de ingressos comprados pelo usuário.
             Ingresso i = compraIngressoUsuario.next();
-            if (i.equals(ingresso)) { // Verifica se o ingresso atual é o mesmo que precisa ser removido
-                compraIngressoUsuario.remove(); // Remove o ingresso da lista do usuário sem causar ConcurrentModificationException
-                i.setStatus(false); // Marca o ingresso como cancelado (status false)
-                return true; // Retorna true para indicar que o ingresso foi removido
+
+            if (i.equals(ingresso)) { // Verifica se o ingresso atual é o mesmo que precisa ser removido.
+                compraIngressoUsuario.remove(); // Remove o ingresso da lista do usuário sem causar ConcurrentModificationException.
+                i.setStatus(false); // Marca o ingresso como cancelado.
+                return true; // Retorna true indicando que o ingresso foi removido.
             }
         }
-        return false; // Retorna false caso o ingresso não tenha sido encontrado na lista
+        return false; // Retorna false caso o ingresso não tenha sido encontrado na lista.
     }
 
-//   Sobrescreve o método equals para comparar dois objetos Usuario.
-//   Dois usuários são considerados iguais se o login, cpf e email forem iguais.
+    // Método equals sobrescrito para comparar dois objetos Usuario.
+    // Dois usuários são iguais se o login, cpf e email forem iguais.
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -83,7 +85,6 @@ public class Usuario {
         return Objects.equals(login, usuario.login) && Objects.equals(cpf, usuario.cpf) && Objects.equals(email, usuario.email);
     }
 
-    // Sobrescreve o método hashCode para garantir a coerência com o método equals.
     @Override
     public int hashCode() {
         return Objects.hash(login, cpf, email);

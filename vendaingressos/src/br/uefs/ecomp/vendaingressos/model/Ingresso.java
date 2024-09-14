@@ -24,49 +24,47 @@ public class Ingresso {
         this.evento = evento;
         this.preco = valor;
         this.assento = assento;
-        this.status = true; // Ingressos criados inicialmente estão ativos
+        this.status = true; // Ingressos inicialmente estão ativos.
     }
 
     public Ingresso(Usuario user, Evento evento, String assento) {
         this.usuario = user;
         this.evento = evento;
         this.assento = assento;
-        this.preco = 100.0; // Preço padrão atribuído ao ingresso
-        this.status = true; // Ingressos criados inicialmente estão ativos
+        this.preco = 100.0; // Preço padrão do ingresso.
+        this.status = true; // Ingressos inicialmente estão ativos.
     }
 
-    // Método para verificar se o ingresso está ativo
+    // Verifica se o ingresso está ativo.
     public boolean isAtivo() {
-        return getStatus(); // Retorna o status do ingresso
+        return getStatus(); // Retorna o status do ingresso.
     }
 
-
-     // Método para cancelar o ingresso:
-     // - Não permite cancelamento no dia do evento.
-     // - Permite cancelamento antes do evento.
-     // - Não permite cancelamento após a data do evento.
-
+     // Cancela o ingresso:
+     // 1) NÃO permite cancelamento NO DIA do evento.
+     // 2) PERMITE cancelamento ANTES do evento.
+     // 3) NÃO permite cancelamento APÓS a data do evento.
     public boolean cancelarIngresso() {
-        Calendar atualData = Calendar.getInstance(); // Obtém a data atual
+        Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getEvento().getData()); // Define a data do evento
-        int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento
-        if (valor == 0) { // Se o evento ocorrer no mesmo dia, não permite cancelamento
+        dataEvento.setTime(getEvento().getData()); // Define a data do evento.
+        int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento.
+        if (valor == 0) { // Se o evento ocorrer no mesmo dia, não permite cancelamento.
             return false;
-        } else if (valor < 0) { // Se a data atual for antes do evento, permite o cancelamento
-            setStatus(false); // Marca o ingresso como cancelado (status false)
-            return true;
-        } else { // Se a data do evento já passou, não permite cancelamento
+        } else if (valor < 0) { // Se a data atual for antes do evento, permite o cancelamento.
+            setStatus(false); // Marca o ingresso como cancelado.
+            return true; // Retorna true indicando que o cancelamento foi bem-sucedido.
+        } else { // Se a data do evento já passou, não permite cancelamento.
             return false;
         }
     }
 
-    // Método para reativar o ingresso, caso necessário
+    // Reativa o ingresso.
     public void reativar() {
         setStatus(true);
     }
 
-    // Método equals para comparar se dois ingressos são iguais com base em preço, evento e assento
+    // Compara se dois ingressos são iguais com base em preço, evento e assento.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,7 +73,6 @@ public class Ingresso {
         return Double.compare(preco, ingresso.preco) == 0 && Objects.equals(evento, ingresso.evento) && Objects.equals(assento, ingresso.assento);
     }
 
-    // Método hashCode que retorna o hash baseado em preço, evento e assento
     @Override
     public int hashCode() {
         return Objects.hash(preco, evento, assento);
