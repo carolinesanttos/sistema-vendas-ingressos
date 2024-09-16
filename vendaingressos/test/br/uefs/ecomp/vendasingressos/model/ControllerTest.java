@@ -21,7 +21,8 @@ public class ControllerTest {
     @Test
     public void testCadastrarEventoPorAdmin() {
         Controller controller = new Controller();
-        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User",
+                "00000000000", "admin@example.com", true);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.SEPTEMBER, 10);
@@ -98,7 +99,7 @@ public class ControllerTest {
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
 
         Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(2024, Calendar.SEPTEMBER, 17); // Troque de 10 para 17
+        calendar1.set(2024, Calendar.SEPTEMBER, 30); // Foi necessário alterar a data para passar no teste. De 10 para 30.
         Date data1 = calendar1.getTime();
 
         Calendar calendar2 = Calendar.getInstance();

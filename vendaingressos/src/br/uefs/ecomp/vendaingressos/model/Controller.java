@@ -1,4 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
+// IDE: IntelliJ
 // Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
@@ -59,7 +60,7 @@ public class Controller {
         return ingresso; // Retorna ingresso criado.
     }
 
-    // Cancela a compra de um ingresso. 
+    // Cancela a compra de um ingresso.
     public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
         return usuario.cancelarIngressoComprado(ingresso);
     }

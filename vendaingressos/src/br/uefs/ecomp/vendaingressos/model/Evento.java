@@ -1,4 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
+// IDE: IntelliJ
 // Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
@@ -38,7 +39,7 @@ public class Evento {
         this.data = data;
     }
 
-     // Ccadastra eventos. O evento só pode ser cadastrado se o usuário for administrador.
+     // Cadastra eventos. O evento só pode ser cadastrado se o usuário for administrador.
      // Caso contrário, lança uma exceção.
     public void cadastroDeEventos(Evento evento) throws SecurityException {
         if (!evento.getUsuario().isAdmin()) {
@@ -53,11 +54,11 @@ public class Evento {
     }
 
     // Remove um assento da lista de assentos disponíveis.
-    public void removerAssento(String assento) {
+    public void removerAssento(String assento)     {
         assentosDisponiveis.remove(assento);
     }
 
-     // Verifica se o evento está ativo. O evento é considerado ativo se ainda não passou da data.
+    // Verifica se o evento está ativo. O evento é considerado ativo se ainda não passou da data.
     public boolean isAtivo() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
@@ -87,9 +88,12 @@ public class Evento {
     public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
         Evento evento = encontrarEventoPorNome(nomeDoEvento); // Busca evento pelo nome.
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
-        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista de ingressos comprados pelo usuário.
-        assentosDisponiveis.remove(assento); // Remove assento da lista de disponíveis, pois foi reservado por um usuário.
-        assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados, pois foi reservado por um usuário.
+        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista.
+        // de ingressos comprados pelo usuário.
+        assentosDisponiveis.remove(assento); // Remove assento da lista de disponíveis,
+        // pois foi reservado por um usuário.
+        assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados,
+        // pois foi reservado por um usuário.
 
         return ingresso; // Retorna o ingresso criado.
     }

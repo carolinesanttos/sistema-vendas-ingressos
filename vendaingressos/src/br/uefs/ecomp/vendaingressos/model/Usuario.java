@@ -1,4 +1,5 @@
 // Sistema Operacional: Windows 10 - 64 Bits
+// IDE: IntelliJ
 // Versão Da Linguagem: Java JDK 22
 // Autor: Caroline Santos de Jesus
 // Componente Curricular: Algoritmos II
