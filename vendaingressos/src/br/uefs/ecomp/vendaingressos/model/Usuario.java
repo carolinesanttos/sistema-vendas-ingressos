@@ -43,7 +43,10 @@ public class Usuario {
 
     // Adiciona usuário à lista de cadastro.
     public void cadastroDeUsuarios (Usuario usuario) {
-        usuariosCadastrados.add(usuario);
+        boolean contemUsuario = usuariosCadastrados.contains(usuario);
+        if (!contemUsuario) {
+            usuariosCadastrados.add(usuario);
+        }
     }
 
     // Verifica login do usuário, retorna true se o login e senha estiverem corretos.
@@ -58,18 +61,11 @@ public class Usuario {
 
     // Remove um ingresso da lista de ingressos comprados pelo usuário.
     public boolean cancelarIngressoComprado(Ingresso ingresso) {
-        Iterator<Ingresso> compraIngressoUsuario = ingressosComprados.iterator();
-
-        while (compraIngressoUsuario.hasNext()) { // Percorre a lista de ingressos comprados pelo usuário.
-            Ingresso i = compraIngressoUsuario.next();
-
-            if (i.equals(ingresso)) { // Verifica se o ingresso atual é o mesmo que precisa ser removido.
-                compraIngressoUsuario.remove(); // Remove o ingresso da lista do usuário sem causar ConcurrentModificationException.
-                i.setStatus(false); // Marca o ingresso como cancelado.
-                return true; // Retorna true indicando que o ingresso foi removido.
-            }
+        boolean contem = ingressosComprados.contains(ingresso);
+        if (contem) {
+            ingressosComprados.remove(ingresso);
         }
-        return false; // Retorna false caso o ingresso não tenha sido encontrado na lista.
+        return true;
     }
 
     // Método equals sobrescrito para comparar dois objetos Usuario.

@@ -45,17 +45,30 @@ public class Evento {
         if (!evento.getUsuario().isAdmin()) {
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
         }
-        eventosCadastrados.add(evento);
+        adicionaEvento(evento);
+    }
+
+    public void adicionaEvento(Evento evento) {
+        boolean contemEvento = eventosCadastrados.contains(evento);
+        if (!contemEvento) {
+            eventosCadastrados.add(evento);
+        }
     }
 
     // Adiciona um assento à lista de assentos disponíveis.
     public void adicionarAssento(String assento) {
-        assentosDisponiveis.add(assento);
+        boolean contemAssento = assentosDisponiveis.contains(assento);
+        if (!contemAssento) {
+            assentosDisponiveis.add(assento);
+        }
     }
 
     // Remove um assento da lista de assentos disponíveis.
     public void removerAssento(String assento)     {
-        assentosDisponiveis.remove(assento);
+        boolean contemAssento = assentosDisponiveis.contains(assento);
+        if (contemAssento) {
+            assentosDisponiveis.remove(assento);
+        }
     }
 
     // Verifica se o evento está ativo. O evento é considerado ativo se ainda não passou da data.
@@ -88,7 +101,7 @@ public class Evento {
     public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
         Evento evento = encontrarEventoPorNome(nomeDoEvento); // Busca evento pelo nome.
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
-        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista.
+        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista
         // de ingressos comprados pelo usuário.
         assentosDisponiveis.remove(assento); // Remove assento da lista de disponíveis,
         // pois foi reservado por um usuário.

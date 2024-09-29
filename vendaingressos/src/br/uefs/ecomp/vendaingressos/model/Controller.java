@@ -25,7 +25,11 @@ public class Controller {
 
     // Cadastra um novo usuário. Recebe as informações do usuário, cria um objeto do tipo "Usuario" e cadastra.
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
-        usuario = new Usuario(login, senha, nome, cpf, email, isAdm); // Cria novo usuário.
+        if (isAdm == true) {
+            usuario = new UserAdministrador(login, senha, nome, cpf, email, isAdm); // Cria novo usuário adm.
+        } else {
+            usuario = new UserComum(login, senha, nome, cpf, email, isAdm);
+        }
         usuario.cadastroDeUsuarios(usuario); // Cadastra usuário na lista de usuários.
         return usuario; // Retorna usuário criado.
     }
