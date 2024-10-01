@@ -77,6 +77,17 @@ public class UsuarioTest {
 
     // A partir daqui testamos o problema 2.
 
+    @Test
+    public void testAlterarDadosPessoais () {
+        UserComum usuario = new UserComum("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
 
+        usuario.setNome("Caroline Santos");
+        usuario.setEmail("caroline.sants@example.com");
+        usuario.setSenha("kawaiidesu");
+
+        assertEquals("Caroline Santos", usuario.getNome());
+        assertEquals("caroline.sants@example.com", usuario.getEmail());
+        assertEquals("kawaiidesu", usuario.getSenha());
+    }
 
 }

@@ -31,7 +31,7 @@ public class IngressoTest {
     @Test
     public void testCancelarIngresso() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 30); // Foi necessário alterar a data para passar no teste. De 10 para 30.
+        calendar.set(2024, Calendar.NOVEMBER, 30); // Foi necessário alterar a data
         Date data = calendar.getTime();
 
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
@@ -57,7 +57,7 @@ public class IngressoTest {
     @Test
     public void testReativarIngresso() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 30); // / Foi necessário alterar a data para passar no teste. De 10 para 30.
+        calendar.set(2024, Calendar.NOVEMBER, 30); // / Foi necessário alterar a data
         Date data = calendar.getTime();
 
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);

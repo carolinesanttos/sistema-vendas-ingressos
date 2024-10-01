@@ -63,6 +63,7 @@ public class Usuario {
     public boolean cancelarIngressoComprado(Ingresso ingresso) {
         boolean contem = ingressosComprados.contains(ingresso);
         if (contem) {
+            ingresso.cancelarIngresso(); //Remove ingresso de evento
             ingressosComprados.remove(ingresso);
         }
         return true;
@@ -101,6 +102,10 @@ public class Usuario {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getSenha() {
+        return senha;
     }
 
     public List<Ingresso> getIngressos() {
