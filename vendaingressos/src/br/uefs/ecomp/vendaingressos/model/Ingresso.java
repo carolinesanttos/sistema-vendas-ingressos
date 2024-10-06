@@ -14,7 +14,6 @@ package br.uefs.ecomp.vendaingressos.model;
 import java.util.*;
 
 public class Ingresso {
-    private String id;
     private double preco;
     private boolean status;
     private Evento evento;
@@ -79,10 +78,6 @@ public class Ingresso {
         return Objects.hash(preco, evento, assento);
     }
 
-    public String getId() {
-        return id;
-    }
-
     public double getPreco() {
         return preco;
     }
@@ -101,10 +96,6 @@ public class Ingresso {
 
     public Usuario getUsuario() {
         return usuario;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setPreco(float preco) {

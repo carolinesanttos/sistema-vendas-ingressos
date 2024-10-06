@@ -1,15 +1,40 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import java.util.Date;
+
 public class Compra {
     private Usuario usuario;
     private Ingresso ingresso;
-    private String data;
+    private Date data;
+    private double valor;
+    private String status; // "Pendente", "Aprovado", "Cancelada"
+    Pagamento pagamento;
 
-    public Compra(Usuario usuario, Ingresso ingresso, String data) {
+    public Compra(Usuario usuario, Ingresso ingresso, Date data, double valor) {
         this.usuario = usuario;
         this.ingresso = ingresso;
         this.data = data;
+        this.valor = valor;
+        this.status = "Pendente";
     }
+
+    public Compra(Ingresso ingresso) {
+        this.ingresso = ingresso;
+    }
+
+    public String processarCompra (Pagamento pagamento) {
+        this.pagamento = pagamento;
+        String resultadoCompra = pagamento.processarPagamento(valor);
+
+        if (resultadoCompra.equals("Pagamento no valor de " + valor + " processado com sucesso no cartão.") || resultadoCompra.equals(
+                "Pagamento no valor de " + valor + " processado com sucesso no boleto.")) {
+            this.status = "Aprovado";
+        }
+
+        return resultadoCompra;
+    }
+
+// public void confirmacaoDaCompra ()
 
     public Usuario getUsuario() {
         return usuario;
@@ -19,8 +44,16 @@ public class Compra {
         return ingresso;
     }
 
-    public String getData() {
+    public Date getData() {
         return data;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public double getValor() {
+        return valor;
     }
 
     public void setUsuario(Usuario usuario) {
@@ -31,7 +64,7 @@ public class Compra {
         this.ingresso = ingresso;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
 }

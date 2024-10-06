@@ -23,8 +23,9 @@ public class Usuario {
     private String cpf;
     private String email;
     private boolean adm;
-    private List<Ingresso> ingressosComprados = new ArrayList<>();
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
+    private List<Pagamento>formaDePagamento = new ArrayList<>();
+    private List <Compra> ingressosComprados = new ArrayList<>();
 
     // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
@@ -54,19 +55,40 @@ public class Usuario {
         return this.login.equals(login) && this.senha.equals(senha);
     }
 
-    // Adiciona ingresso comprado pelo usuário na lista de ingressos comprados por ele.
-    public void adicionarIngressoComprado(Ingresso ingresso) {
-        ingressosComprados.add(ingresso);
+    public void adicionarCompras(Compra compra) {
+        ingressosComprados.add(compra);
+    }
+
+    public Compra detalhesDaCompra () {
+        if (!ingressosComprados.isEmpty()) {
+            return ingressosComprados.get(ingressosComprados.size()-1);  // Pega o último item
+        }
+        return null;
     }
 
     // Remove um ingresso da lista de ingressos comprados pelo usuário.
     public boolean cancelarIngressoComprado(Ingresso ingresso) {
-        boolean contem = ingressosComprados.contains(ingresso);
-        if (contem) {
-            ingresso.cancelarIngresso(); //Remove ingresso de evento
-            ingressosComprados.remove(ingresso);
+        Iterator<Compra> iterator = ingressosComprados.iterator();
+        while (iterator.hasNext()) {
+            Compra bilhetes = iterator.next();
+            if (ingresso.equals(bilhetes.getIngresso())) {
+                boolean cancelar = ingresso.cancelarIngresso();
+                if (cancelar) {
+                    iterator.remove();
+                } else {
+                    return false;
+                }
+            }
         }
         return true;
+    }
+
+    public void adicionaFormaDePagamento (Pagamento pagamento) {
+        formaDePagamento.add(pagamento);
+    }
+
+    public void removerFormaDePagamento (Pagamento pagamento) {
+        formaDePagamento.remove(pagamento);
     }
 
     // Método equals sobrescrito para comparar dois objetos Usuario.
@@ -109,6 +131,22 @@ public class Usuario {
     }
 
     public List<Ingresso> getIngressos() {
+        List <Ingresso>ingressosComprados = new ArrayList<>();
+        for (Compra compra : this.ingressosComprados) {
+            Ingresso ingresso = compra.getIngresso();
+            if (ingresso != null) {
+                ingressosComprados.add(ingresso);
+            }
+        }
+        return ingressosComprados; // Retorna a lista de ingressos comprados
+    }
+
+
+    public List<Pagamento> getFormaDePagamento() {
+        return formaDePagamento;
+    }
+
+    public List<Compra> getCompras() {
         return ingressosComprados;
     }
 

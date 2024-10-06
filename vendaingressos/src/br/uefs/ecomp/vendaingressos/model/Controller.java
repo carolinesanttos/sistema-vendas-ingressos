@@ -20,6 +20,7 @@ public class Controller {
     Usuario usuario;
     Evento evento;
     Ingresso ingresso;
+    Compra compra;
     private List<Evento> eventosCadastrados = new ArrayList<>();
     private List<Ingresso> ingressosComprados = new ArrayList<>();
 
@@ -32,6 +33,22 @@ public class Controller {
         }
         usuario.cadastroDeUsuarios(usuario); // Cadastra usuário na lista de usuários.
         return usuario; // Retorna usuário criado.
+    }
+
+    public Usuario login (String login, String senha) {
+        usuario.login(login, senha);
+        return usuario;
+    }
+
+    public void alterarNome (String nome) {
+        usuario.setNome(nome);
+    }
+    public void alterarEmail (String email) {
+        usuario.setEmail(email);
+    }
+
+    public void alterarSenha (String senha) {
+        usuario.setSenha(senha);
     }
 
     // Cadastra um novo evento. Verifica se usuário tem permissão de administrador antes de cadastrar.
@@ -69,6 +86,34 @@ public class Controller {
         return usuario.cancelarIngressoComprado(ingresso);
     }
 
+    public void adicionaFormaPagamento (Usuario usuario, Pagamento pagamento) {
+        usuario.adicionaFormaDePagamento(pagamento);
+    }
+
+    public List<Pagamento> listarFormasDePagamento(Usuario usuario) {
+        return usuario.getFormaDePagamento();
+    }
+
+    public String processarPagamento(Pagamento formaPagamento, double valor) {
+        return formaPagamento.processarPagamento(valor);
+    }
+
+    public Ingresso gerarIngressos(Evento evento, double valor, String assento) {
+        Ingresso ingresso = new Ingresso(evento, valor, assento);
+        evento.adicionarIngresso(ingresso);
+        return ingresso;
+    }
+
+    public String processsarCompra(Usuario usuario, Ingresso ingresso, Pagamento pagamento, Date data, double valor) {
+        Compra compra = new Compra(usuario, ingresso, data, valor);
+        usuario.adicionarCompras(compra);
+        return compra.processarCompra(pagamento);
+    }
+
+    public Compra mostrarDetalheCompra(Usuario usuario) {
+        return usuario.detalhesDaCompra();
+    }
+
     public List<Evento> listarEventosDisponiveis() {
         return getEventosCadastrados();
     }
@@ -84,6 +129,7 @@ public class Controller {
     public List<Ingresso> getIngressosComprados() {
         return ingressosComprados;
     }
+
 
 
 }

@@ -75,8 +75,6 @@ public class UsuarioTest {
         assertEquals(usuario1, usuario2);
     }
 
-    // A partir daqui testamos o problema 2.
-
     @Test
     public void testAlterarDadosPessoais () {
         UserComum usuario = new UserComum("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);

@@ -25,6 +25,8 @@ public class Evento {
     private List<Evento> eventosCadastrados = new ArrayList<>();
     private List<String> assentosDisponiveis = new ArrayList<>();
     private List<String> assentosReservados = new ArrayList<>();
+    private List<Ingresso> ingressosDisponiveis = new ArrayList<>();
+    private List<Ingresso> ingressosComprados = new ArrayList<>();
 
     public Evento(String nome, String descricao, Date data) {
         this.nome = nome;
@@ -97,11 +99,29 @@ public class Evento {
         return null;
     }
 
+    public void adicionarIngresso(Ingresso ingresso) {
+        boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
+        if (!contemIngresso) {
+            ingressosDisponiveis.add(ingresso);
+        }
+    }
+
+    public void removerIngresso(Ingresso ingresso) {
+        boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
+        if (contemIngresso) {
+            ingressosDisponiveis.remove(ingresso);
+        }
+    }
+
     // Vende um ingresso. Cria um ingresso para evento e associa ao usuário.
     public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
         Evento evento = encontrarEventoPorNome(nomeDoEvento); // Busca evento pelo nome.
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
-        ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista
+
+        ingressosComprados.add(ingresso);
+        ingresso.getUsuario().adicionarCompras(new Compra(ingresso));
+        //ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista
+
         // de ingressos comprados pelo usuário.
         assentosDisponiveis.remove(assento); // Remove assento da lista de disponíveis,
         // pois foi reservado por um usuário.
