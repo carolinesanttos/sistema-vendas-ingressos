@@ -221,5 +221,34 @@ public class ControllerTest {
         assertEquals(150.0, compra.getValor(), 0.001);
     }
 
+    @Test
+    public void testDetalhesDaCompra() {
+        Controller controller = new Controller();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        UserComum  usuario = new UserComum("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+
+        Ingresso ingresso = new Ingresso(evento, 150.0, "L1");
+        Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "Carol Santos", "10/31", "927");
+        Compra compra = new Compra(usuario, ingresso, data, 150.0);
+
+        String mensagem = "Destinatário: ca.sant@example.com\nAssunto: Confirmação de Compra\n\n" +
+                "Olá, Carol Santos,\n\n" +
+                "Obrigado por sua compra! Aqui estão os detalhes da sua compra:\n\n" +
+                "Produto: Show de Rock - Assento: L1\n" +
+                "Valor: R$ 150.0\n" +
+                "Método de pagamento: Cartão\n\n" +
+                "Sua compra foi processada com sucesso. Caso tenha dúvidas, entre em contato com nosso suporte.\n\n" +
+                "Atenciosamente,\nEquipe de Vendas";
+
+        // Verificando se a mensagem gerada é igual à esperada
+        String mensagemGerada = compra.detalhesDaCompra(usuario, pagamento);
+        assertEquals(mensagem, mensagemGerada);
+    }
+
 
 }

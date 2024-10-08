@@ -57,7 +57,7 @@ public class Ingresso {
         } else { // Se a data do evento já passou, não permite cancelamento.
             return false;
         }
-    } oi
+    }
 
     // Reativa o ingresso.
     public void reativar() {
