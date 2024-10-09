@@ -1,9 +1,6 @@
 package br.uefs.ecomp.vendasingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.UserAdministrador;
-import br.uefs.ecomp.vendaingressos.model.UserComum;
 import br.uefs.ecomp.vendaingressos.model.Usuario;
-import br.uefs.ecomp.vendaingressos.model.Ingresso;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +12,7 @@ public class UsuarioTest {
 
     @Test
     public void testCadastrarUsuario() {
-        UserComum usuario = new UserComum("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
         assertNotNull(usuario);
         assertEquals("johndoe", usuario.getLogin());
@@ -27,7 +24,7 @@ public class UsuarioTest {
 
     @Test
     public void testCadastrarUsuarioAdmin() {
-        UserAdministrador admin = new UserAdministrador("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        Usuario admin = new Usuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
 
         assertNotNull(admin);
         assertEquals("admin", admin.getLogin());
@@ -39,7 +36,7 @@ public class UsuarioTest {
 
     @Test
     public void testLogin() {
-        UserComum usuario = new UserComum("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
         assertTrue(usuario.login("johndoe", "senha123"));
         assertFalse(usuario.login("johndoe", "senhaErrada"));
@@ -47,7 +44,7 @@ public class UsuarioTest {
 
     @Test
     public void testAtualizarSenha() {
-        UserComum usuario = new UserComum("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
         usuario.setSenha("novaSenha123");
         assertTrue(usuario.login("johndoe", "novaSenha123"));
@@ -56,7 +53,7 @@ public class UsuarioTest {
 
     @Test
     public void testDadosUsuario() {
-        UserComum usuario = new UserComum("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
         usuario.setNome("Jonathan Doe");
         usuario.setCpf("10987654321");
@@ -69,15 +66,15 @@ public class UsuarioTest {
 
     @Test
     public void testUsuarioDuplicado() {
-        UserComum usuario1 = new UserComum("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
-        UserComum usuario2 = new UserComum("johndoe", "senha456", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario1 = new Usuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        Usuario usuario2 = new Usuario("johndoe", "senha456", "John Doe", "12345678901", "john.doe@example.com", false);
 
         assertEquals(usuario1, usuario2);
     }
 
     @Test
     public void testAlterarDadosPessoais () {
-        UserComum usuario = new UserComum("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
+        Usuario usuario = new Usuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
 
         usuario.setNome("Caroline Santos");
         usuario.setEmail("caroline.sants@example.com");

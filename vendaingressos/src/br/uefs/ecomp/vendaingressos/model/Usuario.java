@@ -23,6 +23,8 @@ public class Usuario {
     private String cpf;
     private String email;
     private boolean adm;
+    private boolean isLogado;
+    Compra compra;
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
     private List<Pagamento>formaDePagamento = new ArrayList<>();
     private List <Compra> ingressosComprados = new ArrayList<>();
@@ -35,6 +37,7 @@ public class Usuario {
         this.cpf = cpf;
         this.email = email;
         this.adm = adm;
+        this.isLogado = false;
     }
 
     // Retorna true se o usuário for administrador.
@@ -52,10 +55,26 @@ public class Usuario {
 
     // Verifica login do usuário, retorna true se o login e senha estiverem corretos.
     public boolean login(String login, String senha) {
-        return this.login.equals(login) && this.senha.equals(senha);
+        // Verifica se o usuário está cadastrado
+        for (Usuario usuario : usuariosCadastrados) {
+            if (usuario.getLogin().equals(login)) {
+                // Se o usuário estiver cadastrado, verifica a senha
+                if (usuario.getSenha().equals(senha)) {
+                    this.isLogado = true;
+                    return true; // Usuário logado com sucesso
+                }
+                return false; // Senha incorreta
+            }
+        }
+        return false; // Usuário não está cadastrado
+    }
+
+    public void logout() {
+        this.isLogado = false; // Desloga o usuário
     }
 
     public void adicionarCompras(Compra compra) {
+        this.compra = compra;
         ingressosComprados.add(compra);
     }
 
@@ -67,14 +86,18 @@ public class Usuario {
     }
 
     // Remove um ingresso da lista de ingressos comprados pelo usuário.
-    public boolean cancelarIngressoComprado(Ingresso ingresso) {
+    public boolean cancelarIngressoComprado(Ingresso ingresso, Pagamento pagamento) {
         Iterator<Compra> iterator = ingressosComprados.iterator();
+
         while (iterator.hasNext()) {
             Compra bilhetes = iterator.next();
+
             if (ingresso.equals(bilhetes.getIngresso())) {
                 boolean cancelar = ingresso.cancelarIngresso();
+
                 if (cancelar) {
                     iterator.remove();
+                    compra.cancelarCompra(bilhetes, pagamento);
                 } else {
                     return false;
                 }
@@ -84,7 +107,11 @@ public class Usuario {
     }
 
     public void adicionaFormaDePagamento (Pagamento pagamento) {
-        formaDePagamento.add(pagamento);
+        if (this.isLogado) {
+            formaDePagamento.add(pagamento);
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     public void removerFormaDePagamento (Pagamento pagamento) {
@@ -150,6 +177,10 @@ public class Usuario {
         return ingressosComprados;
     }
 
+    public boolean isLogado() {
+        return isLogado;
+    }
+
     public void setSenha(String senha) {
         this.senha = senha;
     }
@@ -164,5 +195,9 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setLogado(boolean logado) {
+        isLogado = logado;
     }
 }

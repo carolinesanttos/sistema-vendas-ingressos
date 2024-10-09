@@ -26,17 +26,13 @@ public class Controller {
 
     // Cadastra um novo usuário. Recebe as informações do usuário, cria um objeto do tipo "Usuario" e cadastra.
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
-        if (isAdm == true) {
-            usuario = new UserAdministrador(login, senha, nome, cpf, email, isAdm); // Cria novo usuário adm.
-        } else {
-            usuario = new UserComum(login, senha, nome, cpf, email, isAdm);
-        }
+        usuario = new Usuario(login, senha, nome, cpf, email, isAdm);
         usuario.cadastroDeUsuarios(usuario); // Cadastra usuário na lista de usuários.
         return usuario; // Retorna usuário criado.
     }
 
     public Usuario login (String login, String senha) {
-        usuario.login(login, senha);
+        boolean logado = usuario.login(login, senha);
         return usuario;
     }
 
@@ -53,14 +49,18 @@ public class Controller {
 
     // Cadastra um novo evento. Verifica se usuário tem permissão de administrador antes de cadastrar.
     public Evento cadastrarEvento(Usuario usuario, String nomeDoEvento, String descricao, Date data) throws SecurityException{
-        evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações dadas.
-        try { // Tenta cadastrar evento.
-            evento.cadastroDeEventos(evento);
-            eventosCadastrados.add(evento); // Adiciona evento à lista de eventos cadastrados.
-        } catch (SecurityException e) { // Se usuário não for administrador, lança uma exceção.
+        if (!usuario.isLogado()) { // Verifica se usuário está logado
+            throw new SecurityException("Precisa estar logado para cadastrar um evento.");
+        }
+        if (!(usuario.isAdmin())) { // Verifica se usuário é um administrador
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
         }
-        return evento; // Retorna evento criado.
+        // Se as condições forem atendidas, o evento é cadastrado
+        evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações dadas.
+        evento.cadastroDeEventos(evento); // Supondo que esse método já trata de cadastro de eventos.
+        eventosCadastrados.add(evento); // Adiciona evento à lista de eventos cadastrados.
+
+        return evento; // Retorna o evento criado.
 
     }
 
@@ -70,20 +70,31 @@ public class Controller {
         evento = evento.encontrarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome.
         if (evento!= null) { // Verifica se o evento foi encontrado.
             evento.adicionarAssento(assento); // Adiciona o assento ao evento.
+        } else {
+            System.out.println("Esse evento não existe!");
         }
     }
 
+    public void adicionarIngresso(Ingresso ingresso) {
+        evento.adicionarIngresso(ingresso);
+    }
+
     // Comprar ingresso para um evento. Cria novo ingresso associando usuário, evento e assento.
-    public Ingresso comprarIngresso(Usuario usuario, String nomeDoEvento, String assento) {
-        ingresso = evento.venderIngresso(usuario, nomeDoEvento, assento); // Cria um novo ingresso.
+    public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
+        evento = evento.encontrarEventoPorNome(nomeDoEvento);
+        ingresso = evento.venderIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
         ingressosComprados.add(ingresso); // Adiciona ingresso à lista de ingressos comprados.
 
-        return ingresso; // Retorna ingresso criado.
+        return ingresso;
+    }
+
+    public void adicionarFormaPagamento (Pagamento pagamento) {
+        usuario.adicionaFormaDePagamento(pagamento);
     }
 
     // Cancela a compra de um ingresso.
-    public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
-        return usuario.cancelarIngressoComprado(ingresso);
+    public boolean cancelarCompra(Usuario usuario, Ingresso ingresso, Pagamento pagamento) {
+        return usuario.cancelarIngressoComprado(ingresso, pagamento);
     }
 
     public void adicionaFormaPagamento (Usuario usuario, Pagamento pagamento) {

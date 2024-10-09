@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 
 
 public class Compra {
@@ -25,8 +24,17 @@ public class Compra {
         this.status = "Pendente";
     }
 
+    public Compra(Usuario usuario, Ingresso ingresso) {
+        this.usuario = usuario;
+        this.ingresso = ingresso;
+        this.valor = 100.0; // Valor padrão
+        this.status = "Pendente";
+    }
+
     public Compra(Ingresso ingresso) {
         this.ingresso = ingresso;
+        this.valor = 100.0; // Valor padrão
+        this.status = "Pendente";
     }
 
     public String processarCompra (Pagamento pagamento) {
@@ -37,11 +45,10 @@ public class Compra {
                 "Pagamento no valor de " + valor + " processado com sucesso no boleto.")) {
             this.status = "Aprovado";
         }
-
         return resultadoCompra;
     }
 
-    public String detalhesDaCompra (Usuario usuario, Pagamento pagamento) {
+    public String mensagemConfirmaCompra(Usuario usuario, Pagamento pagamento) {
         return "Destinatário: " + usuario.getEmail() + "\nAssunto: Confirmação de Compra\n\n" +
                 "Olá, " + usuario.getNome() + ",\n\n" +
                 "Obrigado por sua compra! Aqui estão os detalhes da sua compra:\n\n" +
@@ -55,7 +62,7 @@ public class Compra {
     public void confirmarCompra(Usuario usuario, Pagamento pagamento) {
         // Gera o arquivo JSON simulando o "e-mail de confirmação"
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(detalhesDaCompra(usuario, pagamento));
+        String json = gson.toJson(mensagemConfirmaCompra(usuario, pagamento));
 
         // Salva o JSON em um arquivo
         try (FileWriter writer = new FileWriter("confirmacao_compra.json")) {
@@ -63,6 +70,16 @@ public class Compra {
             System.out.println("Arquivo de confirmação gerado com sucesso.");
         } catch (IOException e) {
             System.out.println("Erro ao gerar arquivo de confirmação: " + e.getMessage());
+        }
+    }
+
+    public void cancelarCompra (Compra compra, Pagamento pagamento) {
+        if (!(status.equals("Cancelado"))) {
+            setStatus("Cancelado");  // Marca a compra como cancelada
+            String reembolso = pagamento.reembolsarPagamento(compra); // Chama o método de reembolso
+            System.out.println(reembolso);
+        } else {
+            System.out.println("A compra já foi cancelada.");
         }
     }
 
@@ -96,5 +113,9 @@ public class Compra {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

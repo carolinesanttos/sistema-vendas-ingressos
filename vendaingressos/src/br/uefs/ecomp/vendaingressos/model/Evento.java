@@ -32,6 +32,7 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
+
     }
 
     public Evento(Usuario usuario, String nome, String descricao, Date data) {
@@ -54,6 +55,8 @@ public class Evento {
         boolean contemEvento = eventosCadastrados.contains(evento);
         if (!contemEvento) {
             eventosCadastrados.add(evento);
+        } else {
+            System.out.println("Evento já cadastrado.");
         }
     }
 
@@ -62,6 +65,8 @@ public class Evento {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (!contemAssento) {
             assentosDisponiveis.add(assento);
+        } else {
+            System.out.println("Assento já foi adicionado.");
         }
     }
 
@@ -70,6 +75,8 @@ public class Evento {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (contemAssento) {
             assentosDisponiveis.remove(assento);
+        } else {
+            System.out.println("Esse assento já foi removido.");
         }
     }
 
@@ -103,6 +110,8 @@ public class Evento {
         boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
         if (!contemIngresso) {
             ingressosDisponiveis.add(ingresso);
+        } else {
+            System.out.println("Ingresso já cadastrado.");
         }
     }
 
@@ -110,23 +119,24 @@ public class Evento {
         boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
         if (contemIngresso) {
             ingressosDisponiveis.remove(ingresso);
+        } else {
+            System.out.println("Esse ingresso já foi removido.");
         }
     }
 
     // Vende um ingresso. Cria um ingresso para evento e associa ao usuário.
-    public Ingresso venderIngresso(Usuario usuario, String nomeDoEvento, String assento) {
-        Evento evento = encontrarEventoPorNome(nomeDoEvento); // Busca evento pelo nome.
+    public Ingresso venderIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
+        Compra compra = new Compra(usuario, ingresso); // Cria uma compra
 
-        ingressosComprados.add(ingresso);
-        ingresso.getUsuario().adicionarCompras(new Compra(ingresso));
-        //ingresso.getUsuario().adicionarIngressoComprado(ingresso); // Adiciona ingresso à lista
+        compra.processarCompra(pagamento);
 
-        // de ingressos comprados pelo usuário.
-        assentosDisponiveis.remove(assento); // Remove assento da lista de disponíveis,
-        // pois foi reservado por um usuário.
-        assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados,
-        // pois foi reservado por um usuário.
+        ingressosComprados.add(ingresso); // Adiciona a lista de ingresso comprados do evento
+        ingresso.getUsuario().adicionarCompras(new Compra(usuario, ingresso)); // E também adiciona a lista de compras do usuário
+
+        removerIngresso(ingresso);
+        removerAssento(assento);
+        assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados, pois foi reservado por um usuário.
 
         return ingresso; // Retorna o ingresso criado.
     }

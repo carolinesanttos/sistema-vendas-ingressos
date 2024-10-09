@@ -7,6 +7,8 @@ public class Pagamento {
     private String validadeDoCartao;
     private String codigoDeSeguranca;
     private String codigoDeBarras;   // Para pagamento com boleto
+    private boolean reembolso;
+    Compra compra;
 
     // Forma de pagamento: Cartão
     public Pagamento(String nomeTitular, String numeroDoCartao, String validadeDoCartao, String codigoDeSeguranca) {
@@ -15,12 +17,14 @@ public class Pagamento {
         this.numeroDoCartao = numeroDoCartao;
         this.validadeDoCartao = validadeDoCartao;
         this.codigoDeSeguranca = codigoDeSeguranca;
+        reembolso = false;
     }
 
     // Forma de pagamento: Boleto
     public Pagamento(String codigoDeBarras) {
         this.formaDePagamento = "Boleto bancário";
         this.codigoDeBarras = codigoDeBarras;
+        reembolso = false;
     }
 
     public String processarPagamento(double valor) {
@@ -33,9 +37,15 @@ public class Pagamento {
         }
     }
 
-//    public double reembolsarPagamento() {
-//
-//    }
+    public String reembolsarPagamento(Compra compra) {
+        this.compra = compra;
+        if (!reembolso) {
+            reembolso = true;  // Marca o pagamento como reembolsado
+            return "O pagamento no valor de R$" + compra.getValor() + " será em reembolsado em até 15 dias via " + formaDePagamento + ".";
+        } else {
+            return "O pagamento já foi reembolsado.";
+        }
+    }
 
 
     public String getFormaDePagamento() {
