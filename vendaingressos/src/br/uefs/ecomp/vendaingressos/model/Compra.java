@@ -59,7 +59,7 @@ public class Compra {
                 "Atenciosamente,\nEquipe de Vendas";
     }
 
-    public void confirmarCompra(Usuario usuario, Pagamento pagamento) {
+    public String confirmarCompra(Usuario usuario, Pagamento pagamento) {
         // Gera o arquivo JSON simulando o "e-mail de confirmação"
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(mensagemConfirmaCompra(usuario, pagamento));
@@ -67,17 +67,15 @@ public class Compra {
         // Salva o JSON em um arquivo
         try (FileWriter writer = new FileWriter("confirmacao_compra.json")) {
             writer.write(json);
-            System.out.println("Arquivo de confirmação gerado com sucesso.");
+            return mensagemConfirmaCompra(usuario, pagamento);
         } catch (IOException e) {
-            System.out.println("Erro ao gerar arquivo de confirmação: " + e.getMessage());
+            return "Erro ao gerar arquivo de confirmação: " + e.getMessage();
         }
     }
 
     public void cancelarCompra (Compra compra, Pagamento pagamento) {
         if (!(status.equals("Cancelado"))) {
             setStatus("Cancelado");  // Marca a compra como cancelada
-            String reembolso = pagamento.reembolsarPagamento(compra); // Chama o método de reembolso
-            System.out.println(reembolso);
         } else {
             System.out.println("A compra já foi cancelada.");
         }

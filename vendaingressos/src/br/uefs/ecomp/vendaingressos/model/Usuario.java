@@ -11,10 +11,7 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Usuario {
     private String login;
@@ -26,7 +23,7 @@ public class Usuario {
     private boolean isLogado;
     Compra compra;
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
-    private List<Pagamento>formaDePagamento = new ArrayList<>();
+    private List<Pagamento> formasDePagamento = new ArrayList<>();
     private List <Compra> ingressosComprados = new ArrayList<>();
 
     // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
@@ -63,9 +60,11 @@ public class Usuario {
                     this.isLogado = true;
                     return true; // Usuário logado com sucesso
                 }
+                System.out.println("Usuário ou senha incorreta");
                 return false; // Senha incorreta
             }
         }
+        System.out.println("É necessário realizar o seu cadastro para login.");
         return false; // Usuário não está cadastrado
     }
 
@@ -108,14 +107,27 @@ public class Usuario {
 
     public void adicionaFormaDePagamento (Pagamento pagamento) {
         if (this.isLogado) {
-            formaDePagamento.add(pagamento);
+            formasDePagamento.add(pagamento);
+            if (pagamento != null) {
+                formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
+            }
         } else {
             System.out.println("É necessário estar logado para realizar essa ação.");
         }
     }
 
     public void removerFormaDePagamento (Pagamento pagamento) {
-        formaDePagamento.remove(pagamento);
+        formasDePagamento.remove(pagamento);
+    }
+
+    public Pagamento escolheFormaPagamento (Pagamento pagamento) {
+        boolean contemPagamento = formasDePagamento.contains(pagamento);
+        if (contemPagamento) {
+            return pagamento;
+        } else {
+            System.out.println("Forma de pagamento não encontrada");
+            return null;
+        }
     }
 
     // Método equals sobrescrito para comparar dois objetos Usuario.
@@ -169,12 +181,16 @@ public class Usuario {
     }
 
 
-    public List<Pagamento> getFormaDePagamento() {
-        return formaDePagamento;
+    public List<Pagamento> getFormasDePagamento() {
+        return formasDePagamento;
     }
 
     public List<Compra> getCompras() {
         return ingressosComprados;
+    }
+
+    public Compra getCompra() {
+        return compra;
     }
 
     public boolean isLogado() {
@@ -182,11 +198,19 @@ public class Usuario {
     }
 
     public void setSenha(String senha) {
-        this.senha = senha;
+        if (this.isLogado) {
+            this.senha = senha;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        if (this.isLogado) {
+            this.nome = nome;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     public void setCpf(String cpf) {
@@ -194,7 +218,11 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (this.isLogado) {
+            this.email = email;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     public void setLogado(boolean logado) {

@@ -129,8 +129,6 @@ public class Evento {
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
         Compra compra = new Compra(usuario, ingresso); // Cria uma compra
 
-        compra.processarCompra(pagamento);
-
         ingressosComprados.add(ingresso); // Adiciona a lista de ingresso comprados do evento
         ingresso.getUsuario().adicionarCompras(new Compra(usuario, ingresso)); // E também adiciona a lista de compras do usuário
 

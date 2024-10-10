@@ -1,5 +1,7 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import java.util.Objects;
+
 public class Pagamento {
     private String formaDePagamento;  // Cartão ou boleto
     private String nomeTitular;
@@ -50,5 +52,27 @@ public class Pagamento {
 
     public String getFormaDePagamento() {
         return formaDePagamento;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pagamento pagamento = (Pagamento) o;
+        // Se a forma de pagamento for cartão, compara o número do cartão
+        if (this.formaDePagamento.equals("Cartão")) {
+            return Objects.equals(numeroDoCartao, pagamento.numeroDoCartao);
+        }
+        // Se a forma de pagamento for boleto, compara o código de barras
+        if (this.formaDePagamento.equals("Boleto bancário")) {
+            return Objects.equals(codigoDeBarras, pagamento.codigoDeBarras);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // Gera o hashCode com base no número do cartão ou código de barras
+        return Objects.hash(formaDePagamento.equals("Cartão") ? numeroDoCartao : codigoDeBarras);
     }
 }

@@ -84,8 +84,19 @@ public class Controller {
         evento = evento.encontrarEventoPorNome(nomeDoEvento);
         ingresso = evento.venderIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
         ingressosComprados.add(ingresso); // Adiciona ingresso à lista de ingressos comprados.
-
         return ingresso;
+    }
+
+    public Pagamento escolheFormaPagamento(Pagamento pagamento) {
+        return usuario.escolheFormaPagamento(pagamento);
+    }
+
+    public String processarPagamento(Pagamento formaPagamento, double valor) {
+        return formaPagamento.processarPagamento(valor);
+    }
+
+    public String confirmacaoDeCompra(Usuario usuario, Pagamento pagamento) {
+        return usuario.getCompra().confirmarCompra(usuario, pagamento);
     }
 
     public void adicionarFormaPagamento (Pagamento pagamento) {
@@ -97,32 +108,17 @@ public class Controller {
         return usuario.cancelarIngressoComprado(ingresso, pagamento);
     }
 
+    public String reembolsarValor(Ingresso ingresso, Pagamento pagamento) {
+        compra = new Compra(ingresso);
+        return pagamento.reembolsarPagamento(compra);
+    }
+
     public void adicionaFormaPagamento (Usuario usuario, Pagamento pagamento) {
         usuario.adicionaFormaDePagamento(pagamento);
     }
 
     public List<Pagamento> listarFormasDePagamento(Usuario usuario) {
-        return usuario.getFormaDePagamento();
-    }
-
-    public String processarPagamento(Pagamento formaPagamento, double valor) {
-        return formaPagamento.processarPagamento(valor);
-    }
-
-    public Ingresso gerarIngressos(Evento evento, double valor, String assento) {
-        Ingresso ingresso = new Ingresso(evento, valor, assento);
-        evento.adicionarIngresso(ingresso);
-        return ingresso;
-    }
-
-    public String processsarCompra(Usuario usuario, Ingresso ingresso, Pagamento pagamento, Date data, double valor) {
-        Compra compra = new Compra(usuario, ingresso, data, valor);
-        usuario.adicionarCompras(compra);
-        return compra.processarCompra(pagamento);
-    }
-
-    public Compra mostrarDetalheCompra(Usuario usuario) {
-        return usuario.detalhesDaCompra();
+        return usuario.getFormasDePagamento();
     }
 
     public List<Evento> listarEventosDisponiveis() {
