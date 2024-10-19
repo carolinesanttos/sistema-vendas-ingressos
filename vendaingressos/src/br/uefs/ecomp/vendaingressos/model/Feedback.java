@@ -7,10 +7,12 @@ public class Feedback {
     private String comentario;
 
     public Feedback(Usuario usuario, Evento evento, int nota, String comentario) {
-        this.usuario = usuario;
-        this.evento = evento;
-        setNota(nota);
-        this.comentario = comentario;
+        if (usuario.isLogado()) {
+            this.usuario = usuario;
+            this.evento = evento;
+            setNota(nota);
+            this.comentario = comentario;
+        }
     }
 
 

@@ -11,6 +11,8 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
+import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoEncontradoException;
+
 import java.util.*;
 
 public class Usuario {
@@ -21,7 +23,7 @@ public class Usuario {
     private String email;
     private boolean adm;
     private boolean isLogado;
-    Compra compra;
+    private Compra compra;
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
     private List<Pagamento> formasDePagamento = new ArrayList<>();
     private List <Compra> ingressosComprados = new ArrayList<>();
@@ -57,15 +59,14 @@ public class Usuario {
             if (usuario.getLogin().equals(login)) {
                 // Se o usuário estiver cadastrado, verifica a senha
                 if (usuario.getSenha().equals(senha)) {
-                    this.isLogado = true;
+                    usuario.setLogado(true);
                     return true; // Usuário logado com sucesso
                 }
                 System.out.println("Usuário ou senha incorreta");
                 return false; // Senha incorreta
             }
         }
-        System.out.println("É necessário realizar o seu cadastro para login.");
-        return false; // Usuário não está cadastrado
+        throw new UserNaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
     }
 
     public void logout() {
@@ -107,7 +108,6 @@ public class Usuario {
 
     public void adicionaFormaDePagamento (Pagamento pagamento) {
         if (this.isLogado) {
-            formasDePagamento.add(pagamento);
             if (pagamento != null) {
                 formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
             }
@@ -147,6 +147,10 @@ public class Usuario {
     @Override
     public int hashCode() {
         return Objects.hash(login, cpf, email);
+    }
+
+    public static void limparUsuariosCadastrados() {
+        usuariosCadastrados.clear();
     }
 
     public String getLogin() {
@@ -191,6 +195,10 @@ public class Usuario {
 
     public Compra getCompra() {
         return compra;
+    }
+
+    public static List<Usuario> getUsuariosCadastrados() {
+        return usuariosCadastrados;
     }
 
     public boolean isLogado() {

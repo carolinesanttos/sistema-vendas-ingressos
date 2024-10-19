@@ -11,6 +11,9 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
+import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoEncontradoException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,8 +24,8 @@ public class Controller {
     Evento evento;
     Ingresso ingresso;
     Compra compra;
-    private List<Evento> eventosCadastrados = new ArrayList<>();
-    private List<Ingresso> ingressosComprados = new ArrayList<>();
+    //private List<Evento> eventosCadastrados = new ArrayList<>();
+    //private List<Ingresso> ingressosComprados = new ArrayList<>();
 
     // Cadastra um novo usuário. Recebe as informações do usuário, cria um objeto do tipo "Usuario" e cadastra.
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
@@ -32,8 +35,12 @@ public class Controller {
     }
 
     public Usuario login (String login, String senha) {
-        boolean logado = usuario.login(login, senha);
-        return usuario;
+        boolean logado = usuario.login(login, senha);  // Chama o método que pode lançar a exceção
+        if (logado) {
+            return usuario;  // Retorna o usuário se o login for bem-sucedido
+        } else {
+            throw new UserNaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
+        }
     }
 
     public void alterarNome (String nome) {
@@ -58,7 +65,7 @@ public class Controller {
         // Se as condições forem atendidas, o evento é cadastrado
         evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações dadas.
         evento.cadastroDeEventos(evento); // Supondo que esse método já trata de cadastro de eventos.
-        eventosCadastrados.add(evento); // Adiciona evento à lista de eventos cadastrados.
+        //eventosCadastrados.add(evento); // Adiciona evento à lista de eventos cadastrados.
 
         return evento; // Retorna o evento criado.
 
@@ -137,6 +144,7 @@ public class Controller {
         return ingressosComprados;
     }
 
-
-
+    public static void limparUsuariosCadastrados() {
+        Usuario.limparUsuariosCadastrados();
+    }
 }
