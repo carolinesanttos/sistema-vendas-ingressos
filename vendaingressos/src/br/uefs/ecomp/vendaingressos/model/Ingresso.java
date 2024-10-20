@@ -19,6 +19,7 @@ public class Ingresso {
     private Evento evento;
     private String assento;
     private Usuario usuario;
+    private Compra compra;
 
     public Ingresso(Evento evento, double valor, String assento) {
         this.evento = evento;
@@ -33,6 +34,11 @@ public class Ingresso {
         this.assento = assento;
         this.preco = 100.0; // Preço padrão do ingresso.
         this.status = true; // Ingressos inicialmente estão ativos.
+    }
+
+    public Ingresso(Usuario usuario, Evento evento) {
+        this.usuario = usuario;
+        this.evento = evento;
     }
 
     // Verifica se o ingresso está ativo.
@@ -98,6 +104,10 @@ public class Ingresso {
         return usuario;
     }
 
+    public Compra getCompra() {
+        return compra;
+    }
+
     public void setPreco(float preco) {
         this.preco = preco;
     }
@@ -110,4 +120,7 @@ public class Ingresso {
         this.evento = evento;
     }
 
+    public void setCompra(Compra compra) {
+        this.compra = compra;
+    }
 }

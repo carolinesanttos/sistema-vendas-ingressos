@@ -1,5 +1,7 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoLogadoException;
+
 public class Feedback {
     private Usuario usuario;
     private Evento evento;
@@ -12,6 +14,8 @@ public class Feedback {
             this.evento = evento;
             setNota(nota);
             this.comentario = comentario;
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para avaliar o evento.");
         }
     }
 

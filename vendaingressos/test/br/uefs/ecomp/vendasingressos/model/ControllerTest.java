@@ -5,10 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.uefs.ecomp.vendaingressos.model.*;
-import br.uefs.ecomp.vendaingressos.model.Excecao.CredencialInvalidaException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.EventoForaDoPrazoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -140,11 +137,11 @@ public class ControllerTest {
         controller.login("admin", "senha123");
 
         Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(2024, Calendar.NOVEMBER, 30);
+        calendar1.set(2024, Calendar.DECEMBER, 30);
         Date data1 = calendar1.getTime();
 
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(2024, Calendar.SEPTEMBER, 15);
+        calendar2.set(2024, Calendar.DECEMBER, 29);
         Date data2 = calendar2.getTime();
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data1);
@@ -311,11 +308,8 @@ public class ControllerTest {
     @Test
     public void testConfirmacaoDeCompra () {
 
-        Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
-        controller.login("carolsan", "animehime");
-
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.NOVEMBER, 30);
+        calendar.set(2024, Calendar.DECEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -323,6 +317,9 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
+
+        Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
+        controller.login("carolsan", "animehime");
 
         Ingresso ingresso = new Ingresso(usuario, evento, "A1");
         controller.adicionarIngresso(ingresso);
@@ -342,6 +339,39 @@ public class ControllerTest {
                 "Produto: Show de Rock - Assento: A1\n" + "Valor: R$ 100.0\n" +
                 "Método de pagamento: Cartão\n\n" + "Sua compra foi processada com sucesso. Caso tenha dúvidas, " +
                 "entre em contato com nosso suporte.\n\n" + "Atenciosamente,\nEquipe de Vendas", mensagemEnviada);
+    }
+
+    @Test
+    public void testCompraNaoAutorizada () {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "A1");
+
+        Usuario usuario = controller.cadastrarUsuario("paulo_ramos", "senhaPaulo99", "Paulo Ramos", "33344455566", "paulo.ramos@example.com", false);
+        controller.login("paulo_ramos", "senhaPaulo99");
+
+        Ingresso ingresso = new Ingresso(usuario, evento, "A1");
+        controller.adicionarIngresso(ingresso);
+
+        Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "Carol Santos", "10/31", "927");
+        usuario.adicionaFormaDePagamento(pagamento);
+
+        ingresso = controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
+
+        String resultado = controller.processarPagamento(pagamento, ingresso.getPreco());
+
+        String mensagemEnviada = controller.confirmacaoDeCompra(usuario, pagamento);
+
+
+
+
     }
 
     @Test
@@ -377,7 +407,7 @@ public class ControllerTest {
     public void testAvaliacao () {
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.DECEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
@@ -402,6 +432,43 @@ public class ControllerTest {
 
         assertEquals("Infelizmente, o evento foi uma grande decepção.", feedback.getComentario());
         assertEquals("O evento foi excelente!", feedback2.getComentario());
+    }
+
+    @Test
+    public void testAvaliacaoInvalida () {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario usuario = controller.cadastrarUsuario("joaosilva", "passJoao2024", "João Silva", "11122233344", "joao.silva@example.com", false);
+        controller.login("joaosilva", "passJoao2024");
+
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Feedback feedback2 = new Feedback(usuario, evento, 10, "O evento foi excelente!");
+        });
+
+        assertEquals("A nota deve estar entre 1 e 5.", exception.getMessage());
+    }
+
+    @Test
+    public void testAvaliacaoNaoLogado () {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario usuario = controller.cadastrarUsuario("joaosilva", "passJoao2024", "João Silva", "11122233344", "joao.silva@example.com", false);
+
+        Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
+
+        UserNaoLogadoException exception = assertThrows(UserNaoLogadoException.class, () -> {
+            Feedback feedback2 = new Feedback(usuario, evento, 10, "O evento foi excelente!");
+        });
+
+        assertEquals("É necessário estar logado para avaliar o evento.", exception.getMessage());
     }
 
     @Test
@@ -543,6 +610,28 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAssentoNaoEncontrado () {
+    public void testAssentJaCadastrado () {
+        Usuario usuario = controller.cadastrarUsuario("mariazinha", "segura123", "Maria Costa", "98765432100", "maria.costa@example.com", false);
+        controller.login("mariazinha", "segura123");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "B1");
+
+        JaCadastradoException exception = assertThrows(JaCadastradoException.class, () -> {
+            controller.adicionarAssentoEvento("Show de Rock", "B1");
+        });
+
+        assertEquals("Assento já adicionado.", exception.getMessage());
+
+    }
+
+
 
 }

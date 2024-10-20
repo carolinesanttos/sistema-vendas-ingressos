@@ -2,6 +2,7 @@ package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.Date;
 
+import br.uefs.ecomp.vendaingressos.model.Excecao.CompraNaoAutorizadaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
@@ -43,9 +44,12 @@ public class Compra {
 
         if (resultadoCompra.equals("Pagamento no valor de " + valor + " processado com sucesso no cartão.") || resultadoCompra.equals(
                 "Pagamento no valor de " + valor + " processado com sucesso no boleto.")) {
-            this.status = "Aprovado";
+            setStatus("Aprovado");
+            return resultadoCompra;
         }
-        return resultadoCompra;
+        setStatus("Cancelado");
+        throw new CompraNaoAutorizadaException("Compra não autorizada.");
+
     }
 
     public String mensagemConfirmaCompra(Usuario usuario, Pagamento pagamento) {
