@@ -11,10 +11,8 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class Controller {
         if (logado) {
             return usuario;  // Retorna o usuário se o login for bem-sucedido
         } else {
-            throw new UserNaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
+            throw new NaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
         }
     }
 
@@ -90,7 +88,7 @@ public class Controller {
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
         evento = evento.encontrarEventoPorNome(nomeDoEvento);
         ingresso = evento.venderIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
-        ingressosComprados.add(ingresso); // Adiciona ingresso à lista de ingressos comprados.
+        //ingressosComprados.add(ingresso); // Adiciona ingresso à lista de ingressos comprados.
         return ingresso;
     }
 
@@ -129,19 +127,11 @@ public class Controller {
     }
 
     public List<Evento> listarEventosDisponiveis() {
-        return getEventosCadastrados();
+        return evento.getEventosCadastrados();
     }
 
     public List<Ingresso> listarIngressosComprados(Usuario usuario) {
-        return getIngressosComprados();
-    }
-
-    public List<Evento> getEventosCadastrados() {
-        return eventosCadastrados;
-    }
-
-    public List<Ingresso> getIngressosComprados() {
-        return ingressosComprados;
+        return ingresso.getEvento().getIngressosComprados();
     }
 
     public static void limparUsuariosCadastrados() {

@@ -11,7 +11,9 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.CredencialInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
 
 import java.util.*;
 
@@ -49,6 +51,8 @@ public class Usuario {
         boolean contemUsuario = usuariosCadastrados.contains(usuario);
         if (!contemUsuario) {
             usuariosCadastrados.add(usuario);
+        } else {
+            throw new JaCadastradoException("Usuário já cadastrado.");
         }
     }
 
@@ -62,15 +66,14 @@ public class Usuario {
                     usuario.setLogado(true);
                     return true; // Usuário logado com sucesso
                 }
-                System.out.println("Usuário ou senha incorreta");
-                return false; // Senha incorreta
+                throw new CredencialInvalidaException("Login ou senha inválidos.");
             }
         }
-        throw new UserNaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
+        throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
     }
 
     public void logout() {
-        this.isLogado = false; // Desloga o usuário
+        setLogado(false); // Desloga o usuário
     }
 
     public void adicionarCompras(Compra compra) {

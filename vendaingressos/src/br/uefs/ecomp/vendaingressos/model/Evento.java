@@ -22,7 +22,7 @@ public class Evento {
     private Date data;
     private boolean status;
     private Usuario usuario;
-    private List<Evento> eventosCadastrados = new ArrayList<>();
+    private static List<Evento> eventosCadastrados = new ArrayList<>();
     private List<String> assentosDisponiveis = new ArrayList<>();
     private List<String> assentosReservados = new ArrayList<>();
     private List<Ingresso> ingressosDisponiveis = new ArrayList<>();
@@ -139,6 +139,10 @@ public class Evento {
         return ingresso; // Retorna o ingresso criado.
     }
 
+    public static void limparEventosCadastrados() {
+        eventosCadastrados.clear();
+    }
+
     public String getNome() {
         return nome;
     }
@@ -161,6 +165,10 @@ public class Evento {
 
     public List<Evento> getEventosCadastrados() {
         return eventosCadastrados;
+    }
+
+    public List<Ingresso> getIngressosComprados() {
+        return ingressosComprados;
     }
 
     public Usuario getUsuario() {

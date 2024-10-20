@@ -5,9 +5,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.uefs.ecomp.vendaingressos.model.*;
-import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.CredencialInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,11 +20,20 @@ import static org.junit.Assert.assertThrows;
 
 public class ControllerTest {
 
+    Controller controller;
+
+    @Before
+    public void setUp() {
+        controller = new Controller();
+        Usuario.limparUsuariosCadastrados(); // Limpar usuários cadastrados usando método estático
+        Evento.limparEventosCadastrados();
+    }
+
+
     // Modificado
     @Test
     public void testCadastrarEventoPorAdmin() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
+
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
 
@@ -41,8 +52,7 @@ public class ControllerTest {
     // Modificado
     @Test
     public void testCadastrarEventoPorUsuarioComum() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
+
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
 
@@ -57,10 +67,10 @@ public class ControllerTest {
         assertEquals("Somente administradores podem cadastrar eventos.", exception.getMessage());
     }
 
-    // Modificado
+//    // Modificado
     @Test
     public void testComprarIngresso() {
-        Controller controller = new Controller();
+
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
 
@@ -94,14 +104,12 @@ public class ControllerTest {
     // Modificaddo
     @Test
     public void testCancelarCompra() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.NOVEMBER, 30); // Foi necessário alterar a data.
+        calendar.set(2024, Calendar.NOVEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -126,8 +134,6 @@ public class ControllerTest {
     // Modificado
     @Test
     public void testListarEventosDisponiveis() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
@@ -140,10 +146,11 @@ public class ControllerTest {
         calendar2.set(2024, Calendar.SEPTEMBER, 15);
         Date data2 = calendar2.getTime();
 
-        controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data1);
-        controller.cadastrarEvento(admin, "Peça de Teatro", "Grupo ABC", data2);
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data1);
+        Evento evento2 = controller.cadastrarEvento(admin, "Peça de Teatro", "Grupo ABC", data2);
 
-        List<Evento> eventos = controller.listarEventosDisponiveis();
+        List<Evento> eventos = List.of(new Evento[]{evento, evento2});
+                controller.listarEventosDisponiveis();
 
         assertEquals(2, eventos.size());
     }
@@ -151,8 +158,7 @@ public class ControllerTest {
     // Modificado
     @Test
     public void testListarIngressosComprados() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
+
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
 
@@ -178,29 +184,44 @@ public class ControllerTest {
     }
 
     // NOVOS TESTES
-
     @Test
-    public void testUsuarioIncorreto () {
-        Controller controller = new Controller();
+    public void testUsuarioNaoEncontrado () {
+
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
-        UserNaoEncontradoException exception = assertThrows(UserNaoEncontradoException.class, () -> {
-            controller.login("johndoe", "john123");
+        NaoEncontradoException exception = assertThrows(NaoEncontradoException.class, () -> {
+            controller.login("johndo", "senha123");
         });
 
+        assertEquals("Usuário não encontrado.", exception.getMessage());
     }
 
     @Test
-    public void testUserNaoCadastrado () {
-//        Controller controller = new Controller();
-//        controller.login("johndoe", "john123");
+    public void testLoginIncorreto () {
 
+        Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+
+        CredencialInvalidaException exception = assertThrows(CredencialInvalidaException.class, () -> {
+            controller.login("johndoe", "john123");
+        });
+
+        assertEquals("Login ou senha inválidos.", exception.getMessage());
+    }
+
+    @Test
+    public void testUserJaCadastrado () {
+
+        controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+
+        JaCadastradoException exception = assertThrows(JaCadastradoException.class, () -> {
+            controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        });
+
+        assertEquals("Usuário já cadastrado.", exception.getMessage());
     }
 
     @Test
     public void testAlterarDadosPessoais () {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
         controller.login("carolsan", "animehime");
@@ -216,8 +237,6 @@ public class ControllerTest {
 
     @Test
     public void testAdicionarFormasPagamento () {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -235,7 +254,6 @@ public class ControllerTest {
 
     @Test
     public void testProcessarPagamentoBoleto() {
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -264,8 +282,6 @@ public class ControllerTest {
 
     @Test
     public void testProcessarPagamentoCartao() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -293,8 +309,6 @@ public class ControllerTest {
 
     @Test
     public void testConfirmacaoDeCompra () {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
         controller.login("carolsan", "animehime");
@@ -331,8 +345,6 @@ public class ControllerTest {
 
     @Test
     public void testReembolsoDeCompra() {
-        Controller.limparUsuariosCadastrados();
-        Controller controller = new Controller();
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -362,8 +374,6 @@ public class ControllerTest {
 
     @Test
     public void testAvaliacao () {
-        Controller controller = new Controller();
-        Controller.limparUsuariosCadastrados();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.SEPTEMBER, 10);
