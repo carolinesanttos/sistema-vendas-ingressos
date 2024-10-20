@@ -22,8 +22,6 @@ public class Controller {
     Evento evento;
     Ingresso ingresso;
     Compra compra;
-    //private List<Evento> eventosCadastrados = new ArrayList<>();
-    //private List<Ingresso> ingressosComprados = new ArrayList<>();
 
     // Cadastra um novo usuário. Recebe as informações do usuário, cria um objeto do tipo "Usuario" e cadastra.
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
@@ -53,7 +51,7 @@ public class Controller {
     }
 
     // Cadastra um novo evento. Verifica se usuário tem permissão de administrador antes de cadastrar.
-    public Evento cadastrarEvento(Usuario usuario, String nomeDoEvento, String descricao, Date data) throws SecurityException{
+    public Evento cadastrarEvento(Usuario usuario, String nomeDoEvento, String descricao, Date data) {
         if (!usuario.isLogado()) { // Verifica se usuário está logado
             throw new SecurityException("Precisa estar logado para cadastrar um evento.");
         }
@@ -63,7 +61,6 @@ public class Controller {
         // Se as condições forem atendidas, o evento é cadastrado
         evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações dadas.
         evento.cadastroDeEventos(evento); // Supondo que esse método já trata de cadastro de eventos.
-        //eventosCadastrados.add(evento); // Adiciona evento à lista de eventos cadastrados.
 
         return evento; // Retorna o evento criado.
 
@@ -72,7 +69,7 @@ public class Controller {
     // Adiciona assento disponível a um evento específico. Procura o evento pelo nome e adiciona
     // o assento à lista de assentos disponíveis.
     public void adicionarAssentoEvento(String nomeDoEvento, String assento) {
-        evento = evento.encontrarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome.
+        evento = evento.buscarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome.
         if (evento!= null) { // Verifica se o evento foi encontrado.
             evento.adicionarAssento(assento); // Adiciona o assento ao evento.
         } else {
@@ -86,9 +83,8 @@ public class Controller {
 
     // Comprar ingresso para um evento. Cria novo ingresso associando usuário, evento e assento.
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
-        evento = evento.encontrarEventoPorNome(nomeDoEvento);
+        evento = evento.buscarEventoPorNome(nomeDoEvento);
         ingresso = evento.venderIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
-        //ingressosComprados.add(ingresso); // Adiciona ingresso à lista de ingressos comprados.
         return ingresso;
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.uefs.ecomp.vendaingressos.model.*;
 import br.uefs.ecomp.vendaingressos.model.Excecao.CredencialInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.Excecao.EventoForaDoPrazoException;
 import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
 import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
 import org.junit.Before;
@@ -75,7 +76,7 @@ public class ControllerTest {
         controller.login("johndoe", "senha123");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.NOVEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -163,7 +164,7 @@ public class ControllerTest {
         controller.login("johndoe", "senha123");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.NOVEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -259,7 +260,7 @@ public class ControllerTest {
         controller.login("johndoe", "senha123");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.NOVEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -287,7 +288,7 @@ public class ControllerTest {
         controller.login("johndoe", "senha123");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        calendar.set(2024, Calendar.NOVEMBER, 30);
         Date data = calendar.getTime();
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
@@ -402,5 +403,146 @@ public class ControllerTest {
         assertEquals("Infelizmente, o evento foi uma grande decepção.", feedback.getComentario());
         assertEquals("O evento foi excelente!", feedback2.getComentario());
     }
+
+    @Test
+    public void testEventoExpirou () {
+
+        Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        controller.login("johndoe", "senha123");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.SEPTEMBER, 10);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "AK1");
+
+        Ingresso ingresso = new Ingresso(usuario, evento, "K1");
+        controller.adicionarIngresso(ingresso);
+
+        Pagamento pagamento = new Pagamento("7891234567890");
+        controller.adicionarFormaPagamento(pagamento);
+
+        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(pagamento);
+
+        assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
+
+        EventoForaDoPrazoException exception = assertThrows(EventoForaDoPrazoException.class, () -> {
+            controller.comprarIngresso(usuario, pagamentoEscolhido, "Show de Rock", "A1");
+        });
+
+        assertEquals("Não é possível comprar ingresso para o evento Show de Rock porque o prazo para compra já expirou.", exception.getMessage());
+    }
+
+    @Test
+    public void testEventoNaoEncontrado () {
+        Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
+        controller.login("carolsan", "animehime");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "B1");
+
+        Ingresso ingresso = new Ingresso(usuario, evento, "B1");
+        controller.adicionarIngresso(ingresso);
+
+        Pagamento pagamento = new Pagamento("7896541239858845");
+        controller.adicionarFormaPagamento(pagamento);
+
+        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(pagamento);
+
+        assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
+
+        NaoEncontradoException exception = assertThrows(NaoEncontradoException.class, () -> {
+            controller.comprarIngresso(usuario, pagamentoEscolhido, "Show de Ballet", "A1");
+        });
+
+        assertEquals("Evento não encontrado.", exception.getMessage());
+    }
+
+    @Test
+    public void testEventoJaCadastrado () {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+
+        JaCadastradoException exception = assertThrows(JaCadastradoException.class, () -> {
+            controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        });
+
+        assertEquals("Evento já cadastrado.", exception.getMessage());
+    }
+
+    @Test
+    public void testIngressoJaCadastrado () {
+
+        Usuario usuario = controller.cadastrarUsuario("rafael123", "senhaRafael", "Rafael Oliveira", "12345678901", "rafael.oliveira@example.com", false);
+        controller.login("rafael123", "senhaRafael");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "B1");
+
+        Ingresso ingresso = new Ingresso(usuario, evento, "B1");
+        controller.adicionarIngresso(ingresso);
+
+        JaCadastradoException exception = assertThrows(JaCadastradoException.class, () -> {
+            controller.adicionarIngresso(ingresso);
+        });
+
+        assertEquals("Ingresso já adicionado.", exception.getMessage());
+    }
+
+    @Test
+    public void testAssentoNaoEncontrado () {
+
+        Usuario usuario = controller.cadastrarUsuario("rafael123", "senhaRafael", "Rafael Oliveira", "12345678901", "rafael.oliveira@example.com", false);
+        controller.login("rafael123", "senhaRafael");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        controller.adicionarAssentoEvento("Show de Rock", "B1");
+
+        Ingresso ingresso = new Ingresso(usuario, evento, "B1");
+        controller.adicionarIngresso(ingresso);
+
+        Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "Rafael Oliveira", "10/31", "927");
+        usuario.adicionaFormaDePagamento(pagamento);
+
+        NaoEncontradoException exception = assertThrows(NaoEncontradoException.class, () -> {
+            controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
+        });
+
+        assertEquals("Assento não encontrado.", exception.getMessage());
+    }
+
+    @Test
+    public void testAssentoNaoEncontrado () {
 
 }
