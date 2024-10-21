@@ -2,7 +2,8 @@ package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.Date;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.CompraNaoAutorizadaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.CompraJaCanceladaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
@@ -38,12 +39,11 @@ public class Compra {
         this.status = "Pendente";
     }
 
-    public String processarCompra (Pagamento pagamento) {
+    public boolean processarCompra (Pagamento pagamento) {
         this.pagamento = pagamento;
-        String resultadoCompra = pagamento.processarPagamento(valor);
+        boolean resultadoCompra = pagamento.processarPagamento(valor);
 
-        if (resultadoCompra.equals("Pagamento no valor de " + valor + " processado com sucesso no cartão.") || resultadoCompra.equals(
-                "Pagamento no valor de " + valor + " processado com sucesso no boleto.")) {
+        if (resultadoCompra) {
             setStatus("Aprovado");
             return resultadoCompra;
         }
@@ -81,7 +81,7 @@ public class Compra {
         if (!(status.equals("Cancelado"))) {
             setStatus("Cancelado");  // Marca a compra como cancelada
         } else {
-            System.out.println("A compra já foi cancelada.");
+            throw new CompraJaCanceladaException("A compra já foi cancelada.");
         }
     }
 

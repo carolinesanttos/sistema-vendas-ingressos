@@ -1,5 +1,7 @@
 package br.uefs.ecomp.vendaingressos.model;
 
+import br.uefs.ecomp.vendaingressos.model.excecao.FormaDePagamentoInvalidaException;
+
 import java.util.Objects;
 
 public class Pagamento {
@@ -29,13 +31,15 @@ public class Pagamento {
         reembolso = false;
     }
 
-    public String processarPagamento(double valor) {
+    public boolean processarPagamento(double valor) {
         if (this.formaDePagamento.equals("Cartão")) {
-            return "Pagamento no valor de " + valor + " processado com sucesso no cartão.";
+            // Simula o processamento do pagamento no cartão
+            return true; // Pagamento processado com sucesso
         } else if (this.formaDePagamento.equals("Boleto bancário")) {
-            return "Pagamento no valor de " + valor + " processado com sucesso no boleto.";
+            // Simula o processamento do pagamento no boleto
+            return true; // Pagamento processado com sucesso
         } else {
-            return "Por gentileza, adicionar forma de pagamento válido.";
+            return false; // Forma de pagamento inválida
         }
     }
 
@@ -50,9 +54,7 @@ public class Pagamento {
     }
 
 
-    public String getFormaDePagamento() {
-        return formaDePagamento;
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -74,5 +76,73 @@ public class Pagamento {
     public int hashCode() {
         // Gera o hashCode com base no número do cartão ou código de barras
         return Objects.hash(formaDePagamento.equals("Cartão") ? numeroDoCartao : codigoDeBarras);
+    }
+
+    public void setFormaDePagamento(String formaDePagamento) {
+        if (formaDePagamento.equals("Boleto bancário") || formaDePagamento.equals("Cartão")) {
+            this.formaDePagamento = formaDePagamento;
+        } else {
+            throw new FormaDePagamentoInvalidaException("Forma de pagamento inválida");
+        }
+    }
+
+    public String getNomeTitular() {
+        return nomeTitular;
+    }
+
+    public void setNomeTitular(String nomeTitular) {
+        this.nomeTitular = nomeTitular;
+    }
+
+    public String getNumeroDoCartao() {
+        return numeroDoCartao;
+    }
+
+    public void setNumeroDoCartao(String numeroDoCartao) {
+        this.numeroDoCartao = numeroDoCartao;
+    }
+
+    public String getValidadeDoCartao() {
+        return validadeDoCartao;
+    }
+
+    public void setValidadeDoCartao(String validadeDoCartao) {
+        this.validadeDoCartao = validadeDoCartao;
+    }
+
+    public String getCodigoDeSeguranca() {
+        return codigoDeSeguranca;
+    }
+
+    public void setCodigoDeSeguranca(String codigoDeSeguranca) {
+        this.codigoDeSeguranca = codigoDeSeguranca;
+    }
+
+    public String getCodigoDeBarras() {
+        return codigoDeBarras;
+    }
+
+    public void setCodigoDeBarras(String codigoDeBarras) {
+        this.codigoDeBarras = codigoDeBarras;
+    }
+
+    public boolean isReembolso() {
+        return reembolso;
+    }
+
+    public void setReembolso(boolean reembolso) {
+        this.reembolso = reembolso;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
+    }
+
+    public String getFormaDePagamento() {
+        return formaDePagamento;
     }
 }

@@ -11,11 +11,12 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.CredencialInvalidaException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.CredencialInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
 
 import java.util.*;
+import java.util.List;
 
 public class Usuario {
     private String login;
@@ -81,13 +82,6 @@ public class Usuario {
         ingressosComprados.add(compra);
     }
 
-    public Compra detalhesDaCompra () {
-        if (!ingressosComprados.isEmpty()) {
-            return ingressosComprados.get(ingressosComprados.size()-1);  // Pega o último item
-        }
-        return null;
-    }
-
     // Remove um ingresso da lista de ingressos comprados pelo usuário.
     public boolean cancelarIngressoComprado(Ingresso ingresso, Pagamento pagamento) {
         Iterator<Compra> iterator = ingressosComprados.iterator();
@@ -120,7 +114,12 @@ public class Usuario {
     }
 
     public void removerFormaDePagamento (Pagamento pagamento) {
-        formasDePagamento.remove(pagamento);
+        if (formasDePagamento.contains(pagamento)) {
+            formasDePagamento.remove(pagamento);
+        } else {
+            throw new NaoEncontradoException("Forma de pagamento não encontrada.");
+        }
+
     }
 
     public Pagamento escolheFormaPagamento (Pagamento pagamento) {
@@ -128,8 +127,7 @@ public class Usuario {
         if (contemPagamento) {
             return pagamento;
         } else {
-            System.out.println("Forma de pagamento não encontrada");
-            return null;
+            throw new NaoEncontradoException("Forma de pagamento não encontrada");
         }
     }
 

@@ -1,4 +1,4 @@
-package br.uefs.ecomp.vendaingressos.model.Excecao;
+package br.uefs.ecomp.vendaingressos.model.excecao;
 
 public class CredencialInvalidaException extends RuntimeException{
     public CredencialInvalidaException (String mensagem) {

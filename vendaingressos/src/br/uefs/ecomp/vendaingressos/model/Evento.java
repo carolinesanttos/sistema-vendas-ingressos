@@ -11,10 +11,10 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.CompraNaoAutorizadaException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.EventoForaDoPrazoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.JaCadastradoException;
-import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.EventoForaDoPrazoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
 
 import java.util.*;
 
@@ -92,6 +92,27 @@ public class Evento {
         return false;
     }
 
+    public void adicionarIngresso(Ingresso ingresso) {
+        // Primeiro, verificar se o ingresso já está cadastrado
+        for (Ingresso ing : ingressosDisponiveis) {
+            if (ing.getEvento().getNome().equals(ingresso.getEvento().getNome()) &&
+                    ing.getAssento().equals(ingresso.getAssento())) {
+                throw new JaCadastradoException("Ingresso já adicionado.");
+            }
+        }
+        // Se não encontrou nenhum ingresso duplicado, adicione
+        ingressosDisponiveis.add(ingresso);
+    }
+
+    public void removerIngresso(Ingresso ingresso) {
+        boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
+        if (contemIngresso) {
+            ingressosDisponiveis.remove(ingresso);
+        } else {
+            System.out.println("Esse ingresso já foi removido.");
+        }
+    }
+
     // Verifica se o evento está ativo. O evento é considerado ativo se ainda não passou da data.
     public boolean isAtivo() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
@@ -118,68 +139,39 @@ public class Evento {
         throw new NaoEncontradoException("Evento não encontrado.");
     }
 
-    public void adicionarIngresso(Ingresso ingresso) {
-        // Primeiro, verificar se o ingresso já está cadastrado
-        for (Ingresso ing : ingressosDisponiveis) {
-            if (ing.getEvento().getNome().equals(ingresso.getEvento().getNome()) &&
-                    ing.getAssento().equals(ingresso.getAssento())) {
-                throw new JaCadastradoException("Ingresso já adicionado.");
-            }
-        }
-        // Se não encontrou nenhum ingresso duplicado, adicione
-        ingressosDisponiveis.add(ingresso);
-    }
-
-    public void removerIngresso(Ingresso ingresso) {
-        boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
-        if (contemIngresso) {
-            ingressosDisponiveis.remove(ingresso);
-        } else {
-            System.out.println("Esse ingresso já foi removido.");
-        }
-    }
-
     // Vende um ingresso. Cria um ingresso para evento e associa ao usuário.
     public Ingresso venderIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
         // Verifica se o evento está ativo
         if (!isAtivo()) {
             throw new EventoForaDoPrazoException(evento.getNome());
         }
-
         // Verifica se o assento está disponível
         if (!buscaAssento(assento)) {
             throw new NaoEncontradoException("O assento " + assento + " não está disponível.");
         }
 
         Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
-
         Compra compra = new Compra(usuario, ingresso);
 
-        String resultado = compra.processarCompra(pagamento);
+        boolean resultado = compra.processarCompra(pagamento);
 
+        if (resultado) {
+            ingressosComprados.add(ingresso); // Adiciona a lista de ingresso comprados do evento
+            ingresso.getUsuario().adicionarCompras(new Compra(usuario, ingresso)); // E também adiciona a lista de compras do usuário
+
+            removerIngresso(ingresso); // Remove ingresso da lista de disponíveis
+            removerAssento(assento); // Remove assento de disponíveis
+            assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados,
+
+            return ingresso; // Retorna o ingresso vendido
+        }
         throw new CompraNaoAutorizadaException("Não foi possível processar o pagamento.");
-
-
-
-//        if (isAtivo() && buscaAssento(assento)) {
-//            Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
-//
-//            ingressosComprados.add(ingresso); // Adiciona a lista de ingresso comprados do evento
-//            ingresso.getUsuario().adicionarCompras(new Compra(usuario, ingresso)); // E também adiciona a lista de compras do usuário
-//
-//            removerIngresso(ingresso);
-//            removerAssento(assento);
-//            assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados, pois foi reservado por um usuário.
-//
-//            return ingresso; // Retorna o ingresso criado.
-//        }
-//        throw new EventoForaDoPrazoException(evento.getNome());
-
     }
 
     public static void limparEventosCadastrados() {
         eventosCadastrados.clear();
     }
+
 
     @Override
     public boolean equals(Object o) {

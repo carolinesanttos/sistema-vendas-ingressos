@@ -1,6 +1,6 @@
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.UserNaoLogadoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.UserNaoLogadoException;
 
 public class Feedback {
     private Usuario usuario;

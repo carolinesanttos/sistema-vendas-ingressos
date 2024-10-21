@@ -11,7 +11,7 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.Excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
 
 import java.util.Date;
 import java.util.List;
@@ -92,7 +92,7 @@ public class Controller {
         return usuario.escolheFormaPagamento(pagamento);
     }
 
-    public String processarPagamento(Pagamento formaPagamento, double valor) {
+    public boolean processarPagamento(Pagamento formaPagamento, double valor) {
         return formaPagamento.processarPagamento(valor);
     }
 
@@ -130,7 +130,8 @@ public class Controller {
         return ingresso.getEvento().getIngressosComprados();
     }
 
-    public static void limparUsuariosCadastrados() {
-        Usuario.limparUsuariosCadastrados();
+    public List<Evento> getEventosCadastrados() {
+        return evento.getEventosCadastrados();
     }
+
 }
