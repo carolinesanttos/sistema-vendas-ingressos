@@ -68,7 +68,7 @@ public class ControllerTest {
         assertEquals("Somente administradores podem cadastrar eventos.", exception.getMessage());
     }
 
-//    // Modificado
+    //    // Modificado
     @Test
     public void testComprarIngresso() {
 
@@ -118,7 +118,7 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
-        controller.adicionarIngresso(new Ingresso(usuario,evento, "A1"));
+        controller.adicionarIngresso(new Ingresso(usuario, evento, "A1"));
 
         Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "John Doe", "10/31", "927");
         controller.adicionarFormaPagamento(pagamento);
@@ -172,7 +172,7 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
-        controller.adicionarIngresso(new Ingresso(usuario,evento, "A1"));
+        controller.adicionarIngresso(new Ingresso(usuario, evento, "A1"));
 
         Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "John Doe", "10/31", "927");
         controller.adicionarFormaPagamento(pagamento);
@@ -186,7 +186,7 @@ public class ControllerTest {
 
     // NOVOS TESTES
     @Test
-    public void testUsuarioNaoEncontrado () {
+    public void testUsuarioNaoEncontrado() {
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
@@ -198,7 +198,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testLoginIncorreto () {
+    public void testLoginIncorreto() {
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
@@ -210,7 +210,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testUserJaCadastrado () {
+    public void testUserJaCadastrado() {
 
         controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
 
@@ -222,7 +222,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAlterarDadosPessoais () {
+    public void testAlterarDadosPessoais() {
 
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
         controller.login("carolsan", "animehime");
@@ -237,7 +237,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAdicionarFormasPagamento () {
+    public void testAdicionarFormasPagamento() {
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -268,7 +268,7 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
-        controller.adicionarIngresso(new Ingresso(usuario,evento, "A1"));
+        controller.adicionarIngresso(new Ingresso(usuario, evento, "A1"));
 
         Pagamento formaPagamento = new Pagamento("78945612390142536789");
         controller.adicionarFormaPagamento(formaPagamento);
@@ -297,7 +297,7 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
-        controller.adicionarIngresso(new Ingresso(usuario,evento, "A1"));
+        controller.adicionarIngresso(new Ingresso(usuario, evento, "A1"));
 
         Pagamento formaPagamento = new Pagamento("7589 7418 8529 9637", "John Doe", "10/31", "927");
         controller.adicionarFormaPagamento(formaPagamento);
@@ -311,7 +311,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testConfirmacaoDeCompra () {
+    public void testConfirmacaoDeCompra() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
@@ -340,7 +340,7 @@ public class ControllerTest {
 
         assertTrue(resultado);
         assertEquals("Destinatário: ca.sant@example.com\nAssunto: Confirmação de Compra\n\n" +
-                "Olá, Carol Santos,\n\n" +  "Obrigado por sua compra! Aqui estão os detalhes da sua compra:\n\n" +
+                "Olá, Carol Santos,\n\n" + "Obrigado por sua compra! Aqui estão os detalhes da sua compra:\n\n" +
                 "Produto: Show de Rock - Assento: A1\n" + "Valor: R$ 100.0\n" +
                 "Método de pagamento: Cartão\n\n" + "Sua compra foi processada com sucesso. Caso tenha dúvidas, " +
                 "entre em contato com nosso suporte.\n\n" + "Atenciosamente,\nEquipe de Vendas", mensagemEnviada);
@@ -361,7 +361,7 @@ public class ControllerTest {
 
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         controller.adicionarAssentoEvento("Show de Rock", "A1");
-        controller.adicionarIngresso(new Ingresso(usuario,evento, "A1"));
+        controller.adicionarIngresso(new Ingresso(usuario, evento, "A1"));
 
         Pagamento pagamento = new Pagamento("7589 7418 8529 9637", "John Doe", "10/31", "927");
         controller.adicionarFormaPagamento(pagamento);
@@ -376,7 +376,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAvaliacao () {
+    public void testAvaliacao() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
@@ -407,7 +407,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAvaliacaoInvalida () {
+    public void testAvaliacaoInvalida() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
@@ -426,7 +426,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAvaliacaoNaoLogado () {
+    public void testAvaliacaoNaoLogado() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
@@ -444,7 +444,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testEventoExpirou () {
+    public void testEventoExpirou() {
 
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
@@ -477,7 +477,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testEventoNaoEncontrado () {
+    public void testEventoNaoEncontrado() {
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
         controller.login("carolsan", "animehime");
 
@@ -509,7 +509,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testEventoJaCadastrado () {
+    public void testEventoJaCadastrado() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
         Date data = calendar.getTime();
@@ -527,7 +527,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testIngressoJaCadastrado () {
+    public void testIngressoJaCadastrado() {
 
         Usuario usuario = controller.cadastrarUsuario("rafael123", "senhaRafael", "Rafael Oliveira", "12345678901", "rafael.oliveira@example.com", false);
         controller.login("rafael123", "senhaRafael");
@@ -553,7 +553,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAssentoNaoEncontrado () {
+    public void testAssentoNaoEncontrado() {
 
         Usuario usuario = controller.cadastrarUsuario("rafael123", "senhaRafael", "Rafael Oliveira", "12345678901", "rafael.oliveira@example.com", false);
         controller.login("rafael123", "senhaRafael");
@@ -582,7 +582,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testAssentJaCadastrado () {
+    public void testAssentJaCadastrado() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
         Date data = calendar.getTime();
@@ -602,7 +602,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testPersistenciaDadosEventos () {
+    public void testPersistenciaDetalhesDosEventos() {
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
@@ -618,7 +618,7 @@ public class ControllerTest {
         controller.adicionarAssentoEvento("Teatro Clássico", "C5");
 
         // Instanciando a classe de persistência com o caminho do arquivo
-        PersistenciaEventos persistencia = new PersistenciaEventos("eventos.json");
+        PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
 
         // Obtendo a lista de eventos para salvar
         List<Evento> eventosAtivos = controller.getEventosCadastrados();  // Supondo que há um método que retorna os eventos cadastrados
@@ -633,11 +633,13 @@ public class ControllerTest {
         assertNotNull(eventosCarregados);
         assertEquals(2, eventosCarregados.size());
         assertEquals("Festival de Música", eventosCarregados.get(0).getNome());
+        assertEquals("Bandas Diversas", eventosCarregados.get(0).getDescricao());
         assertEquals("Teatro Clássico", eventosCarregados.get(1).getNome());
+        assertEquals("Peça Teatral", eventosCarregados.get(1).getDescricao());
     }
 
     @Test
-    public void testPersistenciaDadosCompraEvento () {
+    public void testPersistenciaDadosAssentosDisponiveis() {
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
@@ -649,6 +651,46 @@ public class ControllerTest {
         Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
         controller.adicionarAssentoEvento("Festival de Música", "A10");
 
+        // Instanciando a classe de persistência com o caminho do arquivo
+        PersistenciaEventos persistencia = new PersistenciaEventos("assentos-disponiveis.json");
+
+        // Obtendo a lista de eventos para salvar
+        List<Evento> eventosAtivos = controller.getEventosCadastrados();
+
+        // Salvando os eventos em um arquivo JSON
+        persistencia.salvarDados(eventosAtivos);
+
+        // Carregando os dados de volta do arquivo
+        List<Evento> eventosCarregados = persistencia.carregarDados();
+
+        // Verificando se os eventos foram salvos e carregados corretamente
+        assertNotNull(eventosCarregados);
+        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
+
+        // Iterando sobre os eventos carregados
+        for (Evento e : eventosCarregados) {
+            // Verifica se os assentos disponíveis foram carregados corretamente
+            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
+
+            assertTrue(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
+
+            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
+            assertEquals(1, assentosDisponiveis.size()); // Verifica se o tamanho da lista de assentos reservados é 1
+        }
+    }
+
+    @Test
+    public void testPersistenciaDadosAssentosReservados() {
+
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
+        controller.adicionarAssentoEvento("Festival de Música", "A10");
 
         Usuario usuario = controller.cadastrarUsuario("mariazinha", "segura123", "Maria Costa", "98765432100", "maria.costa@example.com", false);
         controller.login("mariazinha", "segura123");
@@ -662,10 +704,10 @@ public class ControllerTest {
         Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(pagamento);
         assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
 
-        ingresso = controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A10");
+        controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A10");
 
         // Instanciando a classe de persistência com o caminho do arquivo
-        PersistenciaEventos persistencia = new PersistenciaEventos("compras-de-eventos.json");
+        PersistenciaEventos persistencia = new PersistenciaEventos("assentos-reservados.json");
 
         // Obtendo a lista de eventos para salvar
         List<Evento> eventosAtivos = controller.getEventosCadastrados();
@@ -678,9 +720,78 @@ public class ControllerTest {
 
         // Verificando se os eventos foram salvos e carregados corretamente
         assertNotNull(eventosCarregados);
-        assertEquals(1, eventosCarregados.size());
-        assertEquals("Festival de Música", eventosCarregados.get(0).getNome());
-        assertEquals("Bandas Diversas", eventosCarregados.get(1).getNome());
+        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
+
+        // Iterando sobre os eventos carregados
+        for (Evento e : eventosCarregados) {
+            // Verifica se os assentos disponíveis foram carregados corretamente
+            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
+            List<String> assentosReservados = e.getAssentosReservados();
+
+            assertNotNull(assentosReservados); // Verifica que a lista de assentos reservados não é nula
+            assertFalse(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
+            assertTrue(assentosReservados.contains("A10")); // O assento "A10" deve estar reservado
+
+            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
+            assertEquals(1, assentosReservados.size()); // Verifica se o tamanho da lista de assentos reservados é 1
+        }
     }
 
+//    @Test
+//    public void testPersistenciaDadosCompraDeIngressos() {
+//        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+//        controller.login("admin", "senha123");
+//
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(2024, Calendar.DECEMBER, 30);
+//        Date data = calendar.getTime();
+//
+//        Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
+//        controller.adicionarAssentoEvento("Festival de Música", "A10");
+//
+//        Usuario usuario = controller.cadastrarUsuario("mariazinha", "segura123", "Maria Costa", "98765432100", "maria.costa@example.com", false);
+//        controller.login("mariazinha", "segura123");
+//
+//        Ingresso ingresso = new Ingresso(usuario, evento, "A10");
+//        controller.adicionarIngresso(ingresso);
+//
+//        Pagamento pagamento = new Pagamento("7891234567890");
+//        controller.adicionarFormaPagamento(pagamento);
+//
+//        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(pagamento);
+//        assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
+//
+//        controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A10");
+//
+//        // Instanciando a classe de persistência com o caminho do arquivo
+//        PersistenciaEventos persistencia = new PersistenciaEventos(".json");
+//
+//        // Obtendo a lista de eventos para salvar
+//        List<Evento> eventosAtivos = controller.getEventosCadastrados();
+//
+//        // Salvando os eventos em um arquivo JSON
+//        persistencia.salvarDados(eventosAtivos);
+//
+//        // Carregando os dados de volta do arquivo
+//        List<Evento> eventosCarregados = persistencia.carregarDados();
+//
+//        // Verificando se os eventos foram salvos e carregados corretamente
+//        assertNotNull(eventosCarregados);
+//        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
+//
+//        // Iterando sobre os eventos carregados
+//        for (Evento e : eventosCarregados) {
+//            // Verifica se os assentos disponíveis foram carregados corretamente
+//            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
+//            List<String> assentosReservados = e.getAssentosReservados();
+//
+//            assertNotNull(assentosReservados); // Verifica que a lista de assentos reservados não é nula
+//            assertFalse(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
+//            assertTrue(assentosReservados.contains("A10")); // O assento "A10" deve estar reservado
+//
+//            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
+//            assertEquals(1, assentosReservados.size()); // Verifica se o tamanho da lista de assentos reservados é 1
+//        }
+//
+//    }
 }

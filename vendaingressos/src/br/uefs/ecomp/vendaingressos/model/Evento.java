@@ -15,7 +15,9 @@ import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.EventoForaDoPrazoException;
 import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
 import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
+import com.google.gson.annotations.Expose;
 
+import java.beans.Transient;
 import java.util.*;
 
 public class Evento {
@@ -204,6 +206,10 @@ public class Evento {
 
     public List<String> getAssentosDisponiveis() {
         return assentosDisponiveis;
+    }
+
+    public List<String> getAssentosReservados() {
+        return assentosReservados;
     }
 
     public List<Evento> getEventosCadastrados() {

@@ -1,6 +1,7 @@
 package br.uefs.ecomp.vendaingressos.model;
 
 import br.uefs.ecomp.vendaingressos.model.excecao.FormaDePagamentoInvalidaException;
+import com.google.gson.annotations.Expose;
 
 import java.util.Objects;
 

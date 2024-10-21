@@ -11,14 +11,17 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
+import com.google.gson.annotations.Expose;
+
+import java.beans.Transient;
 import java.util.*;
 
 public class Ingresso {
     private double preco;
     private boolean status;
-    private Evento evento;
+    private transient Evento evento;
     private String assento;
-    private Usuario usuario;
+    private transient Usuario usuario;
     private Compra compra;
 
     public Ingresso(Evento evento, double valor, String assento) {

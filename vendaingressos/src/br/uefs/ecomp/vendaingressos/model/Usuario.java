@@ -14,6 +14,7 @@ package br.uefs.ecomp.vendaingressos.model;
 import br.uefs.ecomp.vendaingressos.model.excecao.CredencialInvalidaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
 import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
+import com.google.gson.annotations.Expose;
 
 import java.util.*;
 import java.util.List;

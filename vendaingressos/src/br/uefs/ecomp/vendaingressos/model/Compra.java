@@ -6,6 +6,8 @@ import br.uefs.ecomp.vendaingressos.model.excecao.CompraJaCanceladaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
