@@ -180,7 +180,7 @@ public class ControllerTest {
 
         controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
 
-        List<Ingresso> ingressos = controller.listarIngressosComprados(usuario);
+        List<Ingresso> ingressos = controller.listarIngressosComprados();
 
         assertEquals(1, ingressos.size());
     }
@@ -276,7 +276,7 @@ public class ControllerTest {
 
         Ingresso ingresso = controller.comprarIngresso(usuario, formaPagamento, "Show de Rock", "A1");
 
-        boolean resultado = controller.processarPagamento(formaPagamento, ingresso.getPreco());
+        boolean resultado = controller.processarPagamento(formaPagamento);
 
         assertTrue(resultado);
         assertEquals("Boleto bancário", formaPagamento.getFormaDePagamento());
@@ -305,7 +305,7 @@ public class ControllerTest {
 
         Ingresso ingresso = controller.comprarIngresso(usuario, formaPagamento, "Show de Rock", "A1");
 
-        boolean resultado = controller.processarPagamento(formaPagamento, ingresso.getPreco());
+        boolean resultado = controller.processarPagamento(formaPagamento);
 
         assertTrue(resultado);
         assertEquals("Cartão", formaPagamento.getFormaDePagamento());
@@ -335,7 +335,7 @@ public class ControllerTest {
 
         ingresso = controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
 
-        boolean resultado = controller.processarPagamento(pagamento, ingresso.getPreco());
+        boolean resultado = controller.processarPagamento(pagamento);
 
         String mensagemEnviada = controller.confirmacaoDeCompra(usuario, pagamento);
 
@@ -370,10 +370,16 @@ public class ControllerTest {
         Ingresso ingresso = controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
 
         boolean cancelado = controller.cancelarCompra(usuario, ingresso, pagamento);
-        String resultado = controller.reembolsarValor(ingresso, pagamento);
+        String resultado = controller.reembolsarValor(usuario, ingresso, pagamento);
 
         assertTrue(cancelado);
-        assertEquals("O pagamento no valor de R$100.0 será em reembolsado em até 15 dias via Cartão.", resultado);
+        assertEquals("Destinatário: john.doe@example.com\n" +
+                "Assunto: Reembolso da Compra\n\n" +
+                "Olá, John Doe,\n\n" +
+                "O pagamento no valor de R$100.0 será em reembolsado em até 15 dias via Cartão. " +
+                "Caso tenha dúvidas, entre em contato com nosso suporte.\n\n" +
+                "Atenciosamente,\nEquipe de Vendas", resultado);
+
     }
 
     @Test

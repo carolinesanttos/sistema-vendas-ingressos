@@ -1,13 +1,17 @@
-// Sistema Operacional: Windows 10 - 64 Bits
-// IDE: IntelliJ
-// Versão Da Linguagem: Java JDK 22
-// Autor: Caroline Santos de Jesus
-// Componente Curricular: Algoritmos II
-// Concluido em: 12/09/2024
-// Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
-// colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
-// Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
-// código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+/**
+ * <p>
+ * Sistema Operacional: Windows 10 - 64 Bits<br>
+ * IDE: IntelliJ<br>
+ * Versão Da Linguagem: Java JDK 22<br>
+ * Autor: Caroline Santos de Jesus<br>
+ * Componente Curricular: Algoritmos II<br>
+ * Concluído em: 21/10/2024<br>
+ * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
+ * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+ * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
+ * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+ * </p>
+ */
 
 package br.uefs.ecomp.vendaingressos.model;
 
@@ -39,15 +43,23 @@ public class Ingresso {
         this.status = true; // Ingressos inicialmente estão ativos.
     }
 
-    // Verifica se o ingresso está ativo.
+    /**
+     * Verifica se o ingresso está ativo.
+     *
+     * @return true se o ingresso estiver ativo, false caso contrário.
+     */
     public boolean isAtivo() {
         return getStatus(); // Retorna o status do ingresso.
     }
 
-     // Cancela o ingresso:
-     // 1) NÃO permite cancelamento NO DIA do evento.
-     // 2) PERMITE cancelamento ANTES do evento.
-     // 3) NÃO permite cancelamento APÓS a data do evento.
+    /**
+     * Cancela o ingresso, seguindo as regras:
+     * 1) Não permite cancelamento no dia do evento.
+     * 2) Permite cancelamento antes do evento.
+     * 3) Não permite cancelamento após a data do evento.
+     *
+     * @return true se o cancelamento foi bem-sucedido, false caso contrário.
+     */
     public boolean cancelarIngresso() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
@@ -63,12 +75,19 @@ public class Ingresso {
         }
     }
 
-    // Reativa o ingresso.
+    /**
+     * Reativa o ingresso, definindo seu status como ativo.
+     */
     public void reativar() {
         setStatus(true);
     }
 
-    // Compara se dois ingressos são iguais com base em preço, evento e assento.
+    /**
+     * Compara se dois ingressos são iguais com base em preço, evento e assento.
+     *
+     * @param o O objeto a ser comparado.
+     * @return true se os ingressos forem iguais, false caso contrário.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

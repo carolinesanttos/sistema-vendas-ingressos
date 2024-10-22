@@ -1,13 +1,17 @@
-// Sistema Operacional: Windows 10 - 64 Bits
-// IDE: IntelliJ
-// Versão Da Linguagem: Java JDK 22
-// Autor: Caroline Santos de Jesus
-// Componente Curricular: Algoritmos II
-// Concluido em: 12/09/2024
-// Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
-// colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
-// Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
-// código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+/**
+ * <p>
+ * Sistema Operacional: Windows 10 - 64 Bits<br>
+ * IDE: IntelliJ<br>
+ * Versão Da Linguagem: Java JDK 22<br>
+ * Autor: Caroline Santos de Jesus<br>
+ * Componente Curricular: Algoritmos II<br>
+ * Concluído em: 21/10/2024<br>
+ * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
+ * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+ * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
+ * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+ * </p>
+ */
 
 package br.uefs.ecomp.vendaingressos.model;
 
@@ -43,12 +47,12 @@ public class Usuario {
         this.isLogado = false;
     }
 
-    // Retorna true se o usuário for administrador.
-    public boolean isAdmin() {
-        return adm;
-    }
-
-    // Adiciona usuário à lista de cadastro.
+    /**
+     * Adiciona usuário à lista de cadastro.
+     *
+     * @param usuario o usuário a ser cadastrado
+     * @throws JaCadastradoException se o usuário já estiver cadastrado
+     */
     public void cadastroDeUsuarios (Usuario usuario) {
         boolean contemUsuario = usuariosCadastrados.contains(usuario);
         if (!contemUsuario) {
@@ -58,7 +62,15 @@ public class Usuario {
         }
     }
 
-    // Verifica login do usuário, retorna true se o login e senha estiverem corretos.
+    /**
+     * Verifica o login do usuário.
+     *
+     * @param login  o login do usuário
+     * @param senha  a senha do usuário
+     * @return true se o login e senha estiverem corretos
+     * @throws CredencialInvalidaException se o login ou a senha estiverem incorretos
+     * @throws NaoEncontradoException se o usuário não for encontrado
+     */
     public boolean login(String login, String senha) {
         // Verifica se o usuário está cadastrado
         for (Usuario usuario : usuariosCadastrados) {
@@ -74,16 +86,85 @@ public class Usuario {
         throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
     }
 
-    public void logout() {
-        setLogado(false); // Desloga o usuário
+    /**
+     * Retorna true se o usuário for administrador.
+     *
+     * @return true se o usuário for administrador, caso contrário, false
+     */
+    public boolean isAdmin() {
+        return adm;
     }
 
+    /**
+     * Desloga o usuário.
+     */
+    public void logout() {
+        setLogado(false);
+    }
+
+    /**
+     * Adiciona uma forma de pagamento à lista de formas de pagamento do usuário.
+     *
+     * @param pagamento a forma de pagamento a ser adicionada
+     */
+    public void adicionaFormaDePagamento (Pagamento pagamento) {
+        if (this.isLogado) {
+            if (pagamento != null) {
+                formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
+            }
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
+    }
+
+    /**
+     * Remove uma forma de pagamento da lista de formas de pagamento do usuário.
+     *
+     * @param pagamento a forma de pagamento a ser removida
+     * @throws NaoEncontradoException se a forma de pagamento não for encontrada
+     */
+    public void removerFormaDePagamento (Pagamento pagamento) {
+        if (formasDePagamento.contains(pagamento)) {
+            formasDePagamento.remove(pagamento);
+        } else {
+            throw new NaoEncontradoException("Forma de pagamento não encontrada.");
+        }
+
+    }
+
+    /**
+     * Escolhe uma forma de pagamento da lista de formas de pagamento do usuário.
+     *
+     * @param pagamento a forma de pagamento a ser escolhida
+     * @return a forma de pagamento escolhida
+     * @throws NaoEncontradoException se a forma de pagamento não for encontrada
+     */
+    public Pagamento escolheFormaPagamento (Pagamento pagamento) {
+        boolean contemPagamento = formasDePagamento.contains(pagamento);
+        if (contemPagamento) {
+            return pagamento;
+        } else {
+            throw new NaoEncontradoException("Forma de pagamento não encontrada");
+        }
+    }
+
+    /**
+     * Adiciona uma compra à lista de ingressos comprados pelo usuário.
+     *
+     * @param compra a compra a ser adicionada
+     */
     public void adicionarCompras(Compra compra) {
         this.compra = compra;
         ingressosComprados.add(compra);
     }
 
-    // Remove um ingresso da lista de ingressos comprados pelo usuário.
+    /**
+     * Remove um ingresso da lista de ingressos comprados pelo usuário.
+     *
+     * @param ingresso o ingresso a ser cancelado
+     * @param pagamento o pagamento relacionado à compra
+     * @return true se o ingresso foi cancelado com sucesso, caso contrário, false
+     */
     public boolean cancelarIngressoComprado(Ingresso ingresso, Pagamento pagamento) {
         Iterator<Compra> iterator = ingressosComprados.iterator();
 
@@ -95,7 +176,7 @@ public class Usuario {
 
                 if (cancelar) {
                     iterator.remove();
-                    compra.cancelarCompra(bilhetes, pagamento);
+                    compra.cancelarCompra();
                 } else {
                     return false;
                 }
@@ -104,36 +185,13 @@ public class Usuario {
         return true;
     }
 
-    public void adicionaFormaDePagamento (Pagamento pagamento) {
-        if (this.isLogado) {
-            if (pagamento != null) {
-                formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
-            }
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
-    }
-
-    public void removerFormaDePagamento (Pagamento pagamento) {
-        if (formasDePagamento.contains(pagamento)) {
-            formasDePagamento.remove(pagamento);
-        } else {
-            throw new NaoEncontradoException("Forma de pagamento não encontrada.");
-        }
-
-    }
-
-    public Pagamento escolheFormaPagamento (Pagamento pagamento) {
-        boolean contemPagamento = formasDePagamento.contains(pagamento);
-        if (contemPagamento) {
-            return pagamento;
-        } else {
-            throw new NaoEncontradoException("Forma de pagamento não encontrada");
-        }
-    }
-
-    // Método equals sobrescrito para comparar dois objetos Usuario.
-    // Dois usuários são iguais se o login, cpf e email forem iguais.
+    /**
+     * Método equals sobrescrito para comparar dois objetos Usuario.
+     * Dois usuários são iguais se o login, CPF e email forem iguais.
+     *
+     * @param o o objeto a ser comparado
+     * @return true se os objetos forem iguais, caso contrário, false
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -151,8 +209,69 @@ public class Usuario {
         return Objects.hash(login, cpf, email);
     }
 
+    /**
+     * Limpa a lista de usuários cadastrados.
+     */
     public static void limparUsuariosCadastrados() {
         usuariosCadastrados.clear();
+    }
+
+    /**
+     * Retorna a lista de ingressos comprados pelo usuário.
+     *
+     * @return a lista de ingressos comprados
+     */
+    public List<Ingresso> getIngressos() {
+        List <Ingresso>ingressosComprados = new ArrayList<>();
+        for (Compra compra : this.ingressosComprados) {
+            Ingresso ingresso = compra.getIngresso();
+            if (ingresso != null) {
+                ingressosComprados.add(ingresso);
+            }
+        }
+        return ingressosComprados; // Retorna a lista de ingressos comprados
+    }
+
+    /**
+     * Define a nova senha do usuário.
+     *
+     * @param senha A nova senha a ser definida.
+     * @throws IllegalStateException Se o usuário não estiver logado.
+     */
+    public void setSenha(String senha) {
+        if (this.isLogado) {
+            this.senha = senha;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
+    }
+
+    /**
+     * Define o novo nome do usuário.
+     *
+     * @param nome O novo nome a ser definido.
+     * @throws IllegalStateException Se o usuário não estiver logado.
+     */
+    public void setNome(String nome) {
+        if (this.isLogado) {
+            this.nome = nome;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
+    }
+
+    /**
+     * Define o novo email do usuário.
+     *
+     * @param email O novo email a ser definido.
+     * @throws IllegalStateException Se o usuário não estiver logado.
+     */
+    public void setEmail(String email) {
+        if (this.isLogado) {
+            this.email = email;
+        } else {
+            System.out.println("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     public String getLogin() {
@@ -175,18 +294,6 @@ public class Usuario {
         return senha;
     }
 
-    public List<Ingresso> getIngressos() {
-        List <Ingresso>ingressosComprados = new ArrayList<>();
-        for (Compra compra : this.ingressosComprados) {
-            Ingresso ingresso = compra.getIngresso();
-            if (ingresso != null) {
-                ingressosComprados.add(ingresso);
-            }
-        }
-        return ingressosComprados; // Retorna a lista de ingressos comprados
-    }
-
-
     public List<Pagamento> getFormasDePagamento() {
         return formasDePagamento;
     }
@@ -207,32 +314,8 @@ public class Usuario {
         return isLogado;
     }
 
-    public void setSenha(String senha) {
-        if (this.isLogado) {
-            this.senha = senha;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
-    }
-
-    public void setNome(String nome) {
-        if (this.isLogado) {
-            this.nome = nome;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
-    }
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public void setEmail(String email) {
-        if (this.isLogado) {
-            this.email = email;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
     }
 
     public void setLogado(boolean logado) {

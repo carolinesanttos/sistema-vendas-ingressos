@@ -1,13 +1,17 @@
-// Sistema Operacional: Windows 10 - 64 Bits
-// IDE: IntelliJ
-// Versão Da Linguagem: Java JDK 22
-// Autor: Caroline Santos de Jesus
-// Componente Curricular: Algoritmos II
-// Concluido em: 12/09/2024
-// Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
-// colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
-// Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
-// código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+/**
+ * <p>
+ * Sistema Operacional: Windows 10 - 64 Bits<br>
+ * IDE: IntelliJ<br>
+ * Versão Da Linguagem: Java JDK 22<br>
+ * Autor: Caroline Santos de Jesus<br>
+ * Componente Curricular: Algoritmos II<br>
+ * Concluído em: 21/10/2024<br>
+ * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
+ * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
+ * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
+ * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+ * </p>
+ */
 
 package br.uefs.ecomp.vendaingressos.model;
 
@@ -46,8 +50,12 @@ public class Evento {
         this.data = data;
     }
 
-     // Cadastra eventos. O evento só pode ser cadastrado se o usuário for administrador.
-     // Caso contrário, lança uma exceção.
+    /**
+     * Cadastra um evento no sistema, permitindo apenas usuários administradores.
+     *
+     * @param evento O evento a ser cadastrado.
+     * @throws SecurityException Se o usuário não for um administrador.
+     */
     public void cadastroDeEventos(Evento evento) {
         if (!evento.getUsuario().isAdmin()) {
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
@@ -55,6 +63,12 @@ public class Evento {
         adicionaEvento(evento);
     }
 
+    /**
+     * Adiciona um evento à lista de eventos cadastrados.
+     *
+     * @param evento O evento a ser adicionado.
+     * @throws JaCadastradoException Se o evento já estiver cadastrado.
+     */
     public void adicionaEvento(Evento evento) {
         boolean contemEvento = eventosCadastrados.contains(evento);
         if (!contemEvento) {
@@ -65,7 +79,12 @@ public class Evento {
 
     }
 
-    // Adiciona um assento à lista de assentos disponíveis.
+    /**
+     * Adiciona um assento à lista de assentos disponíveis.
+     *
+     * @param assento O assento a ser adicionado.
+     * @throws JaCadastradoException Se o assento já estiver na lista.
+     */
     public void adicionarAssento(String assento) {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (!contemAssento) {
@@ -75,7 +94,11 @@ public class Evento {
         }
     }
 
-    // Remove um assento da lista de assentos disponíveis.
+    /**
+     * Remove um assento da lista de assentos disponíveis.
+     *
+     * @param assento O assento a ser removido.
+     */
     public void removerAssento(String assento)     {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (contemAssento) {
@@ -85,15 +108,26 @@ public class Evento {
         }
     }
 
+    /**
+     * Verifica se um assento está disponível.
+     *
+     * @param assento O assento a ser buscado.
+     * @return true se o assento estiver disponível, false caso contrário.
+     */
     public boolean buscaAssento (String assento) {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (contemAssento) {
             return true;
         }
-        //throw new NaoEncontradoException("Assento não encontrado.");
         return false;
     }
 
+    /**
+     * Adiciona um ingresso à lista de ingressos disponíveis.
+     *
+     * @param ingresso O ingresso a ser adicionado.
+     * @throws JaCadastradoException Se o ingresso já estiver cadastrado.
+     */
     public void adicionarIngresso(Ingresso ingresso) {
         // Primeiro, verificar se o ingresso já está cadastrado
         for (Ingresso ing : ingressosDisponiveis) {
@@ -106,6 +140,11 @@ public class Evento {
         ingressosDisponiveis.add(ingresso);
     }
 
+    /**
+     * Remove um ingresso da lista de ingressos disponíveis.
+     *
+     * @param ingresso O ingresso a ser removido.
+     */
     public void removerIngresso(Ingresso ingresso) {
         boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
         if (contemIngresso) {
@@ -115,7 +154,11 @@ public class Evento {
         }
     }
 
-    // Verifica se o evento está ativo. O evento é considerado ativo se ainda não passou da data.
+    /**
+     * Verifica se o evento está ativo.
+     *
+     * @return true se o evento estiver ativo, false caso contrário.
+     */
     public boolean isAtivo() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
@@ -131,7 +174,13 @@ public class Evento {
         }
     }
 
-    // Busca um evento pelo seu nome. Retorna o evento ou "null" se não existir.
+    /**
+     * Busca um evento pelo seu nome.
+     *
+     * @param name O nome do evento a ser buscado.
+     * @return O evento correspondente ao nome informado.
+     * @throws NaoEncontradoException Se o evento não for encontrado.
+     */
     public Evento buscarEventoPorNome(String name) {
         for (Evento evento : getEventosCadastrados()) {
             if (evento.getNome().equalsIgnoreCase(name)) {
@@ -141,7 +190,18 @@ public class Evento {
         throw new NaoEncontradoException("Evento não encontrado.");
     }
 
-    // Vende um ingresso. Cria um ingresso para evento e associa ao usuário.
+    /**
+     * Vende um ingresso para o usuário, associando-o ao evento e ao pagamento.
+     *
+     * @param usuario   O usuário que está comprando o ingresso.
+     * @param pagamento O método de pagamento utilizado.
+     * @param evento    O evento para o qual o ingresso está sendo vendido.
+     * @param assento   O assento do ingresso a ser vendido.
+     * @return O ingresso vendido.
+     * @throws EventoForaDoPrazoException Se o evento não estiver ativo.
+     * @throws NaoEncontradoException      Se o assento não estiver disponível.
+     * @throws CompraNaoAutorizadaException Se o pagamento não puder ser processado.
+     */
     public Ingresso venderIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
         // Verifica se o evento está ativo
         if (!isAtivo()) {
@@ -170,6 +230,9 @@ public class Evento {
         throw new CompraNaoAutorizadaException("Não foi possível processar o pagamento.");
     }
 
+    /**
+     * Limpa a lista de eventos cadastrados.
+     */
     public static void limparEventosCadastrados() {
         eventosCadastrados.clear();
     }
