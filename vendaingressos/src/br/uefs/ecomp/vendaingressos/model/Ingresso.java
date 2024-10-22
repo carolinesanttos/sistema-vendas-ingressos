@@ -39,11 +39,6 @@ public class Ingresso {
         this.status = true; // Ingressos inicialmente estão ativos.
     }
 
-    public Ingresso(Usuario usuario, Evento evento) {
-        this.usuario = usuario;
-        this.evento = evento;
-    }
-
     // Verifica se o ingresso está ativo.
     public boolean isAtivo() {
         return getStatus(); // Retorna o status do ingresso.

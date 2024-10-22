@@ -13,7 +13,7 @@ import java.io.IOException;
 
 
 public class Compra {
-    private Usuario usuario;
+    private transient Usuario usuario;
     private Ingresso ingresso;
     private Date data;
     private double valor;

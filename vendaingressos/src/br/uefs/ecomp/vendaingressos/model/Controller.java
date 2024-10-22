@@ -134,4 +134,7 @@ public class Controller {
         return evento.getEventosCadastrados();
     }
 
+    public List<Usuario> getUsuariosCadastrados() {
+        return Usuario.getUsuariosCadastrados();
+    }
 }
