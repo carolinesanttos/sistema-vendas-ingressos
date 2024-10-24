@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class Pagamento {
     private String formaDePagamento;  // Cartão ou boleto
-    private String nomeTitular;
+    private transient String nomeTitular;
     private transient String numeroDoCartao;
     private transient String validadeDoCartao;
     private transient String codigoDeSeguranca;

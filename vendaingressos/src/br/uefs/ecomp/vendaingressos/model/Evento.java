@@ -40,6 +40,7 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
+        this.status = true;
 
     }
 
@@ -48,6 +49,7 @@ public class Evento {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;
+        this.status = true;
     }
 
     /**

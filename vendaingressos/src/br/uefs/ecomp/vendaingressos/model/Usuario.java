@@ -34,7 +34,7 @@ public class Usuario {
     private Compra compra;
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
     private List<Pagamento> formasDePagamento = new ArrayList<>();
-    private transient List <Compra> ingressosComprados = new ArrayList<>();
+    private List <Compra> ingressosComprados = new ArrayList<>();
 
     // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
