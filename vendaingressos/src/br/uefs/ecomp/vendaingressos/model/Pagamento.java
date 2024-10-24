@@ -27,10 +27,10 @@ import java.util.Objects;
 public class Pagamento {
     private String formaDePagamento;  // Cartão ou boleto
     private String nomeTitular;
-    private String numeroDoCartao;
-    private String validadeDoCartao;
-    private String codigoDeSeguranca;
-    private String codigoDeBarras;   // Para pagamento com boleto
+    private transient String numeroDoCartao;
+    private transient String validadeDoCartao;
+    private transient String codigoDeSeguranca;
+    private transient String codigoDeBarras;   // Para pagamento com boleto
     private boolean reembolso;
     Compra compra;
 
@@ -57,14 +57,11 @@ public class Pagamento {
      * @return true se o pagamento foi processado com sucesso, false caso contrário.
      */
     public boolean processarPagamento() {
-        if (this.formaDePagamento.equals("Cartão")) {
-            // Simula o processamento do pagamento no cartão
-            return true; // Pagamento processado com sucesso
-        } else if (this.formaDePagamento.equals("Boleto bancário")) {
-            // Simula o processamento do pagamento no boleto
+        // Simula o processamento do pagamento no cartão e simula o processamento do pagamento no boleto
+        if (this.formaDePagamento.equals("Cartão") || this.formaDePagamento.equals("Boleto bancário")) {
             return true; // Pagamento processado com sucesso
         } else {
-            return false; // Forma de pagamento inválida
+            return false;
         }
     }
 

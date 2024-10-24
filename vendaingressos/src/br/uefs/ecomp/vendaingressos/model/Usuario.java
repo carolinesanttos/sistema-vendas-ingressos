@@ -34,7 +34,7 @@ public class Usuario {
     private Compra compra;
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
     private List<Pagamento> formasDePagamento = new ArrayList<>();
-    private List <Compra> ingressosComprados = new ArrayList<>();
+    private transient List <Compra> ingressosComprados = new ArrayList<>();
 
     // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
@@ -54,12 +54,7 @@ public class Usuario {
      * @throws JaCadastradoException se o usuário já estiver cadastrado
      */
     public void cadastroDeUsuarios (Usuario usuario) {
-        boolean contemUsuario = usuariosCadastrados.contains(usuario);
-        if (!contemUsuario) {
-            usuariosCadastrados.add(usuario);
-        } else {
-            throw new JaCadastradoException("Usuário já cadastrado.");
-        }
+        usuariosCadastrados.add(usuario);
     }
 
     /**
@@ -108,13 +103,8 @@ public class Usuario {
      * @param pagamento a forma de pagamento a ser adicionada
      */
     public void adicionaFormaDePagamento (Pagamento pagamento) {
-        if (this.isLogado) {
-            if (pagamento != null) {
-                formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
-            }
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
+        formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
+
     }
 
     /**
@@ -142,9 +132,10 @@ public class Usuario {
     public Pagamento escolheFormaPagamento (Pagamento pagamento) {
         boolean contemPagamento = formasDePagamento.contains(pagamento);
         if (contemPagamento) {
+            formasDePagamento.add(pagamento);
             return pagamento;
         } else {
-            throw new NaoEncontradoException("Forma de pagamento não encontrada");
+            throw new NaoEncontradoException("Forma de pagamento não cadastrada.");
         }
     }
 
@@ -162,21 +153,21 @@ public class Usuario {
      * Remove um ingresso da lista de ingressos comprados pelo usuário.
      *
      * @param ingresso o ingresso a ser cancelado
-     * @param pagamento o pagamento relacionado à compra
      * @return true se o ingresso foi cancelado com sucesso, caso contrário, false
      */
-    public boolean cancelarIngressoComprado(Ingresso ingresso, Pagamento pagamento) {
+    public boolean cancelarIngressoComprado(Usuario usuario, Ingresso ingresso) {
         Iterator<Compra> iterator = ingressosComprados.iterator();
 
         while (iterator.hasNext()) {
-            Compra bilhetes = iterator.next();
+            Compra ing = iterator.next();
 
-            if (ingresso.equals(bilhetes.getIngresso())) {
+            if (ing.getIngresso().equals(ingresso)) {
                 boolean cancelar = ingresso.cancelarIngresso();
 
                 if (cancelar) {
                     iterator.remove();
                     compra.cancelarCompra();
+                    ingresso.getEvento().cancelarIngressoComprado(ingresso);
                 } else {
                     return false;
                 }
@@ -239,11 +230,7 @@ public class Usuario {
      * @throws IllegalStateException Se o usuário não estiver logado.
      */
     public void setSenha(String senha) {
-        if (this.isLogado) {
-            this.senha = senha;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
+        this.senha = senha;
     }
 
     /**
@@ -253,11 +240,7 @@ public class Usuario {
      * @throws IllegalStateException Se o usuário não estiver logado.
      */
     public void setNome(String nome) {
-        if (this.isLogado) {
-            this.nome = nome;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
+        this.nome = nome;
     }
 
     /**
@@ -267,11 +250,8 @@ public class Usuario {
      * @throws IllegalStateException Se o usuário não estiver logado.
      */
     public void setEmail(String email) {
-        if (this.isLogado) {
-            this.email = email;
-        } else {
-            System.out.println("É necessário estar logado para realizar essa ação.");
-        }
+        this.email = email;
+
     }
 
     public String getLogin() {

@@ -1,6 +1,8 @@
 package br.uefs.ecomp.vendaingressos.model.persistencia;
 
 import br.uefs.ecomp.vendaingressos.model.Evento;
+import br.uefs.ecomp.vendaingressos.model.Ingresso;
+import br.uefs.ecomp.vendaingressos.model.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -8,8 +10,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PersistenciaEventos{
 
@@ -66,4 +69,5 @@ public class PersistenciaEventos{
             }
         }
     }
+
 }

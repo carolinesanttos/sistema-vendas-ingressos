@@ -19,29 +19,23 @@ import java.util.Date;
 
 import br.uefs.ecomp.vendaingressos.model.excecao.CompraJaCanceladaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.FormaDePagamentoInvalidaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class Compra {
-    private transient Usuario usuario;
+    private transient  Usuario usuario;
     private Ingresso ingresso;
     private Date data;
-    private double valor;
+    private transient double valor;
     private String status; // "Pendente", "Aprovado", "Cancelada"
     Pagamento pagamento;
-
-    public Compra(Usuario usuario, Ingresso ingresso, Date data, double valor) {
-        this.usuario = usuario;
-        this.ingresso = ingresso;
-        this.data = data;
-        this.valor = valor;
-        this.status = "Pendente";
-    }
 
     public Compra(Usuario usuario, Ingresso ingresso) {
         this.usuario = usuario;
@@ -71,10 +65,10 @@ public class Compra {
         if (resultadoCompra) {
             setStatus("Aprovado");
             return resultadoCompra;
+        } else {
+            setStatus("Cancelado");
+            throw new FormaDePagamentoInvalidaException("Forma de pagamento inválida.");
         }
-        setStatus("Cancelado");
-        throw new CompraNaoAutorizadaException("Compra não autorizada.");
-
     }
 
     /**
@@ -85,17 +79,22 @@ public class Compra {
      * @return A mensagem de confirmação da compra.
      */
     public String confirmarCompra(Usuario usuario, Pagamento pagamento) {
-        // Gera o arquivo JSON simulando o "e-mail de confirmação"
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(mensagemConfirmaCompra(usuario, pagamento));
+        if (status.equals("Aprovado")) {
+            // Gera o arquivo JSON simulando o "e-mail de confirmação"
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(mensagemConfirmaCompra(usuario, pagamento));
 
-        // Salva o JSON em um arquivo
-        try (FileWriter writer = new FileWriter("confirmacao_compra.json")) {
-            writer.write(json);
-            return mensagemConfirmaCompra(usuario, pagamento);
-        } catch (IOException e) {
-            return "Erro ao gerar arquivo de confirmação: " + e.getMessage();
+            // Salva o JSON em um arquivo
+            try (FileWriter writer = new FileWriter("confirmacao_compra.json")) {
+                writer.write(json);
+                return mensagemConfirmaCompra(usuario, pagamento);
+            } catch (IOException e) {
+                return "Erro ao gerar arquivo de confirmação: " + e.getMessage();
+            }
+        } else {
+            throw new CompraNaoAutorizadaException( "Compra não pode ser confirmada, status: " + status);
         }
+
     }
 
     /**

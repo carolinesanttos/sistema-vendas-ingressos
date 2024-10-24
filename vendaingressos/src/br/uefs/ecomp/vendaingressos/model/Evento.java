@@ -19,9 +19,7 @@ import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.EventoForaDoPrazoException;
 import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
 import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
-import com.google.gson.annotations.Expose;
 
-import java.beans.Transient;
 import java.util.*;
 
 public class Evento {
@@ -35,6 +33,8 @@ public class Evento {
     private List<String> assentosReservados = new ArrayList<>();
     private List<Ingresso> ingressosDisponiveis = new ArrayList<>();
     private List<Ingresso> ingressosComprados = new ArrayList<>();
+    private List<Feedback> feedbacks = new ArrayList<>();
+
 
     public Evento(String nome, String descricao, Date data) {
         this.nome = nome;
@@ -99,7 +99,7 @@ public class Evento {
      *
      * @param assento O assento a ser removido.
      */
-    public void removerAssento(String assento)     {
+    public void removerAssentoDisponivel(String assento)     {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (contemAssento) {
             assentosDisponiveis.remove(assento);
@@ -129,6 +129,7 @@ public class Evento {
      * @throws JaCadastradoException Se o ingresso já estiver cadastrado.
      */
     public void adicionarIngresso(Ingresso ingresso) {
+
         // Primeiro, verificar se o ingresso já está cadastrado
         for (Ingresso ing : ingressosDisponiveis) {
             if (ing.getEvento().getNome().equals(ingresso.getEvento().getNome()) &&
@@ -145,7 +146,7 @@ public class Evento {
      *
      * @param ingresso O ingresso a ser removido.
      */
-    public void removerIngresso(Ingresso ingresso) {
+    public void removerIngressoDisponivel(Ingresso ingresso) {
         boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
         if (contemIngresso) {
             ingressosDisponiveis.remove(ingresso);
@@ -202,7 +203,7 @@ public class Evento {
      * @throws NaoEncontradoException      Se o assento não estiver disponível.
      * @throws CompraNaoAutorizadaException Se o pagamento não puder ser processado.
      */
-    public Ingresso venderIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
+    public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
         // Verifica se o evento está ativo
         if (!isAtivo()) {
             throw new EventoForaDoPrazoException(evento.getNome());
@@ -212,22 +213,55 @@ public class Evento {
             throw new NaoEncontradoException("O assento " + assento + " não está disponível.");
         }
 
-        Ingresso ingresso = new Ingresso(usuario, evento, assento); // Cria um ingresso.
+        Ingresso ingresso = buscarPorIngresso(evento, assento);
+
         Compra compra = new Compra(usuario, ingresso);
 
         boolean resultado = compra.processarCompra(pagamento);
 
         if (resultado) {
             ingressosComprados.add(ingresso); // Adiciona a lista de ingresso comprados do evento
-            ingresso.getUsuario().adicionarCompras(new Compra(usuario, ingresso)); // E também adiciona a lista de compras do usuário
+            usuario.adicionarCompras(compra); // E também adiciona a lista de compras do usuário
+            assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados
 
-            removerIngresso(ingresso); // Remove ingresso da lista de disponíveis
-            removerAssento(assento); // Remove assento de disponíveis
-            assentosReservados.add(assento); // Adiciona assento à lista de assentos reservados,
+            removerIngressoDisponivel(ingresso); // Remove ingresso da lista de disponíveis
+            removerAssentoDisponivel(assento); // Remove assento de disponíveis
 
             return ingresso; // Retorna o ingresso vendido
         }
+
         throw new CompraNaoAutorizadaException("Não foi possível processar o pagamento.");
+    }
+
+    public void cancelarIngressoComprado(Ingresso ingresso) {
+        Iterator<Ingresso> iterator = ingressosComprados.iterator();
+
+        while (iterator.hasNext()) {
+            Ingresso ing = iterator.next();
+
+            if (ing.equals(ingresso)) {
+                boolean cancelar = ingresso.cancelarIngresso();
+
+                if (cancelar) {
+                    iterator.remove();
+                }
+            }
+        }
+
+    }
+
+
+    private Ingresso buscarPorIngresso(Evento evento, String assento) {
+        for (Ingresso ingresso: ingressosDisponiveis) {
+            if (ingresso.getEvento().equals(evento) && ingresso.getAssento().equals(assento)) {
+                return ingresso;
+            }
+        }
+        throw new NaoEncontradoException("Ingresso não encontrado.");
+    }
+
+    public void adicionarFeedbacks (Feedback feedback) {
+        feedbacks.add(feedback);
     }
 
     /**
@@ -281,6 +315,10 @@ public class Evento {
 
     public List<Ingresso> getIngressosComprados() {
         return ingressosComprados;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
     }
 
     public Usuario getUsuario() {

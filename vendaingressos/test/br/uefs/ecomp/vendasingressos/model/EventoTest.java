@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 import br.uefs.ecomp.vendaingressos.model.Evento;
-import br.uefs.ecomp.vendaingressos.model.Ingresso;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -49,7 +48,7 @@ public class EventoTest {
 
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
         evento.adicionarAssento("A1");
-        evento.removerAssento("A1");
+        evento.removerAssentoDisponivel("A1");
 
         List<String> assentos = evento.getAssentosDisponiveis();
         assertFalse(assentos.contains("A1"));

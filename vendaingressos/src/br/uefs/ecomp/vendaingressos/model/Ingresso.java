@@ -22,7 +22,7 @@ import java.util.*;
 
 public class Ingresso {
     private double preco;
-    private boolean status;
+    private transient boolean status;
     private transient Evento evento;
     private String assento;
     private transient Usuario usuario;
@@ -35,8 +35,7 @@ public class Ingresso {
         this.status = true; // Ingressos inicialmente estão ativos.
     }
 
-    public Ingresso(Usuario user, Evento evento, String assento) {
-        this.usuario = user;
+    public Ingresso(Evento evento, String assento) {
         this.evento = evento;
         this.assento = assento;
         this.preco = 100.0; // Preço padrão do ingresso.

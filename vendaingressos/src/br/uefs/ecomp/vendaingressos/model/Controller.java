@@ -15,9 +15,10 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Controller {
@@ -66,8 +67,13 @@ public class Controller {
      *
      * @param nome O novo nome do usuário.
      */
-    public void alterarNome (String nome) {
-        usuario.setNome(nome);
+    public void alterarNome (Usuario usuario, String nome) {
+        if (usuario.isLogado()) {
+            usuario.setNome(nome);
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
+
     }
 
     /**
@@ -75,8 +81,12 @@ public class Controller {
      *
      * @param email O novo email do usuário.
      */
-    public void alterarEmail (String email) {
-        usuario.setEmail(email);
+    public void alterarEmail (Usuario usuario, String email) {
+        if (usuario.isLogado()) {
+            usuario.setEmail(email);
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     /**
@@ -84,8 +94,12 @@ public class Controller {
      *
      * @param senha A nova senha do usuário.
      */
-    public void alterarSenha (String senha) {
-        usuario.setSenha(senha);
+    public void alterarSenha (Usuario usuario, String senha) {
+        if (usuario.isLogado()) {
+            usuario.setSenha(senha);
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     /**
@@ -119,22 +133,28 @@ public class Controller {
      * @param nomeDoEvento O nome do evento.
      * @param assento O assento a ser adicionado.
      */
-    public void adicionarAssentoEvento(String nomeDoEvento, String assento) {
+    public String adicionarAssento(Usuario user, String nomeDoEvento, String assento) {
         evento = evento.buscarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome.
-        if (evento!= null) { // Verifica se o evento foi encontrado.
+        if (evento!= null && user.isAdmin()) { // Verifica se o evento foi encontrado.
             evento.adicionarAssento(assento); // Adiciona o assento ao evento.
+            return assento;
         } else {
-            System.out.println("Esse evento não existe!");
+            throw new NaoEncontradoException("Esse evento não existe!");
         }
     }
 
     /**
      * Adiciona um ingresso a um evento.
      *
-     * @param ingresso O ingresso a ser adicionado.
+     * @param evento O ingresso a ser adicionado.
+     * @param assento O assento a ser adicionado.
      */
-    public void adicionarIngresso(Ingresso ingresso) {
-        evento.adicionarIngresso(ingresso);
+    public void gerarIngresso(Usuario user, Evento evento, String assento) {
+        if (user.isAdmin()) {
+            evento.adicionarIngresso(new Ingresso(evento, assento));
+        } else {
+            throw new SomenteAdminException("Somente administradores podem gerar ingressos para eventos.");
+        }
     }
 
     /**
@@ -147,9 +167,30 @@ public class Controller {
      * @return O ingresso comprado.
      */
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
+        if (pagamento == null) {
+            throw new FormaDePagamentoInvalidaException("É necessário adicionar uma forma de pagamento.");
+        }
+        if (!usuario.isLogado()) {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
         evento = evento.buscarEventoPorNome(nomeDoEvento);
-        ingresso = evento.venderIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
+        ingresso = evento.comprarIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
         return ingresso;
+    }
+
+    /**
+     * Cancela a compra de um ingresso.
+     *
+     * @param usuario O usuário que deseja cancelar a compra.
+     * @param ingresso O ingresso a ser cancelado.
+     * @return true se o cancelamento for bem-sucedido, false caso contrário.
+     */
+    public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
+        if (usuario.isLogado()) {
+            return usuario.cancelarIngressoComprado(usuario, ingresso);
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     /**
@@ -158,18 +199,27 @@ public class Controller {
      * @param pagamento O método de pagamento a ser escolhido.
      * @return A forma de pagamento escolhida.
      */
-    public Pagamento escolheFormaPagamento(Pagamento pagamento) {
-        return usuario.escolheFormaPagamento(pagamento);
+    public Pagamento escolheFormaPagamento(Usuario usuario, Pagamento pagamento) {
+
+        if (usuario.isLogado()) {
+            return usuario.escolheFormaPagamento(pagamento);
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     /**
-     * Processa o pagamento.
+     * Adiciona uma forma de pagamento ao usuário.
      *
-     * @param formaPagamento A forma de pagamento a ser processada.
-     * @return true se o pagamento for bem-sucedido, false caso contrário.
+     * @param pagamento A forma de pagamento a ser adicionada.
      */
-    public boolean processarPagamento(Pagamento formaPagamento) {
-        return formaPagamento.processarPagamento();
+    public void adicionarFormaPagamento (Usuario usuario, Pagamento pagamento) {
+        if (usuario.isLogado()) {
+            usuario.adicionaFormaDePagamento(pagamento);;  // Adiciona o pagamento à lista
+
+        } else {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
     }
 
     /**
@@ -183,25 +233,16 @@ public class Controller {
         return usuario.getCompra().confirmarCompra(usuario, pagamento);
     }
 
-    /**
-     * Adiciona uma forma de pagamento ao usuário.
-     *
-     * @param pagamento A forma de pagamento a ser adicionada.
-     */
-    public void adicionarFormaPagamento (Pagamento pagamento) {
-        usuario.adicionaFormaDePagamento(pagamento);
-    }
-
-    /**
-     * Cancela a compra de um ingresso.
-     *
-     * @param usuario O usuário que deseja cancelar a compra.
-     * @param ingresso O ingresso a ser cancelado.
-     * @param pagamento O método de pagamento utilizado.
-     * @return true se o cancelamento for bem-sucedido, false caso contrário.
-     */
-    public boolean cancelarCompra(Usuario usuario, Ingresso ingresso, Pagamento pagamento) {
-        return usuario.cancelarIngressoComprado(ingresso, pagamento);
+    public Feedback darFeedback(Usuario usuario, Evento evento, int nota, String mensagem) {
+        if (!usuario.isLogado()) {
+            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+        }
+        if (!evento.isAtivo()) {
+            Feedback feedback = new Feedback(usuario, evento, nota, mensagem);
+            evento.adicionarFeedbacks(feedback);
+            return feedback;
+        }
+        throw new EventoAtivoException("Só é possível avaliar após o evento.");
     }
 
     /**
@@ -215,16 +256,6 @@ public class Controller {
     public String reembolsarValor(Usuario usuario, Ingresso ingresso, Pagamento pagamento) {
         compra = new Compra(ingresso);
         return pagamento.reembolsarPagamento(usuario, compra);
-    }
-
-    /**
-     * Adiciona uma forma de pagamento ao usuário.
-     *
-     * @param usuario O usuário que receberá a forma de pagamento.
-     * @param pagamento A forma de pagamento a ser adicionada.
-     */
-    public void adicionaFormaPagamento (Usuario usuario, Pagamento pagamento) {
-        usuario.adicionaFormaDePagamento(pagamento);
     }
 
     /**
@@ -254,6 +285,7 @@ public class Controller {
     public List<Ingresso> listarIngressosComprados() {
         return ingresso.getEvento().getIngressosComprados();
     }
+
 
     /**
      * Retorna os eventos cadastrados no sistema.
