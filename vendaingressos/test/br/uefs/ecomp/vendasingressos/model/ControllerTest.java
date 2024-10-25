@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.uefs.ecomp.vendaingressos.model.*;
+import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.UserNaoLogadoException;
 import br.uefs.ecomp.vendaingressos.model.persistencia.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -458,5 +460,68 @@ public class ControllerTest {
         assertEquals(1, u3.getIngressosComprados().size());
     }
 
+    // Testando algumas das exceções
 
+    @Test
+    public void testNaoLogadoException () {
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.DECEMBER, 30);
+        Date data = calendar.getTime();
+
+        Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
+        String assento = controller.adicionarAssento(admin,"Festival de Música", "A1");
+        controller.gerarIngresso(admin, evento, assento);
+
+        // Usuário realiza seu cadastro no sistema
+        Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
+
+        Pagamento pagamento = new Pagamento("Carol Santos","8529 7418 9634 4568", "05/35", "356");
+
+        // Usuário tenta adicionar uma forma de pagamento sem está logado
+        UserNaoLogadoException exception = assertThrows(UserNaoLogadoException.class, () -> {
+            controller.adicionarFormaPagamento(usuario, pagamento);
+        });
+
+        assertEquals("É necessário estar logado para realizar essa ação.", exception.getMessage());
+    }
+
+    @Test
+    public void testEventoNaoEncontradoException () {
+        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
+        controller.login("admin", "senha123");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.NOVEMBER, 30);
+        Date data = calendar.getTime();
+
+        Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
+        String assento = controller.adicionarAssento(admin,"Show de Rock", "A1");
+        controller.gerarIngresso(admin, evento, assento);
+
+        // Usuário realiza seu cadastro no sistema
+        Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
+        controller.login("johndoe", "senha123");
+
+        // Usuário adiciona forma de pagamento de sua preferência
+        Pagamento pagamento = new Pagamento("7891234567890");
+        controller.adicionarFormaPagamento( usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+
+        assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
+
+        // Usuário tenta comprar ingresso para evento que não existe
+        NaoEncontradoException exception = assertThrows(NaoEncontradoException.class, () -> {
+            controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
+        });
+
+        assertEquals("Evento não encontrado.", exception.getMessage());
+    }
+
+    @Test
+    public void testEventoJaCadastradoException () {
+        
+    }
 }
