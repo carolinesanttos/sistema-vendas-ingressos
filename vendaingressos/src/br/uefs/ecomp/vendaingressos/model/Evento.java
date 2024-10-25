@@ -319,6 +319,10 @@ public class Evento {
         return ingressosComprados;
     }
 
+    public List<Ingresso> getIngressosDisponiveis() {
+        return ingressosDisponiveis;
+    }
+
     public List<Feedback> getFeedbacks() {
         return feedbacks;
     }

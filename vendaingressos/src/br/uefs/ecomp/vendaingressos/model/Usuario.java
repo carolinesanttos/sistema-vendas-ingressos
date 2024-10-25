@@ -67,18 +67,36 @@ public class Usuario {
      * @throws NaoEncontradoException se o usuário não for encontrado
      */
     public boolean login(String login, String senha) {
+        if (this.login.equals(login) && this.senha.equals(senha)) {
+            setLogado(true);
+            return true;
+        }
+        return false;
+
         // Verifica se o usuário está cadastrado
+//        for (Usuario usuario : usuariosCadastrados) {
+//            if (usuario.getLogin().equals(login)) {
+//                // Se o usuário estiver cadastrado, verifica a senha
+//                if (usuario.getSenha().equals(senha)) {
+//                    usuario.setLogado(true);
+//                    return true; // Usuário logado com sucesso
+//                }
+//                throw new CredencialInvalidaException("Login ou senha inválidos.");
+//            }
+//        }
+//        throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
+    }
+
+    public boolean isCasdastrado (String login, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
             if (usuario.getLogin().equals(login)) {
                 // Se o usuário estiver cadastrado, verifica a senha
                 if (usuario.getSenha().equals(senha)) {
-                    usuario.setLogado(true);
-                    return true; // Usuário logado com sucesso
+                    return true; // Usuário encontrado
                 }
-                throw new CredencialInvalidaException("Login ou senha inválidos.");
             }
         }
-        throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
+        return false;
     }
 
     /**
@@ -276,6 +294,10 @@ public class Usuario {
 
     public List<Pagamento> getFormasDePagamento() {
         return formasDePagamento;
+    }
+
+    public List<Compra> getIngressosComprados() {
+        return ingressosComprados;
     }
 
     public List<Compra> getCompras() {

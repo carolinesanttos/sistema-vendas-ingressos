@@ -259,9 +259,9 @@ public class ControllerTest {
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
 
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
-        Usuario usuario2 = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
-
         controller.login("carolsan", "animehime");
+
+        Usuario usuario2 = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
 
 
@@ -284,7 +284,7 @@ public class ControllerTest {
     // Testes em relação a persistência de dados
 
     @Test
-    public void testPersistenciaDetalhesDosEventos() {
+    public void testPersistenciaSalvarDados() {
 
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
@@ -294,12 +294,24 @@ public class ControllerTest {
         Date data = calendar.getTime();
 
         Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
-        String assento = controller.adicionarAssento(admin,"Festival de Música", "A1");
-        controller.gerarIngresso(admin, evento, assento);
 
-        Evento evento2 = controller.cadastrarEvento(admin, "Teatro Clássico", "Peça Teatral", data);
-        String assento2 = controller.adicionarAssento(admin,"Teatro Clássico", "A2");
-        controller.gerarIngresso(admin, evento2, assento2);
+        String assento = controller.adicionarAssento(admin,"Festival de Música", "A1");
+        controller.adicionarAssento(admin,"Festival de Música", "A2");
+        controller.adicionarAssento(admin,"Festival de Música", "A3");
+
+        controller.gerarIngresso(admin, evento, assento);
+        controller.gerarIngresso(admin, evento, "A2");
+        controller.gerarIngresso(admin, evento, "A3");
+
+        Usuario usuario = controller.cadastrarUsuario("mariazinha", "segura123", "Maria Costa", "98765432100", "maria.costa@example.com", false);
+        controller.login("mariazinha", "segura123");
+
+        Pagamento pagamento = new Pagamento("Maria Costa","7589 7418 8529 9637", "10/31", "927");
+        controller.adicionarFormaPagamento(usuario, pagamento);
+
+        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+
+        controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
 
         // Instanciando a classe de persistência com o caminho do arquivo
         PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
@@ -315,15 +327,69 @@ public class ControllerTest {
 
         // Verificando se os eventos foram salvos e carregados corretamente
         assertNotNull(eventosCarregados);
-        assertEquals(2, eventosCarregados.size());
-        assertEquals("Festival de Música", eventosCarregados.get(0).getNome());
-        assertEquals("Bandas Diversas", eventosCarregados.get(0).getDescricao());
-        assertEquals("Teatro Clássico", eventosCarregados.get(1).getNome());
-        assertEquals("Peça Teatral", eventosCarregados.get(1).getDescricao());
+        assertEquals(1, eventosCarregados.size());
+        assertEquals("Festival de Música", eventosCarregados.getFirst().getNome());
+        assertEquals("Bandas Diversas", eventosCarregados.getFirst().getDescricao());
     }
 
     @Test
-    public void testPersistenciaDadosCompraDeIngressos() {
+    public void testPersistenciaCarregarEventos() {
+        PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
+        List<Evento> detalheEventos = persistencia.carregarDados();
+
+        assertEquals(1, detalheEventos.size());  // Verifica se dois eventos foram carregados
+
+        Evento evento = detalheEventos.getFirst();
+        assertEquals("Festival de Música", evento.getNome());
+        assertEquals("Bandas Diversas", evento.getDescricao());
+    }
+
+    @Test
+    public void testPersistenciaAssentoDisponivelEReservado() {
+        PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
+
+        List<Evento> detalheEventos = persistencia.carregarDados();
+
+        Evento evento = detalheEventos.getFirst();
+        assertEquals(2, evento.getAssentosDisponiveis().size());
+        assertTrue(evento.getAssentosDisponiveis().contains("A2"));
+        assertTrue(evento.getAssentosDisponiveis().contains("A3"));
+
+        assertEquals(1, evento.getAssentosReservados().size());
+        assertTrue(evento.getAssentosReservados().contains("A1"));
+    }
+
+    @Test
+    public void testPersistenciaIngressosDisponivelReservado() {
+        PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
+
+        List<Evento> detalheEventos = persistencia.carregarDados();
+
+        // Verificando se o evento "Festival de Música" foi carregado corretamente
+        Evento evento = detalheEventos.getFirst();
+        assertEquals("Festival de Música", evento.getNome());
+        assertEquals(2, evento.getIngressosDisponiveis().size()); // Deve ter 2 ingressos disponíveis
+
+        // Verificando os ingressos disponíveis para o festival de música
+        Ingresso ingresso = evento.getIngressosDisponiveis().get(0);
+        assertEquals("Festival de Música", evento.getNome());
+        assertEquals("A2", ingresso.getAssento());
+        assertEquals(100.0, ingresso.getPreco(), 0.01);
+
+        Ingresso ingresso2 = evento.getIngressosDisponiveis().get(1);
+        assertEquals("Festival de Música", evento.getNome());
+        assertEquals("A3", ingresso2.getAssento());
+        assertEquals(100.0, ingresso.getPreco(), 0.01);
+
+        // Verificando se o evento "Teatro Clássico" não está presente
+        // Para isso, devemos assegurar que a lista de eventos só contém o evento de música.
+        assertEquals(1, detalheEventos.size()); // Deve ter apenas 1 evento
+        assertEquals("Festival de Música", detalheEventos.getFirst().getNome());
+
+    }
+
+    @Test
+    public void testPersistenciaUsuarios() {
         Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
         controller.login("admin", "senha123");
 
@@ -359,196 +425,38 @@ public class ControllerTest {
         controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
         controller.comprarIngresso(usuario2, pagamentoEscolhido2, "Festival de Música", "A2");
 
-        // Instanciando a classe de persistência com o caminho do arquivo
-        //PersistenciaEventos persistencia = new PersistenciaEventos("eventos-ativos.json");
-
         // Obtendo a lista de eventos para salvar
         List<Evento> eventosAtivos = controller.getEventosCadastrados();
 
-        // Salvando os eventos em um arquivo JSON
-        //ersistencia.salvarDados(eventosAtivos);
-
         // Persistindo os usuários em JSON
         PersistenciaUsuarios persistenciaUsuarios = new PersistenciaUsuarios("usuarios.json");
+
         List<Usuario> usuariosCadastrados = controller.getUsuariosCadastrados();
+
         persistenciaUsuarios.salvarDados(usuariosCadastrados);  // Salvando os dados dos usuários
 
         // Carregando os dados de volta do arquivo
-        //List<Evento> eventosCarregados = persistencia.carregarDados();
-        List<Usuario> usuariosCarregados = persistenciaUsuarios.carregarDados();
+        List<Usuario> usuarios = persistenciaUsuarios.carregarDados();
 
-        // Verificando se os eventos foram salvos e carregados corretamente
-        //assertNotNull(eventosCarregados);
-        //assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
+        assertEquals(3, usuarios.size());
 
-        // Verificando se os usuários foram salvos e carregados corretamente
-        assertNotNull(usuariosCarregados);  // Garante que os usuários foram carregados
-        assertEquals(usuariosCadastrados.size(), usuariosCarregados.size());  // Verifica o número de usuários
+        // Verificações do usuário administrador
+        Usuario u1 = usuarios.getFirst();
+        assertEquals("admin", u1.getLogin());
+        assertTrue(u1.isAdmin());
 
-        // Verificando os dados dos usuários carregados
-        for (Usuario u : usuariosCarregados) {
-            assertNotNull(u.getNome()); // Verifica que o nome do usuário não é nulo
-            for (Pagamento p : u.getFormasDePagamento()) {
-                assertEquals("Cartão", p.getFormaDePagamento());  // Verifica que o pagamento foi carregado corretamente
-            }
-        }
+        // Verificações do usuário "mariazinha"
+        Usuario u2 = usuarios.get(1);
+        assertEquals("mariazinha", u2.getLogin());
+        assertEquals("Cartão", u2.getFormasDePagamento().getFirst().getFormaDePagamento());
+        assertEquals(1, u2.getIngressosComprados().size());
 
+        // Verificações do usuário "carolsan"
+        Usuario u3 = usuarios.get(2);
+        assertEquals("carolsan", u3.getLogin());
+        assertEquals("Cartão", u3.getFormasDePagamento().getFirst().getFormaDePagamento());
+        assertEquals(1, u3.getIngressosComprados().size());
     }
 
-//    @Test
-//    public void testPersistenciaDadosCompraDeIngressos() {
-//
-//
-//        // Instanciando a classe de persistência com o caminho do arquivo
-//        PersistenciaEventos persistencia = new PersistenciaEventos("eventos-ativos.json");
-//
-//        // Obtendo a lista de eventos para salvar
-//        List<Evento> eventosAtivos = controller.getEventosCadastrados();
-//
-//
-//        // Salvando os eventos em um arquivo JSON
-//        persistencia.salvarDados(eventosAtivos);
-//
-//        // Persistindo os usuários em JSON
-//        PersistenciaUsuarios persistenciaUsuarios = new PersistenciaUsuarios("usuarios.json");
-//        List<Usuario> usuariosCadastrados = controller.getUsuariosCadastrados();
-//        persistenciaUsuarios.salvarDados(usuariosCadastrados);  // Salvando os dados dos usuários
-//
-//        // Carregando os dados de volta do arquivo
-//        List<Evento> eventosCarregados = persistencia.carregarDados();
-//        List<Usuario> usuariosCarregados = persistenciaUsuarios.carregarDados();
-//
-//        // Verificando se os eventos foram salvos e carregados corretamente
-//        assertNotNull(eventosCarregados);
-//        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
-//
-//        // Verificando se os usuários foram salvos e carregados corretamente
-//        assertNotNull(usuariosCarregados);  // Garante que os usuários foram carregados
-//        assertEquals(usuariosCadastrados.size(), usuariosCarregados.size());  // Verifica o número de usuários
-//
-//        // Verificando os dados dos usuários carregados
-//        for (Usuario u : usuariosCarregados) {
-//            assertNotNull(u.getNome()); // Verifica que o nome do usuário não é nulo
-//            for (Pagamento p : u.getFormasDePagamento()) {
-//                assertEquals("Boleto bancário", p.getFormaDePagamento());  // Verifica que o pagamento foi carregado corretamente
-//            }
-//        }
-//
-//        // Iterando sobre os eventos carregados
-//        for (Evento e : eventosCarregados) {
-//            // Verifica se os assentos disponíveis foram carregados corretamente
-//            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
-//            List<String> assentosReservados = e.getAssentosReservados();
-//
-//            assertNotNull(assentosReservados); // Verifica que a lista de assentos reservados não é nula
-//            assertFalse(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
-//            assertTrue(assentosReservados.contains("A10")); // O assento "A10" deve estar reservado
-//
-//            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
-//            assertEquals(1, assentosReservados.size()); // Verifica se o tamanho da lista de assentos reservados é 1
-//        }
-//
-//    }
-
-
-//    @Test
-//    public void testPersistenciaDadosAssentosDisponiveis() {
-//
-//        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
-//        controller.login("admin", "senha123");
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.DECEMBER, 30);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
-//        controller.adicionarAssento(admin,"Festival de Música", "A1");
-//
-//        // Instanciando a classe de persistência com o caminho do arquivo
-//        PersistenciaEventos persistencia = new PersistenciaEventos("assentos-disponiveis.json");
-//
-//        // Obtendo a lista de eventos para salvar
-//        List<Evento> eventosAtivos = controller.getEventosCadastrados();
-//
-//        // Salvando os eventos em um arquivo JSON
-//        persistencia.salvarDados(eventosAtivos);
-//
-//        // Carregando os dados de volta do arquivo
-//        List<Evento> eventosCarregados = persistencia.carregarDados();
-//
-//        // Verificando se os eventos foram salvos e carregados corretamente
-//        assertNotNull(eventosCarregados);
-//        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
-//
-//        // Iterando sobre os eventos carregados
-//        for (Evento e : eventosCarregados) {
-//            // Verifica se os assentos disponíveis foram carregados corretamente
-//            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
-//
-//            assertTrue(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
-//
-//            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
-//            assertEquals(1, assentosDisponiveis.size()); // Verifica se o tamanho da lista de assentos reservados é 1
-//        }
-//    }
-
-//    @Test
-//    public void testPersistenciaDadosAssentosReservados() {
-//
-//        Usuario admin = controller.cadastrarUsuario("admin", "senha123", "Admin User", "00000000000", "admin@example.com", true);
-//        controller.login("admin", "senha123");
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(2024, Calendar.DECEMBER, 30);
-//        Date data = calendar.getTime();
-//
-//        Evento evento = controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
-//        controller.adicionarAssentoEvento("Festival de Música", "A10");
-//
-//        Usuario usuario = controller.cadastrarUsuario("mariazinha", "segura123", "Maria Costa", "98765432100", "maria.costa@example.com", false);
-//        controller.login("mariazinha", "segura123");
-//
-//        Ingresso ingresso = new Ingresso(usuario, evento, "A10");
-//        controller.adicionarIngresso(ingresso);
-//
-//        Pagamento pagamento = new Pagamento("7891234567890");
-//        controller.adicionarFormaPagamento(pagamento);
-//
-//        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(pagamento);
-//        assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
-//
-//        controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A10");
-//
-//        // Instanciando a classe de persistência com o caminho do arquivo
-//        PersistenciaEventos persistencia = new PersistenciaEventos("assentos-reservados.json");
-//
-//        // Obtendo a lista de eventos para salvar
-//        List<Evento> eventosAtivos = controller.getEventosCadastrados();
-//
-//        // Salvando os eventos em um arquivo JSON
-//        persistencia.salvarDados(eventosAtivos);
-//
-//        // Carregando os dados de volta do arquivo
-//        List<Evento> eventosCarregados = persistencia.carregarDados();
-//
-//        // Verificando se os eventos foram salvos e carregados corretamente
-//        assertNotNull(eventosCarregados);
-//        assertEquals(eventosAtivos.size(), eventosCarregados.size());  // Verifica se o número de eventos carregados é o mesmo
-//
-//        // Iterando sobre os eventos carregados
-//        for (Evento e : eventosCarregados) {
-//            // Verifica se os assentos disponíveis foram carregados corretamente
-//            List<String> assentosDisponiveis = e.getAssentosDisponiveis();
-//            List<String> assentosReservados = e.getAssentosReservados();
-//
-//            assertNotNull(assentosReservados); // Verifica que a lista de assentos reservados não é nula
-//            assertFalse(assentosDisponiveis.contains("A10")); // O assento "A10" não deve estar disponível
-//            assertTrue(assentosReservados.contains("A10")); // O assento "A10" deve estar reservado
-//
-//            // Exemplo de verificação para eventos específicos (caso você queira verificar detalhes específicos)
-//            assertEquals(1, assentosReservados.size()); // Verifica se o tamanho da lista de assentos reservados é 1
-//        }
-//    }
-//
 
 }

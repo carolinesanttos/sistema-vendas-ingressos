@@ -24,6 +24,7 @@ public class Ingresso {
     private double preco;
     private transient boolean status;
     private transient Evento evento;
+    private String nomeEvento;
     private String assento;
     private transient Usuario usuario;
     private Compra compra;
@@ -37,10 +38,12 @@ public class Ingresso {
 
     public Ingresso(Evento evento, String assento) {
         this.evento = evento;
+        this.nomeEvento = evento.getNome();
         this.assento = assento;
         this.preco = 100.0; // Preço padrão do ingresso.
         this.status = true; // Ingressos inicialmente estão ativos.
     }
+
 
     /**
      * Verifica se o ingresso está ativo.

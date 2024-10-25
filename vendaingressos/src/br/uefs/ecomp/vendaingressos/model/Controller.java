@@ -54,12 +54,21 @@ public class Controller {
      * @throws NaoEncontradoException Se o login ou a senha estiverem incorretos.
      */
     public Usuario login (String login, String senha) {
-        boolean logado = usuario.login(login, senha);  // Chama o método que pode lançar a exceção
-        if (logado) {
-            return usuario;  // Retorna o usuário se o login for bem-sucedido
+        boolean cadastrado = usuario.isCasdastrado(login, senha);
+        if (cadastrado) {
+            usuario.login(login, senha);
+            return usuario;
         } else {
-            throw new NaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
+            throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
         }
+
+
+//        boolean logado = usuario.login(login, senha);  // Chama o método que pode lançar a exceção
+//        if (logado) {
+//            return usuario;  // Retorna o usuário se o login for bem-sucedido
+//        } else {
+//            throw new NaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
+//        }
     }
 
     /**

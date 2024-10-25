@@ -35,7 +35,7 @@ public class Compra {
     private Date data;
     private transient double valor;
     private String status; // "Pendente", "Aprovado", "Cancelada"
-    Pagamento pagamento;
+    private Pagamento  pagamento;
 
     public Compra(Usuario usuario, Ingresso ingresso) {
         this.usuario = usuario;

@@ -32,7 +32,7 @@ public class Pagamento {
     private transient String codigoDeSeguranca;
     private transient String codigoDeBarras;   // Para pagamento com boleto
     private boolean reembolso;
-    Compra compra;
+    private Compra compra;
 
     // Forma de pagamento: Cartão
     public Pagamento(String nomeTitular, String numeroDoCartao, String validadeDoCartao, String codigoDeSeguranca) {
