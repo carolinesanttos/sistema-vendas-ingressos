@@ -27,11 +27,11 @@ public class Feedback {
      * Construtor da classe Feedback.
      * Inicializa um novo feedback apenas se o usuário estiver logado.
      *
-     * @param usuario   O usuário que fornece o feedback.
-     * @param evento    O evento que está sendo avaliado.
-     * @param nota      A nota atribuída ao evento (de 1 a 5).
-     * @param comentario Um comentário sobre o evento.
-     * @throws UserNaoLogadoException Se o usuário não estiver logado.
+     * @param usuario   usuário que fornece o feedback.
+     * @param evento    evento que está sendo avaliado.
+     * @param nota      nota atribuída ao evento (de 1 a 5).
+     * @param comentario comentário sobre o evento.
+     * @throws UserNaoLogadoException se o usuário não estiver logado.
      */
     public Feedback(Usuario usuario, Evento evento, int nota, String comentario) {
         if (usuario.isLogado()) {
@@ -45,10 +45,10 @@ public class Feedback {
     }
 
     /**
-     * Retorna uma representação em String do feedback, incluindo nome do usuário, nome do evento,
+     * Retorna String do feedback, com nome do usuário, nome do evento,
      * nota e comentário.
      *
-     * @return Uma string representando o feedback.
+     * @return string representando o feedback.
      */
     @Override
     public String toString() {
@@ -59,8 +59,8 @@ public class Feedback {
     /**
      * Define a nota do feedback, que deve estar entre 1 e 5.
      *
-     * @param nota A nova nota a ser atribuída.
-     * @throws IllegalArgumentException Se a nota não estiver entre 1 e 5.
+     * @param nota nova nota a ser passada.
+     * @throws IllegalArgumentException se a nota não estiver entre 1 e 5.
      */
     public void setNota(int nota) {
         if (nota >= 1 && nota <= 5) {

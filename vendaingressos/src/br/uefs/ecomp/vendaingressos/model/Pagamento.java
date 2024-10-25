@@ -54,7 +54,7 @@ public class Pagamento {
     /**
      * Processa o pagamento de acordo com a forma de pagamento escolhida.
      *
-     * @return true se o pagamento foi processado com sucesso, false caso contrário.
+     * @return true se pagamento foi processado com sucesso, false caso contrário.
      */
     public boolean processarPagamento() {
         // Simula o processamento do pagamento no cartão e simula o processamento do pagamento no boleto
@@ -68,9 +68,9 @@ public class Pagamento {
     /**
      * Realiza o reembolso do pagamento, se ainda não foi reembolsado.
      *
-     * @param usuario O usuário que solicita o reembolso.
-     * @param compra A compra associada ao pagamento.
-     * @return A mensagem de confirmação ou erro do reembolso.
+     * @param usuario usuário que solicita o reembolso.
+     * @param compra compra associada ao pagamento.
+     * @return Mensagem de confirmação ou erro do reembolso.
      */
     public String reembolsarPagamento(Usuario usuario, Compra compra) {
         this.compra = compra;
@@ -97,9 +97,9 @@ public class Pagamento {
     /**
      * Gera a mensagem de reembolso para o usuário.
      *
-     * @param usuario O usuário que receberá a mensagem.
-     * @param formaPagamento A forma de pagamento utilizada.
-     * @return A mensagem de reembolso formatada.
+     * @param usuario usuário que receberá a mensagem.
+     * @param formaPagamento forma de pagamento utilizada.
+     * @return mensagem de reembolso.
      */
     public String mensagemDeReembolso(Usuario usuario, String formaPagamento) {
         return "Destinatário: " + usuario.getEmail() + "\nAssunto: Reembolso da Compra\n\n" +
@@ -111,9 +111,9 @@ public class Pagamento {
 
     /**
      * Compara este objeto com outro para verificar se são iguais.
-     * A comparação é baseada na forma de pagamento e nos dados associados.
+     * A comparação é baseada na forma de pagamento e nos dados.
      *
-     * @param o O objeto a ser comparado.
+     * @param o objeto que será comparado.
      * @return true se os objetos forem iguais, false caso contrário.
      */
     @Override
@@ -141,8 +141,8 @@ public class Pagamento {
     /**
      * Define a forma de pagamento. Se a forma de pagamento for inválida, lança uma exceção.
      *
-     * @param formaDePagamento A nova forma de pagamento a ser definida.
-     * @throws FormaDePagamentoInvalidaException Se a forma de pagamento não for válida.
+     * @param formaDePagamento nova forma de pagamento a ser definida.
+     * @throws FormaDePagamentoInvalidaException se a forma de pagamento não for válida.
      */
     public void setFormaDePagamento(String formaDePagamento) {
         if (formaDePagamento.equals("Boleto bancário") || formaDePagamento.equals("Cartão")) {
@@ -150,62 +150,6 @@ public class Pagamento {
         } else {
             throw new FormaDePagamentoInvalidaException("Forma de pagamento inválida");
         }
-    }
-
-    public String getNomeTitular() {
-        return nomeTitular;
-    }
-
-    public void setNomeTitular(String nomeTitular) {
-        this.nomeTitular = nomeTitular;
-    }
-
-    public String getNumeroDoCartao() {
-        return numeroDoCartao;
-    }
-
-    public void setNumeroDoCartao(String numeroDoCartao) {
-        this.numeroDoCartao = numeroDoCartao;
-    }
-
-    public String getValidadeDoCartao() {
-        return validadeDoCartao;
-    }
-
-    public void setValidadeDoCartao(String validadeDoCartao) {
-        this.validadeDoCartao = validadeDoCartao;
-    }
-
-    public String getCodigoDeSeguranca() {
-        return codigoDeSeguranca;
-    }
-
-    public void setCodigoDeSeguranca(String codigoDeSeguranca) {
-        this.codigoDeSeguranca = codigoDeSeguranca;
-    }
-
-    public String getCodigoDeBarras() {
-        return codigoDeBarras;
-    }
-
-    public void setCodigoDeBarras(String codigoDeBarras) {
-        this.codigoDeBarras = codigoDeBarras;
-    }
-
-    public boolean isReembolso() {
-        return reembolso;
-    }
-
-    public void setReembolso(boolean reembolso) {
-        this.reembolso = reembolso;
-    }
-
-    public Compra getCompra() {
-        return compra;
-    }
-
-    public void setCompra(Compra compra) {
-        this.compra = compra;
     }
 
     public String getFormaDePagamento() {

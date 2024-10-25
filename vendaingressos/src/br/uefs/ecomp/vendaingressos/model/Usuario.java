@@ -36,7 +36,6 @@ public class Usuario {
     private List<Pagamento> formasDePagamento = new ArrayList<>();
     private List <Compra> ingressosComprados = new ArrayList<>();
 
-    // Construtor que inicializa todos os atributos do usuário ao criar um novo objeto.
     public Usuario(String login, String senha, String nome, String cpf, String email, boolean adm) {
         this.login = login;
         this.senha = senha;
@@ -50,21 +49,19 @@ public class Usuario {
     /**
      * Adiciona usuário à lista de cadastro.
      *
-     * @param usuario o usuário a ser cadastrado
-     * @throws JaCadastradoException se o usuário já estiver cadastrado
+     * @param usuario será o usuário a ser cadastrado
+     * @throws JaCadastradoException se usuário já estiver cadastrado
      */
     public void cadastroDeUsuarios (Usuario usuario) {
         usuariosCadastrados.add(usuario);
     }
 
     /**
-     * Verifica o login do usuário.
+     * Verifica as credenciais de login do usuário.
      *
-     * @param login  o login do usuário
-     * @param senha  a senha do usuário
-     * @return true se o login e senha estiverem corretos
-     * @throws CredencialInvalidaException se o login ou a senha estiverem incorretos
-     * @throws NaoEncontradoException se o usuário não for encontrado
+     * @param login  será o login do usuário
+     * @param senha  será a senha do usuário
+     * @return true se login e senha estiverem corretos, caso contrário, false
      */
     public boolean login(String login, String senha) {
         if (this.login.equals(login) && this.senha.equals(senha)) {
@@ -72,44 +69,38 @@ public class Usuario {
             return true;
         }
         return false;
-
-        // Verifica se o usuário está cadastrado
-//        for (Usuario usuario : usuariosCadastrados) {
-//            if (usuario.getLogin().equals(login)) {
-//                // Se o usuário estiver cadastrado, verifica a senha
-//                if (usuario.getSenha().equals(senha)) {
-//                    usuario.setLogado(true);
-//                    return true; // Usuário logado com sucesso
-//                }
-//                throw new CredencialInvalidaException("Login ou senha inválidos.");
-//            }
-//        }
-//        throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
     }
 
+    /**
+     * Verifica se usuário está cadastrado com o login e senha passados.
+     *
+     * @param login  será o login do usuário
+     * @param senha  será a senha do usuário
+     * @return true se usuário estiver cadastrado, caso contrário, false
+     */
     public boolean isCasdastrado (String login, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
             if (usuario.getLogin().equals(login)) {
-                // Se o usuário estiver cadastrado, verifica a senha
+                // Se o login estiver cadastrado, verifica a senha
                 if (usuario.getSenha().equals(senha)) {
                     return true; // Usuário encontrado
                 }
             }
         }
-        return false;
+        return false; // Usuário não encontrado
     }
 
     /**
-     * Retorna true se o usuário for administrador.
+     * Retorna true se usuário for administrador.
      *
-     * @return true se o usuário for administrador, caso contrário, false
+     * @return true se usuário for administrador, senão, false
      */
     public boolean isAdmin() {
         return adm;
     }
 
     /**
-     * Desloga o usuário.
+     * Desloga usuário.
      */
     public void logout() {
         setLogado(false);
@@ -118,17 +109,17 @@ public class Usuario {
     /**
      * Adiciona uma forma de pagamento à lista de formas de pagamento do usuário.
      *
-     * @param pagamento a forma de pagamento a ser adicionada
+     * @param pagamento a forma de pagamento que será adicionada
      */
     public void adicionaFormaDePagamento (Pagamento pagamento) {
-        formasDePagamento.add(pagamento);  // Adiciona o pagamento à lista
+        formasDePagamento.add(pagamento);
 
     }
 
     /**
-     * Remove uma forma de pagamento da lista de formas de pagamento do usuário.
+     * Remove forma de pagamento da lista de formas de pagamento do usuário.
      *
-     * @param pagamento a forma de pagamento a ser removida
+     * @param pagamento a forma de pagamento que será removida
      * @throws NaoEncontradoException se a forma de pagamento não for encontrada
      */
     public void removerFormaDePagamento (Pagamento pagamento) {
@@ -143,9 +134,9 @@ public class Usuario {
     /**
      * Escolhe uma forma de pagamento da lista de formas de pagamento do usuário.
      *
-     * @param pagamento a forma de pagamento a ser escolhida
-     * @return a forma de pagamento escolhida
-     * @throws NaoEncontradoException se a forma de pagamento não for encontrada
+     * @param pagamento forma de pagamento escolhida
+     * @return forma de pagamento escolhida
+     * @throws NaoEncontradoException caso a forma de pagamento não for encontrada
      */
     public Pagamento escolheFormaPagamento (Pagamento pagamento) {
         boolean contemPagamento = formasDePagamento.contains(pagamento);
@@ -160,7 +151,7 @@ public class Usuario {
     /**
      * Adiciona uma compra à lista de ingressos comprados pelo usuário.
      *
-     * @param compra a compra a ser adicionada
+     * @param compra compra que será adicionada
      */
     public void adicionarCompras(Compra compra) {
         this.compra = compra;
@@ -168,10 +159,10 @@ public class Usuario {
     }
 
     /**
-     * Remove um ingresso da lista de ingressos comprados pelo usuário.
+     * Remove ingresso da lista de ingressos comprados pelo usuário.
      *
-     * @param ingresso o ingresso a ser cancelado
-     * @return true se o ingresso foi cancelado com sucesso, caso contrário, false
+     * @param ingresso ingresso que será cancelado
+     * @return true se ingresso foi cancelado com sucesso, senão, false
      */
     public boolean cancelarIngressoComprado(Usuario usuario, Ingresso ingresso) {
         Iterator<Compra> iterator = ingressosComprados.iterator();
@@ -186,19 +177,18 @@ public class Usuario {
                     iterator.remove();
                     compra.cancelarCompra();
                     ingresso.getEvento().cancelarIngressoComprado(ingresso);
-                } else {
-                    return false;
+                    return true; // Retorna true se o ingresso foi cancelado
                 }
             }
         }
-        return true;
+        return false; // Retorna false se o ingresso não foi encontrado
     }
 
     /**
      * Método equals sobrescrito para comparar dois objetos Usuario.
      * Dois usuários são iguais se o login, CPF e email forem iguais.
      *
-     * @param o o objeto a ser comparado
+     * @param o objeto que será comparado
      * @return true se os objetos forem iguais, caso contrário, false
      */
     @Override
@@ -228,7 +218,7 @@ public class Usuario {
     /**
      * Retorna a lista de ingressos comprados pelo usuário.
      *
-     * @return a lista de ingressos comprados
+     * @return lista de ingressos comprados
      */
     public List<Ingresso> getIngressos() {
         List <Ingresso>ingressosComprados = new ArrayList<>();
@@ -238,35 +228,17 @@ public class Usuario {
                 ingressosComprados.add(ingresso);
             }
         }
-        return ingressosComprados; // Retorna a lista de ingressos comprados
+        return ingressosComprados;
     }
 
-    /**
-     * Define a nova senha do usuário.
-     *
-     * @param senha A nova senha a ser definida.
-     * @throws IllegalStateException Se o usuário não estiver logado.
-     */
     public void setSenha(String senha) {
         this.senha = senha;
     }
 
-    /**
-     * Define o novo nome do usuário.
-     *
-     * @param nome O novo nome a ser definido.
-     * @throws IllegalStateException Se o usuário não estiver logado.
-     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    /**
-     * Define o novo email do usuário.
-     *
-     * @param email O novo email a ser definido.
-     * @throws IllegalStateException Se o usuário não estiver logado.
-     */
     public void setEmail(String email) {
         this.email = email;
 

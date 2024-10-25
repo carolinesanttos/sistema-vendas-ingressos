@@ -51,11 +51,11 @@ public class Ingresso {
      * @return true se o ingresso estiver ativo, false caso contrário.
      */
     public boolean isAtivo() {
-        return getStatus(); // Retorna o status do ingresso.
+        return getStatus();
     }
 
     /**
-     * Cancela o ingresso, seguindo as regras:
+     * Cancela o ingresso, com as regras:
      * 1) Não permite cancelamento no dia do evento.
      * 2) Permite cancelamento antes do evento.
      * 3) Não permite cancelamento após a data do evento.
@@ -65,7 +65,7 @@ public class Ingresso {
     public boolean cancelarIngresso() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getEvento().getData()); // Define a data do evento.
+        dataEvento.setTime(getEvento().getData()); // Data do evento
         int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento.
         if (valor == 0) { // Se o evento ocorrer no mesmo dia, não permite cancelamento.
             return false;
@@ -87,7 +87,7 @@ public class Ingresso {
     /**
      * Compara se dois ingressos são iguais com base em preço, evento e assento.
      *
-     * @param o O objeto a ser comparado.
+     * @param o objeto comparado.
      * @return true se os ingressos forem iguais, false caso contrário.
      */
     @Override

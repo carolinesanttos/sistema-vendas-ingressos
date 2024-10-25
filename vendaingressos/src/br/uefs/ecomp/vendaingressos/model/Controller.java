@@ -31,13 +31,13 @@ public class Controller {
     /**
      * Cadastra um novo usuário no sistema.
      *
-     * @param login O login do usuário.
-     * @param senha A senha do usuário.
-     * @param nome O nome completo do usuário.
-     * @param cpf O CPF do usuário.
-     * @param email O email do usuário.
-     * @param isAdm Indica se o usuário é um administrador.
-     * @return O usuário criado.
+     * @param login login do usuário.
+     * @param senha senha do usuário.
+     * @param nome nome completo do usuário.
+     * @param cpf CPF do usuário.
+     * @param email email do usuário.
+     * @param isAdm indica se o usuário é um administrador.
+     * @return usuário criado.
      */
     public Usuario cadastrarUsuario(String login, String senha, String nome, String cpf, String email, boolean isAdm) {
         usuario = new Usuario(login, senha, nome, cpf, email, isAdm);
@@ -46,12 +46,12 @@ public class Controller {
     }
 
     /**
-     * Realiza o login do usuário.
+     * Realiza login do usuário.
      *
-     * @param login O login do usuário.
-     * @param senha A senha do usuário.
-     * @return O usuário logado.
-     * @throws NaoEncontradoException Se o login ou a senha estiverem incorretos.
+     * @param login login do usuário.
+     * @param senha senha do usuário.
+     * @return usuário logado.
+     * @throws NaoEncontradoException se o login ou a senha estiverem incorretos.
      */
     public Usuario login (String login, String senha) {
         boolean cadastrado = usuario.isCasdastrado(login, senha);
@@ -61,20 +61,12 @@ public class Controller {
         } else {
             throw new NaoEncontradoException("Usuário não encontrado."); // Usuário não está cadastrado
         }
-
-
-//        boolean logado = usuario.login(login, senha);  // Chama o método que pode lançar a exceção
-//        if (logado) {
-//            return usuario;  // Retorna o usuário se o login for bem-sucedido
-//        } else {
-//            throw new NaoEncontradoException("Usuário ou senha");  // Lança exceção se o login falhar
-//        }
     }
 
     /**
      * Altera o nome do usuário.
      *
-     * @param nome O novo nome do usuário.
+     * @param nome novo nome do usuário.
      */
     public void alterarNome (Usuario usuario, String nome) {
         if (usuario.isLogado()) {
@@ -88,7 +80,7 @@ public class Controller {
     /**
      * Altera o email do usuário.
      *
-     * @param email O novo email do usuário.
+     * @param email novo email do usuário.
      */
     public void alterarEmail (Usuario usuario, String email) {
         if (usuario.isLogado()) {
@@ -101,7 +93,7 @@ public class Controller {
     /**
      * Altera a senha do usuário.
      *
-     * @param senha A nova senha do usuário.
+     * @param senha nova senha do usuário.
      */
     public void alterarSenha (Usuario usuario, String senha) {
         if (usuario.isLogado()) {
@@ -112,14 +104,14 @@ public class Controller {
     }
 
     /**
-     * Cadastra um novo evento no sistema.
+     * Cadastra novo evento no sistema.
      *
-     * @param usuario O usuário que está cadastrando o evento.
-     * @param nomeDoEvento O nome do evento a ser cadastrado.
-     * @param descricao A descrição do evento.
-     * @param data A data do evento.
-     * @return O evento criado.
-     * @throws SecurityException Se o usuário não estiver logado ou não for administrador.
+     * @param usuario usuário que está cadastrando o evento.
+     * @param nomeDoEvento nome do evento a ser cadastrado.
+     * @param descricao descrição do evento.
+     * @param data data do evento.
+     * @return evento criado.
+     * @throws SecurityException se o usuário não estiver logado ou não for administrador.
      */
     public Evento cadastrarEvento(Usuario usuario, String nomeDoEvento, String descricao, Date data) {
         if (!usuario.isLogado()) { // Verifica se usuário está logado
@@ -130,22 +122,22 @@ public class Controller {
         }
         // Se as condições forem atendidas, o evento é cadastrado
         evento = new Evento(usuario, nomeDoEvento, descricao, data); // Cria um novo evento com as informações dadas.
-        evento.cadastroDeEventos(evento); // Supondo que esse método já trata de cadastro de eventos.
+        evento.cadastroDeEventos(evento);
 
         return evento; // Retorna o evento criado.
-
     }
 
     /**
-     * Adiciona um assento disponível a um evento específico.
+     * Adiciona assento disponível a um evento específico.
      *
-     * @param nomeDoEvento O nome do evento.
-     * @param assento O assento a ser adicionado.
+     * @param nomeDoEvento nome do evento.
+     * @param assento assento a ser adicionado.
+     * @throws NaoEncontradoException se evento não for encontrado.
      */
     public String adicionarAssento(Usuario user, String nomeDoEvento, String assento) {
-        evento = evento.buscarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome.
-        if (evento!= null && user.isAdmin()) { // Verifica se o evento foi encontrado.
-            evento.adicionarAssento(assento); // Adiciona o assento ao evento.
+        evento = evento.buscarEventoPorNome(nomeDoEvento); // Encontra o evento pelo nome
+        if (evento!= null && user.isAdmin()) { // Verifica se o evento foi encontrado
+            evento.adicionarAssento(assento); // Adiciona o assento ao evento
             return assento;
         } else {
             throw new NaoEncontradoException("Esse evento não existe!");
@@ -153,10 +145,11 @@ public class Controller {
     }
 
     /**
-     * Adiciona um ingresso a um evento.
+     * Adiciona ingresso a um evento.
      *
-     * @param evento O ingresso a ser adicionado.
-     * @param assento O assento a ser adicionado.
+     * @param evento ingresso a ser adicionado.
+     * @param assento assento a ser adicionado.
+     * @throws SomenteAdminException se o usuário não for um administrador.
      */
     public void gerarIngresso(Usuario user, Evento evento, String assento) {
         if (user.isAdmin()) {
@@ -167,13 +160,16 @@ public class Controller {
     }
 
     /**
-     * Compra um ingresso para um evento.
+     * Compra ingresso para um evento.
      *
-     * @param usuario O usuário que está comprando o ingresso.
-     * @param pagamento O método de pagamento utilizado.
-     * @param nomeDoEvento O nome do evento.
-     * @param assento O assento do ingresso.
-     * @return O ingresso comprado.
+     * @param usuario usuário que está comprando o ingresso.
+     * @param pagamento método de pagamento utilizado.
+     * @param nomeDoEvento nome do evento.
+     * @param assento assento do ingresso.
+     * @return ingresso comprado.
+     * @throws FormaDePagamentoInvalidaException se não houver uma forma de pagamento válida.
+     * @throws UserNaoLogadoException se o usuário não estiver logado.
+     * @throws NaoEncontradoException se o evento não for encontrado.
      */
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
         if (pagamento == null) {
@@ -188,11 +184,12 @@ public class Controller {
     }
 
     /**
-     * Cancela a compra de um ingresso.
+     * Cancela compra de um ingresso.
      *
-     * @param usuario O usuário que deseja cancelar a compra.
-     * @param ingresso O ingresso a ser cancelado.
+     * @param usuario usuário que deseja cancelar a compra.
+     * @param ingresso ingresso a ser cancelado.
      * @return true se o cancelamento for bem-sucedido, false caso contrário.
+     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar cancelar a compra.
      */
     public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
         if (usuario.isLogado()) {
@@ -203,10 +200,11 @@ public class Controller {
     }
 
     /**
-     * Escolhe a forma de pagamento.
+     * Escolhe forma de pagamento.
      *
-     * @param pagamento O método de pagamento a ser escolhido.
-     * @return A forma de pagamento escolhida.
+     * @param pagamento método de pagamento a ser escolhido.
+     * @return forma de pagamento escolhida.
+     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar escolher a forma de pagamento.
      */
     public Pagamento escolheFormaPagamento(Usuario usuario, Pagamento pagamento) {
 
@@ -220,7 +218,8 @@ public class Controller {
     /**
      * Adiciona uma forma de pagamento ao usuário.
      *
-     * @param pagamento A forma de pagamento a ser adicionada.
+     * @param pagamento forma de pagamento a ser adicionada.
+     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar adicionar uma forma de pagamento.
      */
     public void adicionarFormaPagamento (Usuario usuario, Pagamento pagamento) {
         if (usuario.isLogado()) {
@@ -234,14 +233,26 @@ public class Controller {
     /**
      * Confirma a compra de um ingresso.
      *
-     * @param usuario O usuário que fez a compra.
-     * @param pagamento O método de pagamento utilizado.
-     * @return A confirmação da compra.
+     * @param usuario usuário que fez a compra.
+     * @param pagamento método de pagamento utilizado.
+     * @return confirmação da compra.
      */
     public String confirmacaoDeCompra(Usuario usuario, Pagamento pagamento) {
         return usuario.getCompra().confirmarCompra(usuario, pagamento);
     }
 
+
+    /**
+     * Permite que  usuário forneça feedback sobre um evento.
+     *
+     * @param usuario usuário que está dando o feedback.
+     * @param evento evento ao qual o feedback se refere.
+     * @param nota nota dada pelo usuário ao evento.
+     * @param mensagem mensagem adicional do usuário sobre o evento.
+     * @return objeto feedback criado com as informações passadas.
+     * @throws UserNaoLogadoException se o usuário não estiver logado ao tentar dar feedback.
+     * @throws EventoAtivoException se o evento ainda estiver ativo, impedindo a avaliação.
+     */
     public Feedback darFeedback(Usuario usuario, Evento evento, int nota, String mensagem) {
         if (!usuario.isLogado()) {
             throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
@@ -257,10 +268,10 @@ public class Controller {
     /**
      * Reembolsa o valor de um ingresso.
      *
-     * @param usuario O usuário que solicitou o reembolso.
-     * @param ingresso O ingresso a ser reembolsado.
-     * @param pagamento O método de pagamento utilizado.
-     * @return A confirmação do reembolso.
+     * @param usuario usuário que solicitou o reembolso.
+     * @param ingresso ingresso a ser reembolsado.
+     * @param pagamento método de pagamento utilizado.
+     * @return confirmação do reembolso.
      */
     public String reembolsarValor(Usuario usuario, Ingresso ingresso, Pagamento pagamento) {
         compra = new Compra(ingresso);
@@ -268,10 +279,10 @@ public class Controller {
     }
 
     /**
-     * Lista as formas de pagamento disponíveis para um usuário.
+     * Lista as formas de pagamento disponíveis para usuário.
      *
-     * @param usuario O usuário cujas formas de pagamento serão listadas.
-     * @return A lista de formas de pagamento do usuário.
+     * @param usuario usuário cujas formas de pagamento serão listadas.
+     * @return lista de formas de pagamento do usuário.
      */
     public List<Pagamento> listarFormasDePagamento(Usuario usuario) {
         return usuario.getFormasDePagamento();
@@ -280,7 +291,7 @@ public class Controller {
     /**
      * Lista os eventos disponíveis no sistema.
      *
-     * @return A lista de eventos cadastrados.
+     * @return lista de eventos cadastrados.
      */
     public List<Evento> listarEventosDisponiveis() {
         return evento.getEventosCadastrados();
@@ -289,7 +300,7 @@ public class Controller {
     /**
      * Lista os ingressos comprados do evento.
      *
-     * @return A lista de ingressos comprados do evento.
+     * @return lista de ingressos comprados do evento.
      */
     public List<Ingresso> listarIngressosComprados() {
         return ingresso.getEvento().getIngressosComprados();
@@ -299,7 +310,7 @@ public class Controller {
     /**
      * Retorna os eventos cadastrados no sistema.
      *
-     * @return A lista de eventos cadastrados.
+     * @return lista de eventos cadastrados.
      */
     public List<Evento> getEventosCadastrados() {
         return evento.getEventosCadastrados();
@@ -308,7 +319,7 @@ public class Controller {
     /**
      * Retorna os usuários cadastrados no sistema.
      *
-     * @return A lista de usuários cadastrados.
+     * @return lista de usuários cadastrados.
      */
     public List<Usuario> getUsuariosCadastrados() {
         return Usuario.getUsuariosCadastrados();

@@ -53,10 +53,11 @@ public class Evento {
     }
 
     /**
-     * Cadastra um evento no sistema, permitindo apenas usuários administradores.
+     * Cadastra evento no sistema
+     * Somente usuários administradores podem cadastrar.
      *
-     * @param evento O evento a ser cadastrado.
-     * @throws SecurityException Se o usuário não for um administrador.
+     * @param evento evento que será cadastrado.
+     * @throws SecurityException se o usuário não for um administrador.
      */
     public void cadastroDeEventos(Evento evento) {
         if (!evento.getUsuario().isAdmin()) {
@@ -66,10 +67,10 @@ public class Evento {
     }
 
     /**
-     * Adiciona um evento à lista de eventos cadastrados.
+     * Adiciona evento à lista de eventos cadastrados.
      *
-     * @param evento O evento a ser adicionado.
-     * @throws JaCadastradoException Se o evento já estiver cadastrado.
+     * @param evento evento que será adicionado.
+     * @throws JaCadastradoException se o evento já estiver cadastrado.
      */
     public void adicionaEvento(Evento evento) {
         boolean contemEvento = eventosCadastrados.contains(evento);
@@ -78,14 +79,13 @@ public class Evento {
         } else {
             throw new JaCadastradoException("Evento já cadastrado.");
         }
-
     }
 
     /**
-     * Adiciona um assento à lista de assentos disponíveis.
+     * Adiciona assento à lista de assentos disponíveis.
      *
-     * @param assento O assento a ser adicionado.
-     * @throws JaCadastradoException Se o assento já estiver na lista.
+     * @param assento assento que será adicionado.
+     * @throws JaCadastradoException se o assento já estiver na lista.
      */
     public void adicionarAssento(String assento) {
         boolean contemAssento = assentosDisponiveis.contains(assento);
@@ -97,9 +97,9 @@ public class Evento {
     }
 
     /**
-     * Remove um assento da lista de assentos disponíveis.
+     * Remove assento da lista de assentos disponíveis.
      *
-     * @param assento O assento a ser removido.
+     * @param assento assento a ser removido.
      */
     public void removerAssentoDisponivel(String assento)     {
         boolean contemAssento = assentosDisponiveis.contains(assento);
@@ -111,9 +111,9 @@ public class Evento {
     }
 
     /**
-     * Verifica se um assento está disponível.
+     * Verifica se assento está disponível.
      *
-     * @param assento O assento a ser buscado.
+     * @param assento assento buscado.
      * @return true se o assento estiver disponível, false caso contrário.
      */
     public boolean buscaAssento (String assento) {
@@ -125,13 +125,12 @@ public class Evento {
     }
 
     /**
-     * Adiciona um ingresso à lista de ingressos disponíveis.
+     * Adiciona ingresso à lista de ingressos disponíveis.
      *
-     * @param ingresso O ingresso a ser adicionado.
-     * @throws JaCadastradoException Se o ingresso já estiver cadastrado.
+     * @param ingresso ingresso a ser adicionado.
+     * @throws JaCadastradoException se o ingresso já estiver cadastrado.
      */
     public void adicionarIngresso(Ingresso ingresso) {
-
         // Primeiro, verificar se o ingresso já está cadastrado
         for (Ingresso ing : ingressosDisponiveis) {
             if (ing.getEvento().getNome().equals(ingresso.getEvento().getNome()) &&
@@ -139,14 +138,15 @@ public class Evento {
                 throw new JaCadastradoException("Ingresso já adicionado.");
             }
         }
-        // Se não encontrou nenhum ingresso duplicado, adicione
+
+        // Se não encontrou nenhum ingresso duplicado, adiciona
         ingressosDisponiveis.add(ingresso);
     }
 
     /**
-     * Remove um ingresso da lista de ingressos disponíveis.
+     * Remove ingresso da lista de ingressos disponíveis.
      *
-     * @param ingresso O ingresso a ser removido.
+     * @param ingresso ingresso a ser removido.
      */
     public void removerIngressoDisponivel(Ingresso ingresso) {
         boolean contemIngresso = ingressosDisponiveis.contains(ingresso);
@@ -165,7 +165,7 @@ public class Evento {
     public boolean isAtivo() {
         Calendar atualData = Calendar.getInstance(); // Pega data atual.
         Calendar dataEvento = Calendar.getInstance();
-        dataEvento.setTime(getData()); // Define a data do evento.
+        dataEvento.setTime(getData()); // Data do evento.
         int valor = atualData.compareTo(dataEvento); // Compara a data atual com a data do evento.
         if (valor == 0) { // Se o evento ocorrer no mesmo dia, define como inativo.
             return false;
@@ -178,11 +178,11 @@ public class Evento {
     }
 
     /**
-     * Busca um evento pelo seu nome.
+     * Busca evento pelo seu nome.
      *
-     * @param name O nome do evento a ser buscado.
-     * @return O evento correspondente ao nome informado.
-     * @throws NaoEncontradoException Se o evento não for encontrado.
+     * @param name nome do evento a ser buscado.
+     * @return evento correspondente ao nome passado.
+     * @throws NaoEncontradoException se o evento não for encontrado.
      */
     public Evento buscarEventoPorNome(String name) {
         for (Evento evento : getEventosCadastrados()) {
@@ -196,14 +196,14 @@ public class Evento {
     /**
      * Vende um ingresso para o usuário, associando-o ao evento e ao pagamento.
      *
-     * @param usuario   O usuário que está comprando o ingresso.
-     * @param pagamento O método de pagamento utilizado.
-     * @param evento    O evento para o qual o ingresso está sendo vendido.
-     * @param assento   O assento do ingresso a ser vendido.
-     * @return O ingresso vendido.
-     * @throws EventoForaDoPrazoException Se o evento não estiver ativo.
-     * @throws NaoEncontradoException      Se o assento não estiver disponível.
-     * @throws CompraNaoAutorizadaException Se o pagamento não puder ser processado.
+     * @param usuario   usuário que está comprando o ingresso.
+     * @param pagamento método de pagamento utilizado.
+     * @param evento    evento para o ingresso que está sendo vendido.
+     * @param assento   assento do ingresso a ser vendido.
+     * @return ingresso vendido.
+     * @throws EventoForaDoPrazoException se o evento não estiver ativo.
+     * @throws NaoEncontradoException      se o assento não estiver disponível.
+     * @throws CompraNaoAutorizadaException se o pagamento não puder ser processado.
      */
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, Evento evento, String assento) {
         // Verifica se o evento está ativo
@@ -235,6 +235,11 @@ public class Evento {
         throw new CompraNaoAutorizadaException("Não foi possível processar o pagamento.");
     }
 
+    /**
+     * Cancela ingresso comprado pelo usuário.
+     *
+     * @param ingresso ingresso a ser cancelado.
+     */
     public void cancelarIngressoComprado(Ingresso ingresso) {
         Iterator<Ingresso> iterator = ingressosComprados.iterator();
 
@@ -252,7 +257,14 @@ public class Evento {
 
     }
 
-
+    /**
+     * Busca ingresso na lista de ingressos disponíveis pelo evento e assento.
+     *
+     * @param evento  evento que ingresso pertence.
+     * @param assento assento do ingresso a ser buscado.
+     * @return ingresso correspondente ao evento e assento informados.
+     * @throws NaoEncontradoException se o ingresso não for encontrado.
+     */
     private Ingresso buscarPorIngresso(Evento evento, String assento) {
         for (Ingresso ingresso: ingressosDisponiveis) {
             if (ingresso.getEvento().equals(evento) && ingresso.getAssento().equals(assento)) {
@@ -262,6 +274,11 @@ public class Evento {
         throw new NaoEncontradoException("Ingresso não encontrado.");
     }
 
+    /**
+     * Adiciona feedback à lista de feedbacks do evento.
+     *
+     * @param feedback feedback a ser adicionado.
+     */
     public void adicionarFeedbacks (Feedback feedback) {
         feedbacks.add(feedback);
     }

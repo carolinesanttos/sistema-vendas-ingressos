@@ -51,12 +51,12 @@ public class Compra {
     }
 
     /**
-     * Processa a compra utilizando o pagamento fornecido.
+     * Processa a compra utilizando o pagamento passado.
      * Atualiza o status da compra de acordo com o resultado do pagamento.
      *
-     * @param pagamento O objeto de pagamento a ser processado.
+     * @param pagamento objeto de pagamento que será processado.
      * @return true se o pagamento foi aprovado, false caso contrário.
-     * @throws CompraNaoAutorizadaException Se a compra não for autorizada.
+     * @throws FormaDePagamentoInvalidaException se o pagamento não for válido.
      */
     public boolean processarCompra (Pagamento pagamento) {
         this.pagamento = pagamento;
@@ -74,8 +74,8 @@ public class Compra {
     /**
      * Confirma a compra e gera um arquivo JSON simulando um "e-mail de confirmação".
      *
-     * @param usuario O usuário que realizou a compra.
-     * @param pagamento O pagamento relacionado à compra.
+     * @param usuario usuário que realizou a compra.
+     * @param pagamento pagamento relacionado à compra.
      * @return A mensagem de confirmação da compra.
      */
     public String confirmarCompra(Usuario usuario, Pagamento pagamento) {
@@ -98,11 +98,11 @@ public class Compra {
     }
 
     /**
-     * Cria uma mensagem de confirmação de compra para o usuário.
+     * Mensagem de confirmação de compra para o usuário.
      *
-     * @param usuario O usuário que realizou a compra.
-     * @param pagamento O pagamento relacionado à compra.
-     * @return A mensagem de confirmação.
+     * @param usuario usuário que realizou a compra.
+     * @param pagamento agamento relacionado à compra.
+     * @return mensagem de confirmação.
      */
     public String mensagemConfirmaCompra(Usuario usuario, Pagamento pagamento) {
         return "Destinatário: " + usuario.getEmail() + "\nAssunto: Confirmação de Compra\n\n" +
@@ -118,7 +118,7 @@ public class Compra {
     /**
      * Cancela a compra se ainda não estiver cancelada.
      *
-     * @throws CompraJaCanceladaException Se a compra já foi cancelada anteriormente.
+     * @throws CompraJaCanceladaException caso a compra já foi cancelada anteriormente.
      */
     public void cancelarCompra () {
         if (!(status.equals("Cancelado"))) {
