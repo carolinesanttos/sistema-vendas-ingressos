@@ -18,7 +18,6 @@ package br.uefs.ecomp.vendaingressos.model;
 import br.uefs.ecomp.vendaingressos.model.excecao.*;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class Controller {
@@ -67,12 +66,13 @@ public class Controller {
      * Altera o nome do usuário.
      *
      * @param nome novo nome do usuário.
+     * @throws NaoLogadoException se o usuário não estiver logado.
      */
     public void alterarNome (Usuario usuario, String nome) {
         if (usuario.isLogado()) {
             usuario.setNome(nome);
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
 
     }
@@ -81,12 +81,13 @@ public class Controller {
      * Altera o email do usuário.
      *
      * @param email novo email do usuário.
+     * @throws NaoLogadoException se o usuário não estiver logado
      */
     public void alterarEmail (Usuario usuario, String email) {
         if (usuario.isLogado()) {
             usuario.setEmail(email);
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
     }
 
@@ -94,12 +95,13 @@ public class Controller {
      * Altera a senha do usuário.
      *
      * @param senha nova senha do usuário.
+     * @throws NaoLogadoException se o usuário não estiver logado
      */
     public void alterarSenha (Usuario usuario, String senha) {
         if (usuario.isLogado()) {
             usuario.setSenha(senha);
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
     }
 
@@ -168,15 +170,14 @@ public class Controller {
      * @param assento assento do ingresso.
      * @return ingresso comprado.
      * @throws FormaDePagamentoInvalidaException se não houver uma forma de pagamento válida.
-     * @throws UserNaoLogadoException se o usuário não estiver logado.
-     * @throws NaoEncontradoException se o evento não for encontrado.
+     * @throws NaoLogadoException se o usuário não estiver logado.
      */
     public Ingresso comprarIngresso(Usuario usuario, Pagamento pagamento, String nomeDoEvento, String assento) {
         if (pagamento == null) {
             throw new FormaDePagamentoInvalidaException("É necessário adicionar uma forma de pagamento.");
         }
         if (!usuario.isLogado()) {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
         evento = evento.buscarEventoPorNome(nomeDoEvento);
         ingresso = evento.comprarIngresso(usuario, pagamento, evento, assento); // Cria um novo ingresso.
@@ -189,44 +190,46 @@ public class Controller {
      * @param usuario usuário que deseja cancelar a compra.
      * @param ingresso ingresso a ser cancelado.
      * @return true se o cancelamento for bem-sucedido, false caso contrário.
-     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar cancelar a compra.
+     * @throws NaoLogadoException Se o usuário não estiver logado ao tentar cancelar a compra.
      */
     public boolean cancelarCompra(Usuario usuario, Ingresso ingresso) {
         if (usuario.isLogado()) {
             return usuario.cancelarIngressoComprado(usuario, ingresso);
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
     }
 
     /**
      * Escolhe forma de pagamento.
      *
+     * @param usuario o usuário que está escolhendo a forma de pagamento.
      * @param pagamento método de pagamento a ser escolhido.
      * @return forma de pagamento escolhida.
-     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar escolher a forma de pagamento.
+     * @throws NaoLogadoException Se o usuário não estiver logado ao tentar escolher a forma de pagamento.
      */
     public Pagamento escolheFormaPagamento(Usuario usuario, Pagamento pagamento) {
 
         if (usuario.isLogado()) {
             return usuario.escolheFormaPagamento(pagamento);
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
     }
 
     /**
      * Adiciona uma forma de pagamento ao usuário.
      *
+     * @param usuario o usuário que está adicionando a forma de pagamento
      * @param pagamento forma de pagamento a ser adicionada.
-     * @throws UserNaoLogadoException Se o usuário não estiver logado ao tentar adicionar uma forma de pagamento.
+     * @throws NaoLogadoException Se o usuário não estiver logado ao tentar adicionar uma forma de pagamento.
      */
     public void adicionarFormaPagamento (Usuario usuario, Pagamento pagamento) {
         if (usuario.isLogado()) {
             usuario.adicionaFormaDePagamento(pagamento);;  // Adiciona o pagamento à lista
 
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
     }
 
@@ -243,19 +246,19 @@ public class Controller {
 
 
     /**
-     * Permite que  usuário forneça feedback sobre um evento.
+     * Permite usuário fornecer feedback sobre um evento.
      *
      * @param usuario usuário que está dando o feedback.
      * @param evento evento ao qual o feedback se refere.
      * @param nota nota dada pelo usuário ao evento.
      * @param mensagem mensagem adicional do usuário sobre o evento.
      * @return objeto feedback criado com as informações passadas.
-     * @throws UserNaoLogadoException se o usuário não estiver logado ao tentar dar feedback.
+     * @throws NaoLogadoException se o usuário não estiver logado ao tentar dar feedback.
      * @throws EventoAtivoException se o evento ainda estiver ativo, impedindo a avaliação.
      */
     public Feedback darFeedback(Usuario usuario, Evento evento, int nota, String mensagem) {
         if (!usuario.isLogado()) {
-            throw new UserNaoLogadoException("É necessário estar logado para realizar essa ação.");
+            throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
         if (!evento.isAtivo()) {
             Feedback feedback = new Feedback(usuario, evento, nota, mensagem);
@@ -281,7 +284,7 @@ public class Controller {
     /**
      * Lista as formas de pagamento disponíveis para usuário.
      *
-     * @param usuario usuário cujas formas de pagamento serão listadas.
+     * @param usuario formas de pagamento do usuário.
      * @return lista de formas de pagamento do usuário.
      */
     public List<Pagamento> listarFormasDePagamento(Usuario usuario) {
@@ -323,5 +326,17 @@ public class Controller {
      */
     public List<Usuario> getUsuariosCadastrados() {
         return Usuario.getUsuariosCadastrados();
+    }
+
+    /**
+     * Altera a forma de pagamento associada a um pagamento existente.
+     *
+     * @param pagamento o objeto de pagamento cuja forma de pagamento será alterada
+     * @param formaDePagamento a nova forma de pagamento a ser definida
+     *
+     * @throws IllegalArgumentException se a forma de pagamento fornecida for inválida ou nula
+     */
+    public void alterarFormaDePagamento(Pagamento pagamento, String formaDePagamento) {
+        pagamento.setFormaDePagamento(formaDePagamento);
     }
 }

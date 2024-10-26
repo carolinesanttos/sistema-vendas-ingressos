@@ -15,7 +15,9 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
+import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.FormaDePagamentoInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.ReembolsoException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -66,11 +68,15 @@ public class Pagamento {
     }
 
     /**
-     * Realiza o reembolso do pagamento, se ainda não foi reembolsado.
+     * Realiza o reembolso do pagamento associado a uma compra, se o reembolso ainda não tiver sido processado.
+     * Marca o pagamento como reembolsado e gera um arquivo GSON simulando o envio de um e-mail de reembolso
+     * para o usuário.
      *
      * @param usuario usuário que solicita o reembolso.
      * @param compra compra associada ao pagamento.
-     * @return Mensagem de confirmação ou erro do reembolso.
+     * @return uma mensagem de confirmação do reembolso ou uma mensagem de erro se houver falha ao gerar o arquivo GSON
+     *
+     * @throws ReembolsoException se o pagamento já tiver sido reembolsado anteriormente
      */
     public String reembolsarPagamento(Usuario usuario, Compra compra) {
         this.compra = compra;
@@ -78,11 +84,11 @@ public class Pagamento {
         if (!reembolso) {
             reembolso = true;  // Marca o pagamento como reembolsado
 
-            // Gera o arquivo JSON simulando o "e-mail de reembolso"
+            // Gera arquivo GSON simulando o e-mail de reembolso
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(mensagemDeReembolso(usuario, formaDePagamento));
 
-            // Salva o JSON em um arquivo
+            // Salva GSON em um arquivo
             try (FileWriter writer = new FileWriter("reembolso_compra.json")) {
                 writer.write(json);
                 return mensagemDeReembolso(usuario, formaDePagamento);
@@ -90,7 +96,7 @@ public class Pagamento {
                 return "Erro ao gerar arquivo de confirmação: " + e.getMessage();
             }
         } else {
-            return "O pagamento já foi reembolsado.";
+            throw new ReembolsoException("O pagamento já foi reembolsado.");
         }
     }
 
@@ -148,7 +154,7 @@ public class Pagamento {
         if (formaDePagamento.equals("Boleto bancário") || formaDePagamento.equals("Cartão")) {
             this.formaDePagamento = formaDePagamento;
         } else {
-            throw new FormaDePagamentoInvalidaException("Forma de pagamento inválida");
+            throw new FormaDePagamentoInvalidaException("Forma de pagamento inválida.");
         }
     }
 

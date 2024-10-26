@@ -17,16 +17,14 @@ package br.uefs.ecomp.vendaingressos.model;
 
 import java.util.Date;
 
-import br.uefs.ecomp.vendaingressos.model.excecao.CompraJaCanceladaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.FormaDePagamentoInvalidaException;
+import br.uefs.ecomp.vendaingressos.model.excecao.ReembolsoException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
 
 
 public class Compra {
@@ -34,7 +32,7 @@ public class Compra {
     private Ingresso ingresso;
     private Date data;
     private transient double valor;
-    private String status; // "Pendente", "Aprovado", "Cancelada"
+    private String status; // "Pendente", "Aprovado", "Cancelado"
     private Pagamento  pagamento;
 
     public Compra(Usuario usuario, Ingresso ingresso) {
@@ -76,15 +74,16 @@ public class Compra {
      *
      * @param usuario usuário que realizou a compra.
      * @param pagamento pagamento relacionado à compra.
-     * @return A mensagem de confirmação da compra.
+     * @return mensagem de confirmação da compra.
+     * @throws CompraNaoAutorizadaException se a compra não pode ser confirmada.
      */
     public String confirmarCompra(Usuario usuario, Pagamento pagamento) {
         if (status.equals("Aprovado")) {
-            // Gera o arquivo JSON simulando o "e-mail de confirmação"
+            // Gera arquivo simulando o e-mail de confirmação
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(mensagemConfirmaCompra(usuario, pagamento));
 
-            // Salva o JSON em um arquivo
+            // Salva GSON em um arquivo
             try (FileWriter writer = new FileWriter("confirmacao_compra.json")) {
                 writer.write(json);
                 return mensagemConfirmaCompra(usuario, pagamento);
@@ -101,7 +100,7 @@ public class Compra {
      * Mensagem de confirmação de compra para o usuário.
      *
      * @param usuario usuário que realizou a compra.
-     * @param pagamento agamento relacionado à compra.
+     * @param pagamento pagamento relacionado à compra.
      * @return mensagem de confirmação.
      */
     public String mensagemConfirmaCompra(Usuario usuario, Pagamento pagamento) {
@@ -116,16 +115,51 @@ public class Compra {
     }
 
     /**
-     * Cancela a compra se ainda não estiver cancelada.
+     * Cancela a compra se ainda não estiver cancelada. Marca o status da compra como "Cancelado" e
+     * processa o reembolso através do método `reembolsarPagamento`.
      *
-     * @throws CompraJaCanceladaException caso a compra já foi cancelada anteriormente.
+     * @param usuario o usuário que realizou a compra.
+     * @param compra a compra a ser cancelada.
+     *
+     * @throws ReembolsoException se a compra já foi cancelada anteriormente.
      */
-    public void cancelarCompra () {
+    public void cancelarCompra (Usuario usuario, Compra compra) {
         if (!(status.equals("Cancelado"))) {
             setStatus("Cancelado");  // Marca a compra como cancelada
+            pagamento.reembolsarPagamento(usuario, compra); // Reembolsa pagamento
         } else {
-            throw new CompraJaCanceladaException("A compra já foi cancelada.");
+            throw new ReembolsoException("A compra já foi cancelada. Seu pagamento será reembolsado dentro de 15 dias.");
         }
+    }
+
+    /**
+     * Confirma o reembolso para uma compra cancelada.
+     * Gera um arquivo GSON simulando um "e-mail de confirmação"
+     * para o usuário, contendo uma mensagem de reembolso.
+     *
+     * @param usuario usuário que realizou a compra e está recebendo o reembolso.
+     * @param pagamento  pagamento associado à compra, utilizado para gerar a mensagem de reembolso.
+     * @return a mensagem de confirmação do reembolso.
+     *
+     * @throws ReembolsoException se a compra não pôde ser cancelada, impedindo o reembolso.
+     */
+    public String confirmarReembolso(Usuario usuario, Pagamento pagamento) {
+        if (status.equals("Cancelado")) {
+            // Gera o arquivo JSON simulando o "e-mail de confirmação"
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(pagamento.mensagemDeReembolso(usuario, pagamento.getFormaDePagamento()));
+
+            // Salva o JSON em um arquivo
+            try (FileWriter writer = new FileWriter("confirmacao_reembolso.json")) {
+                writer.write(json);
+                return pagamento.mensagemDeReembolso(usuario, pagamento.getFormaDePagamento());
+            } catch (IOException e) {
+                return "Erro ao gerar arquivo de confirmação: " + e.getMessage();
+            }
+        } else {
+            throw new ReembolsoException( "Compra não pode ser reembolsada, status: " + status);
+        }
+
     }
 
     public Usuario getUsuario() {

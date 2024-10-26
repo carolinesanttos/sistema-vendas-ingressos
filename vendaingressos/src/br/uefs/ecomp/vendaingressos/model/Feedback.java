@@ -15,7 +15,7 @@
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import br.uefs.ecomp.vendaingressos.model.excecao.UserNaoLogadoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.NaoLogadoException;
 
 public class Feedback {
     private Usuario usuario;
@@ -31,7 +31,7 @@ public class Feedback {
      * @param evento    evento que está sendo avaliado.
      * @param nota      nota atribuída ao evento (de 1 a 5).
      * @param comentario comentário sobre o evento.
-     * @throws UserNaoLogadoException se o usuário não estiver logado.
+     * @throws NaoLogadoException se o usuário não estiver logado.
      */
     public Feedback(Usuario usuario, Evento evento, int nota, String comentario) {
         if (usuario.isLogado()) {
@@ -40,7 +40,7 @@ public class Feedback {
             setNota(nota);
             this.comentario = comentario;
         } else {
-            throw new UserNaoLogadoException("É necessário estar logado para avaliar o evento.");
+            throw new NaoLogadoException("É necessário estar logado para avaliar o evento.");
         }
     }
 

@@ -17,7 +17,7 @@ package br.uefs.ecomp.vendaingressos.model;
 
 import br.uefs.ecomp.vendaingressos.model.excecao.CompraNaoAutorizadaException;
 import br.uefs.ecomp.vendaingressos.model.excecao.EventoForaDoPrazoException;
-import br.uefs.ecomp.vendaingressos.model.excecao.JaCadastradoException;
+import br.uefs.ecomp.vendaingressos.model.excecao.CadastroException;
 import br.uefs.ecomp.vendaingressos.model.excecao.NaoEncontradoException;
 
 import java.util.*;
@@ -70,14 +70,14 @@ public class Evento {
      * Adiciona evento à lista de eventos cadastrados.
      *
      * @param evento evento que será adicionado.
-     * @throws JaCadastradoException se o evento já estiver cadastrado.
+     * @throws CadastroException se o evento já estiver cadastrado.
      */
     public void adicionaEvento(Evento evento) {
         boolean contemEvento = eventosCadastrados.contains(evento);
         if (!contemEvento) {
             eventosCadastrados.add(evento);
         } else {
-            throw new JaCadastradoException("Evento já cadastrado.");
+            throw new CadastroException("Evento já cadastrado.");
         }
     }
 
@@ -85,14 +85,14 @@ public class Evento {
      * Adiciona assento à lista de assentos disponíveis.
      *
      * @param assento assento que será adicionado.
-     * @throws JaCadastradoException se o assento já estiver na lista.
+     * @throws CadastroException se o assento já estiver na lista.
      */
     public void adicionarAssento(String assento) {
         boolean contemAssento = assentosDisponiveis.contains(assento);
         if (!contemAssento) {
             assentosDisponiveis.add(assento);
         } else {
-            throw new JaCadastradoException("Assento já adicionado.");
+            throw new CadastroException("Assento já adicionado.");
         }
     }
 
@@ -125,20 +125,20 @@ public class Evento {
     }
 
     /**
-     * Adiciona ingresso à lista de ingressos disponíveis.
+     * Adiciona ingresso à lista de ingressos disponíveis, caso ele ainda não esteja cadastrado.
+     * Verifica se o ingresso já existe na lista, baseado no nome do evento e no assento.
      *
      * @param ingresso ingresso a ser adicionado.
-     * @throws JaCadastradoException se o ingresso já estiver cadastrado.
+     * @throws CadastroException se o ingresso já estiver cadastrado.
      */
     public void adicionarIngresso(Ingresso ingresso) {
         // Primeiro, verificar se o ingresso já está cadastrado
         for (Ingresso ing : ingressosDisponiveis) {
             if (ing.getEvento().getNome().equals(ingresso.getEvento().getNome()) &&
                     ing.getAssento().equals(ingresso.getAssento())) {
-                throw new JaCadastradoException("Ingresso já adicionado.");
+                throw new CadastroException("Ingresso já adicionado.");
             }
         }
-
         // Se não encontrou nenhum ingresso duplicado, adiciona
         ingressosDisponiveis.add(ingresso);
     }
@@ -236,9 +236,10 @@ public class Evento {
     }
 
     /**
-     * Cancela ingresso comprado pelo usuário.
+     * Cancela ingresso comprado pelo usuário. Remove o ingresso da lista de ingressos comprados
+     * caso o cancelamento seja bem-sucedido.
      *
-     * @param ingresso ingresso a ser cancelado.
+     * @param ingresso o ingresso a ser cancelado.
      */
     public void cancelarIngressoComprado(Ingresso ingresso) {
         Iterator<Ingresso> iterator = ingressosComprados.iterator();
