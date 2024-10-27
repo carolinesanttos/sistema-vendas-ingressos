@@ -104,10 +104,10 @@ public class Pagamento {
      * Gera a mensagem de reembolso para o usuário.
      *
      * @param usuario usuário que receberá a mensagem.
-     * @param formaPagamento forma de pagamento utilizada.
+     * @param formaDePagamento forma de pagamento utilizada.
      * @return mensagem de reembolso.
      */
-    public String mensagemDeReembolso(Usuario usuario, String formaPagamento) {
+    public String mensagemDeReembolso(Usuario usuario, String formaDePagamento) {
         return "Destinatário: " + usuario.getEmail() + "\nAssunto: Reembolso da Compra\n\n" +
                 "Olá, " + usuario.getNome() + ",\n\n" +
                 "O pagamento no valor de R$" + compra.getValor() + " será em reembolsado em até 15 dias via " +

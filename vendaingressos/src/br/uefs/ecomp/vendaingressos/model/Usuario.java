@@ -74,7 +74,7 @@ public class Usuario {
      * @param senha  será a senha do usuário.
      * @return true se usuário estiver cadastrado, caso contrário, false.
      */
-    public boolean isCasdastrado (String login, String senha) {
+    public boolean estaCasdastrado(String login, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
             if (usuario.getLogin().equals(login)) {
                 // Se o login estiver cadastrado, verifica a senha
@@ -108,7 +108,7 @@ public class Usuario {
      * @param pagamento a forma de pagamento que será adicionada.
      * @throws FormaDePagamentoInvalidaException se a forma de pagamento for inválida.
      */
-    public void adicionaFormaDePagamento (Pagamento pagamento) {
+    public void adicionarFormaDePagamento(Pagamento pagamento) {
         if (pagamento.getFormaDePagamento().equals("Boleto bancário") || pagamento.getFormaDePagamento().equals("Cartão")) {
             formasDePagamento.add(pagamento);
         } else {
@@ -139,7 +139,7 @@ public class Usuario {
      * @return forma de pagamento escolhida.
      * @throws NaoEncontradoException caso a forma de pagamento não for encontrada.
      */
-    public Pagamento escolheFormaPagamento (Pagamento pagamento) {
+    public Pagamento escolherFormaPagamento(Pagamento pagamento) {
         boolean contemPagamento = formasDePagamento.contains(pagamento);
         if (contemPagamento) {
             formasDePagamento.add(pagamento);

@@ -53,7 +53,7 @@ public class Controller {
      * @throws NaoEncontradoException se o login ou a senha estiverem incorretos.
      */
     public Usuario login (String login, String senha) {
-        boolean cadastrado = usuario.isCasdastrado(login, senha);
+        boolean cadastrado = usuario.estaCasdastrado(login, senha);
         if (cadastrado) {
             usuario.login(login, senha);
             return usuario;
@@ -208,10 +208,10 @@ public class Controller {
      * @return forma de pagamento escolhida.
      * @throws NaoLogadoException Se o usuário não estiver logado ao tentar escolher a forma de pagamento.
      */
-    public Pagamento escolheFormaPagamento(Usuario usuario, Pagamento pagamento) {
+    public Pagamento escolherFormaDePagamento(Usuario usuario, Pagamento pagamento) {
 
         if (usuario.isLogado()) {
-            return usuario.escolheFormaPagamento(pagamento);
+            return usuario.escolherFormaPagamento(pagamento);
         } else {
             throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");
         }
@@ -226,7 +226,7 @@ public class Controller {
      */
     public void adicionarFormaPagamento (Usuario usuario, Pagamento pagamento) {
         if (usuario.isLogado()) {
-            usuario.adicionaFormaDePagamento(pagamento);;  // Adiciona o pagamento à lista
+            usuario.adicionarFormaDePagamento(pagamento);;  // Adiciona o pagamento à lista
 
         } else {
             throw new NaoLogadoException("É necessário estar logado para realizar essa ação.");

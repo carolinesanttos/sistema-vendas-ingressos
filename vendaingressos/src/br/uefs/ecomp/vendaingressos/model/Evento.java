@@ -63,7 +63,7 @@ public class Evento {
         if (!evento.getUsuario().isAdmin()) {
             throw new SecurityException("Somente administradores podem cadastrar eventos.");
         }
-        adicionaEvento(evento);
+        adicionarEvento(evento);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Evento {
      * @param evento evento que será adicionado.
      * @throws CadastroException se o evento já estiver cadastrado.
      */
-    public void adicionaEvento(Evento evento) {
+    public void adicionarEvento(Evento evento) {
         boolean contemEvento = eventosCadastrados.contains(evento);
         if (!contemEvento) {
             eventosCadastrados.add(evento);

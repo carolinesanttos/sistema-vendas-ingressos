@@ -109,7 +109,7 @@ public class ControllerTest {
         controller.adicionarFormaPagamento( usuario, pagamento);
 
         // O usuário escolhe uma forma de pagamento
-        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolherFormaDePagamento(usuario, pagamento);
 
         assertNotNull(pagamentoEscolhido);  // Verifica se a forma de pagamento foi encontrada
 
@@ -151,7 +151,7 @@ public class ControllerTest {
         controller.adicionarFormaPagamento( usuario, pagamento);
 
         // O usuário escolhe uma forma de pagamento
-        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolherFormaDePagamento(usuario, pagamento);
 
         // O usuário compra um ingresso
         Ingresso ingresso = controller.comprarIngresso(usuario, pagamentoEscolhido, "Show de Rock", "A1");
@@ -392,7 +392,7 @@ public class ControllerTest {
         Pagamento pagamento = new Pagamento("Maria Costa","7589 7418 8529 9637", "10/31", "927");
         controller.adicionarFormaPagamento(usuario, pagamento);
 
-        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolherFormaDePagamento(usuario, pagamento);
 
         controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
 
@@ -400,14 +400,14 @@ public class ControllerTest {
         PersistenciaEventos persistencia = new PersistenciaEventos("detalhes-do-evento.json");
 
         // Obtendo a lista de eventos para salvar
-        List<Evento> eventosAtivos = controller.getEventosCadastrados();
+        List<Evento> eventosAtivos = controller.getEventosCadastrados(); 
 
         // Salvando os eventos em um arquivo JSON
         persistencia.salvarDados(eventosAtivos);
 
         // Carregando os dados de volta do arquivo
         List<Evento> eventosCarregados = persistencia.carregarDados();
-
+        
         assertNotNull(eventosCarregados);
         assertEquals(1, eventosCarregados.size());
         assertEquals("Festival de Música", eventosCarregados.getFirst().getNome());
@@ -460,7 +460,7 @@ public class ControllerTest {
      * Festival de Música foram carregados corretamente a partir
      * do arquivo JSON. Ele valida se o evento foi carregado com o
      * nome correto, a quantidade de ingressos disponíveis e as
-     * informações dos ingressos, como assento e preço.
+     * informações dos ingressos, como assento e preço. 
      */
     @Test
     public void testPersistenciaIngressosDisponivelReservado() {
@@ -471,7 +471,7 @@ public class ControllerTest {
         // Verificando se o evento Festival de Música foi carregado corretamente
         Evento evento = detalheEventos.getFirst();
         assertEquals("Festival de Música", evento.getNome());
-        assertEquals(2, evento.getIngressosDisponiveis().size());
+        assertEquals(2, evento.getIngressosDisponiveis().size()); 
 
         // Verificando os ingressos disponíveis para o Festival de Música
         Ingresso ingresso = evento.getIngressosDisponiveis().get(0);
@@ -483,7 +483,7 @@ public class ControllerTest {
         assertEquals("Festival de Música", evento.getNome());
         assertEquals("A3", ingresso2.getAssento());
         assertEquals(100.0, ingresso.getPreco(), 0.01);
-
+        
         assertEquals(1, detalheEventos.size()); // Deve ter apenas 1 evento
         assertEquals("Festival de Música", detalheEventos.getFirst().getNome());
 
@@ -517,7 +517,7 @@ public class ControllerTest {
         Pagamento pagamento = new Pagamento("Maria Costa","7589 7418 8529 9637", "10/31", "927");
         controller.adicionarFormaPagamento(usuario, pagamento);
 
-        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolherFormaDePagamento(usuario, pagamento);
 
         Usuario usuario2 = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
         controller.login("carolsan", "animehime");
@@ -525,9 +525,9 @@ public class ControllerTest {
         Pagamento pagamento2 = new Pagamento("Carol Santos","8529 7418 9634 4568", "05/35", "356");
         controller.adicionarFormaPagamento(usuario2, pagamento2);
 
-        Pagamento pagamentoEscolhido2 = controller.escolheFormaPagamento(usuario2, pagamento2);
+        Pagamento pagamentoEscolhido2 = controller.escolherFormaDePagamento(usuario2, pagamento2);
 
-        assertNotNull(pagamentoEscolhido);
+        assertNotNull(pagamentoEscolhido);  
         assertNotNull(pagamentoEscolhido2);
 
         controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
@@ -584,11 +584,11 @@ public class ControllerTest {
         String assento = controller.adicionarAssento(admin,"Festival de Música", "A1");
         controller.gerarIngresso(admin, evento, assento);
 
-
+        
         Usuario usuario = controller.cadastrarUsuario("carolsan", "animehime", "Carol Santos", "09875978902", "ca.sant@example.com", false);
 
         Pagamento pagamento = new Pagamento("Carol Santos","8529 7418 9634 4568", "05/35", "356");
-
+        
         NaoLogadoException exception = assertThrows(NaoLogadoException.class, () -> {
             controller.adicionarFormaPagamento(usuario, pagamento);
         });
@@ -614,16 +614,16 @@ public class ControllerTest {
         Evento evento = controller.cadastrarEvento(admin, "Show de Rock", "Banda XYZ", data);
         String assento = controller.adicionarAssento(admin,"Show de Rock", "A1");
         controller.gerarIngresso(admin, evento, assento);
-
+        
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
-
+        
         Pagamento pagamento = new Pagamento("7891234567890");
         controller.adicionarFormaPagamento( usuario, pagamento);
-        Pagamento pagamentoEscolhido = controller.escolheFormaPagamento(usuario, pagamento);
+        Pagamento pagamentoEscolhido = controller.escolherFormaDePagamento(usuario, pagamento);
 
-        assertNotNull(pagamentoEscolhido);
-
+        assertNotNull(pagamentoEscolhido); 
+        
         NaoEncontradoException exception = assertThrows(NaoEncontradoException.class, () -> {
             controller.comprarIngresso(usuario, pagamentoEscolhido, "Festival de Música", "A1");
         });
@@ -649,11 +649,11 @@ public class ControllerTest {
 
         controller.cadastrarEvento(admin, "Festival de Música", "Bandas Diversas", data);
         controller.adicionarAssento(admin,"Festival de Música", "A1");
-
+        
         CadastroException exception = assertThrows(CadastroException.class, () -> {
             controller.adicionarAssento(admin,"Festival de Música", "A1");
         });
-
+        
         assertEquals("Assento já adicionado.", exception.getMessage());
     }
 
@@ -670,7 +670,7 @@ public class ControllerTest {
 
         Pagamento pagamento = new Pagamento("852974157485952474");
         controller.adicionarFormaPagamento( usuario, pagamento);
-
+        
         FormaDePagamentoInvalidaException exception = assertThrows(FormaDePagamentoInvalidaException.class, () -> {
             controller.alterarFormaDePagamento(pagamento, "Pix");
         });
@@ -690,12 +690,12 @@ public class ControllerTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.DECEMBER, 30);
         Date data = calendar.getTime();
-
+        
         Evento evento = new Evento("Show de Rock", "Banda XYZ", data);
-
+        
         Usuario usuario = controller.cadastrarUsuario("johndoe", "senha123", "John Doe", "12345678901", "john.doe@example.com", false);
         controller.login("johndoe", "senha123");
-
+        
         EventoAtivoException exception = assertThrows(EventoAtivoException.class, () -> {
             controller.darFeedback(usuario, evento, 5, "O evento foi excelente!");
         });
@@ -728,12 +728,12 @@ public class ControllerTest {
         Pagamento pagamento = new Pagamento("Maria Costa","7589 7418 8529 9637", "10/31", "927");
         controller.adicionarFormaPagamento(usuario, pagamento);
 
-        assertNotNull(pagamento);
+        assertNotNull(pagamento);  
 
         Ingresso ingresso = controller.comprarIngresso(usuario, pagamento, "Show de Rock", "A1");
 
         controller.cancelarCompra(usuario, ingresso);
-        
+
         ReembolsoException exception = assertThrows(ReembolsoException.class, () -> {
             controller.cancelarCompra(usuario, ingresso);
         });
