@@ -8,7 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Classe responsável por gerenciar a persistência de dados de usuários em um arquivo JSON.
+ * Permite salvar e carregar listas de usuários para manter os dados persistentes.
+ */
 public class PersistenciaUsuarios {
 
     private String caminhoArquivo;
@@ -17,6 +20,12 @@ public class PersistenciaUsuarios {
         this.caminhoArquivo = caminhoArquivo;
     }
 
+    /**
+     * Salva uma lista de usuários no arquivo especificado em formato JSON.
+     *
+     * @param usuarios A lista de usuários a ser salva no arquivo.
+     * @throws RuntimeException Se ocorrer algum erro ao escrever os dados no arquivo.
+     */
     public void salvarDados(List<Usuario> usuarios) {
         Gson gson = new Gson();
         FileWriter writer = null;
@@ -40,6 +49,12 @@ public class PersistenciaUsuarios {
         }
     }
 
+    /**
+     * Carrega uma lista de usuários a partir do arquivo especificado em formato JSON.
+     *
+     * @return Uma lista de objetos {@code Usuario} carregada do arquivo.
+     * @throws RuntimeException Se ocorrer algum erro ao ler os dados do arquivo.
+     */
     public List<Usuario> carregarDados() {
         Gson gson = new Gson();
         FileReader reader = null;

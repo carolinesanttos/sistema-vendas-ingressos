@@ -209,7 +209,6 @@ public class Controller {
      * @throws NaoLogadoException Se o usuário não estiver logado ao tentar escolher a forma de pagamento.
      */
     public Pagamento escolherFormaDePagamento(Usuario usuario, Pagamento pagamento) {
-
         if (usuario.isLogado()) {
             return usuario.escolherFormaPagamento(pagamento);
         } else {

@@ -13,7 +13,10 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Classe responsável por gerenciar a persistência de dados de eventos em um arquivo JSON.
+ * Permite salvar e carregar listas de eventos para manter os dados persistentes.
+ */
 public class PersistenciaEventos{
 
     private String caminhoArquivo;
@@ -22,19 +25,21 @@ public class PersistenciaEventos{
         this.caminhoArquivo = caminhoArquivo;
     }
 
+    /**
+     * Salva uma lista de eventos ativos no arquivo especificado em formato JSON.
+     *
+     * @param eventosAtivos A lista de eventos a ser salva no arquivo.
+     * @throws RuntimeException Se ocorrer algum erro ao escrever os dados no arquivo.
+     */
     public void salvarDados(List<Evento> eventosAtivos) {
         Gson gson = new Gson();
         FileWriter writer = null;
         try {
-            // Tenta abrir o arquivo para escrita
             writer = new FileWriter(caminhoArquivo);
-            // Converte a lista de eventos para JSON e escreve no arquivo
             gson.toJson(eventosAtivos, writer);
         } catch (IOException e) {
-            // Lança uma nova exceção com uma mensagem de erro
             throw new RuntimeException("Não foi possível salvar os dados em " + caminhoArquivo + ": " + e.getMessage());
         } finally {
-            // Fecha o escritor se não for nulo
             if (writer != null) {
                 try {
                     writer.close();
@@ -45,6 +50,12 @@ public class PersistenciaEventos{
         }
     }
 
+    /**
+     * Carrega uma lista de eventos a partir do arquivo especificado em formato JSON.
+     *
+     * @return Uma lista de objetos {@code Evento} carregada do arquivo.
+     * @throws RuntimeException Se ocorrer algum erro ao ler os dados do arquivo.
+     */
     public List<Evento> carregarDados() {
         Gson gson = new Gson();
         FileReader reader = null; // Inicializa o leitor como nulo

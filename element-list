@@ -1,0 +1,5 @@
+br.uefs.ecomp.vendaingressos.facade
+br.uefs.ecomp.vendaingressos.model
+br.uefs.ecomp.vendaingressos.model.excecao
+br.uefs.ecomp.vendaingressos.model.persistencia
+br.uefs.ecomp.vendasingressos.model
