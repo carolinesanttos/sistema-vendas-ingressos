@@ -1,16 +1,14 @@
 /**
- * <p>
- * Sistema Operacional: Windows 10 - 64 Bits<br>
- * IDE: IntelliJ<br>
- * Versão Da Linguagem: Java JDK 22<br>
- * Autor: Caroline Santos de Jesus<br>
- * Componente Curricular: Algoritmos II<br>
- * Concluído em: 21/10/2024<br>
+ * Sistema Operacional: Windows 10 - 64 Bits
+ * IDE: IntelliJ
+ * Versão Da Linguagem: Java JDK 22
+ * Autor: Caroline Santos de Jesus
+ * Componente Curricular: Algoritmos II
+ * Concluído em: 28/10/2024
  * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
  * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
  * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
  * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
- * </p>
  */
 
 package br.uefs.ecomp.vendaingressos.model;
@@ -20,6 +18,19 @@ import br.uefs.ecomp.vendaingressos.model.excecao.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * A classe Usuario representa um usuário no sistema de venda de ingressos.
+ *
+ * Gerencia informações do usuário, como login, senha, nome, CPF e email. Permite:
+ * - Cadastrar novos usuários.
+ * - Verificar credenciais de login.
+ * - Adicionar e remover formas de pagamento.
+ * - Realizar e cancelar compras de ingressos.
+ * - Verificar se o usuário é administrador.
+ *
+ * Exceções são lançadas em caso de erros, como tentativas de adicionar
+ * formas de pagamento inválidas ou cancelar ingressos já reembolsados.
+ */
 public class Usuario {
     private String login;
     private String senha;

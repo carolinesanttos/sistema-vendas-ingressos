@@ -1,16 +1,14 @@
 /**
- * <p>
- * Sistema Operacional: Windows 10 - 64 Bits<br>
- * IDE: IntelliJ<br>
- * Versão Da Linguagem: Java JDK 22<br>
- * Autor: Caroline Santos de Jesus<br>
- * Componente Curricular: Algoritmos II<br>
- * Concluído em: 21/10/2024<br>
+ * Sistema Operacional: Windows 10 - 64 Bits
+ * IDE: IntelliJ
+ * Versão Da Linguagem: Java JDK 22
+ * Autor: Caroline Santos de Jesus
+ * Componente Curricular: Algoritmos II
+ * Concluído em: 28/10/2024
  * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
  * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
  * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
  * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
- * </p>
  */
 
 package br.uefs.ecomp.vendaingressos.model;
@@ -26,7 +24,14 @@ import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
+/**
+ * A classe Compra representa uma transação de compra de ingressos no sistema.
+ * Ela armazena informações sobre o usuário que fez a compra, o ingresso adquirido,
+ * a data da compra, o valor e o status da transação.
+ *
+ * A classe permite processar a compra, cancelar a compra, e gerar mensagens de
+ * confirmação de compra e reembolso.
+ */
 public class Compra {
     private transient  Usuario usuario;
     private Ingresso ingresso;

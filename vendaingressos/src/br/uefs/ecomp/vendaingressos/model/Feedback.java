@@ -1,22 +1,25 @@
 /**
- * <p>
- * Sistema Operacional: Windows 10 - 64 Bits<br>
- * IDE: IntelliJ<br>
- * Versão Da Linguagem: Java JDK 22<br>
- * Autor: Caroline Santos de Jesus<br>
- * Componente Curricular: Algoritmos II<br>
- * Concluído em: 21/10/2024<br>
+ * Sistema Operacional: Windows 10 - 64 Bits
+ * IDE: IntelliJ
+ * Versão Da Linguagem: Java JDK 22
+ * Autor: Caroline Santos de Jesus
+ * Componente Curricular: Algoritmos II
+ * Concluído em: 28/10/2024
  * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
  * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
  * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
  * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
- * </p>
  */
 
 package br.uefs.ecomp.vendaingressos.model;
 
 import br.uefs.ecomp.vendaingressos.model.excecao.NaoLogadoException;
 
+/**
+ * Classe que representa um feedback dado por um usuário sobre um evento.
+ * Contém informações sobre o usuário, evento, nota de avaliação (de 1 a 5) e um comentário.
+ * O feedback só pode ser criado se o usuário estiver logado.
+ */
 public class Feedback {
     private Usuario usuario;
     private Evento evento;

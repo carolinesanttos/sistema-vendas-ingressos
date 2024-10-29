@@ -1,25 +1,29 @@
 /**
- * <p>
- * Sistema Operacional: Windows 10 - 64 Bits<br>
- * IDE: IntelliJ<br>
- * Versão Da Linguagem: Java JDK 22<br>
- * Autor: Caroline Santos de Jesus<br>
- * Componente Curricular: Algoritmos II<br>
- * Concluído em: 21/10/2024<br>
+ * Sistema Operacional: Windows 10 - 64 Bits
+ * IDE: IntelliJ
+ * Versão Da Linguagem: Java JDK 22
+ * Autor: Caroline Santos de Jesus
+ * Componente Curricular: Algoritmos II
+ * Concluído em: 28/10/2024
  * Declaro que este código foi elaborado por mim de forma individual e não contém nenhum trecho de código de outro
  * colega ou de outro autor, tais como provindos de livros e apostilas, e páginas ou documentos eletrônicos da Internet.
  * Qualquer trecho de código de outra autoria que não a minha está destacado com uma citação para o autor e a fonte do
  * código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
- * </p>
  */
 
 package br.uefs.ecomp.vendaingressos.model;
 
-import com.google.gson.annotations.Expose;
-
-import java.beans.Transient;
 import java.util.*;
 
+/**
+ * Classe que representa ingresso no sistema de venda de ingressos.
+ *
+ * Gerencia as informações do ingresso, como preço, status (ativo ou cancelado),
+ * evento associado e assento. Permite verificar se o ingresso está ativo,
+ * cancelar o ingresso com base em regras específicas e reativar ingressos cancelados.
+ *
+ * A comparação de ingressos é feita com base em preço, evento e assento.
+ */
 public class Ingresso {
     private double preco;
     private transient boolean status;
